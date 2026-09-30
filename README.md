@@ -61,7 +61,7 @@ DATABASE_URL="postgres://..." npm run db:migrate   # apply migrations; safe to r
 npm run db:generate                                 # after changing the schema: creates a new migration
 ```
 
-Migrations are **not** run automatically during the Vercel build. `db:generate` fetches `drizzle-kit` on demand rather than installing it, which keeps the Vercel install free of warnings.
+Migrations are **not** run automatically during the Vercel build. `db:generate` fetches `drizzle-kit` on demand rather than installing it, which keeps the Vercel install free of warnings. `package.json` also has an `allowScripts` entry that blocks the install script of `unrs-resolver` (a linting helper): its native binary is installed as a separate package, so the script is not needed, and newer npm versions otherwise warn about unreviewed install scripts.
 
 ## Changing copy
 
