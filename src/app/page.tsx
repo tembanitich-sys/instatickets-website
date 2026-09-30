@@ -1,4 +1,6 @@
 import { Hero } from "@/components/home/Hero";
+import { serverNowMs } from "@/lib/countdown";
+import { getGetStartedUrl } from "@/lib/settings-server";
 import {
   AboutSection,
   BusSection,
@@ -11,10 +13,15 @@ import {
   SportsSection,
 } from "@/components/home/Sections";
 
-export default function HomePage() {
+// Re-render at most once a minute so the server-rendered countdown and the
+// GET STARTED link stay close to current without a redeploy.
+export const revalidate = 60;
+
+export default async function HomePage() {
+  const getStartedUrl = await getGetStartedUrl();
   return (
     <>
-      <Hero />
+      <Hero nowMs={serverNowMs()} getStartedUrl={getStartedUrl} />
       <FindSection />
       <BusSection />
       <EventsSection />

@@ -165,6 +165,14 @@ export const home = {
   },
 } as const;
 
+export const countdown = {
+  labels: { days: "DAYS", hours: "HOURS", minutes: "MINUTES", seconds: "SECONDS" },
+  liveHeading: "INSTATICKETS IS NOW LIVE",
+  liveButton: "GET STARTED",
+  // Accessible name for the timer; not shown on screen.
+  timerLabel: "Time until InstaTickets launches",
+} as const;
+
 export const customerForm = {
   fields: {
     firstName: "First Name",

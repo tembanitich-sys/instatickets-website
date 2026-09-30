@@ -1,8 +1,9 @@
 import Image from "next/image";
 import { home, nav } from "@content/site";
+import { Countdown } from "../Countdown";
 import { ButtonLink } from "../ui";
 
-export function Hero() {
+export function Hero({ nowMs, getStartedUrl }: { nowMs: number; getStartedUrl: string }) {
   const h = home.hero;
   return (
     <div className="hero-bg on-navy relative overflow-hidden text-white">
@@ -29,7 +30,7 @@ export function Hero() {
           {h.launchLine}
         </p>
 
-        {/* Phase 2: <Countdown /> goes directly below the launch line. */}
+        <Countdown initialNowMs={nowMs} getStartedUrl={getStartedUrl} />
 
         <div className="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
           <ButtonLink href={nav.join.href} variant="primary">
