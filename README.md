@@ -2,7 +2,7 @@
 
 Public pre-launch site for InstaTickets (www.instatickets.co.zw). Next.js App Router, TypeScript (strict), Tailwind CSS. The full build brief is in [`docs/WEBSITE_BRIEF.md`](docs/WEBSITE_BRIEF.md).
 
-> Status: **Phase 2 (countdown)**. Phase 1 (pages, brand, header, footer, WhatsApp button) and the countdown are in place. Working forms (Phase 3), admin (Phase 4) and SEO/security polish (Phase 5) are still to come. Until Phase 3 the three forms are laid out but their submit buttons are disabled.
+> Status: **Phase 3 (forms)**. Pages, countdown and the three working forms are in place. Admin (Phase 4) and SEO/security polish (Phase 5) are still to come.
 
 ## Run locally
 
@@ -37,6 +37,32 @@ The launch instant is hard-coded in [`src/lib/countdown.ts`](src/lib/countdown.t
 ### GET STARTED link
 
 Stored in the `site_settings` table under the key `get_started_url` and read at most once a minute. Only `https://` links are accepted. Default: the WhatsApp chat link. The admin page that edits it arrives in Phase 4.
+
+## Forms
+
+The customer pre-registration (home), business registration (`/for-businesses`) and contact (`/contact`) forms are Next.js server actions in [`src/app/actions.ts`](src/app/actions.ts). The logic is in `src/lib/forms/`. Every submission goes through the same steps, in this order:
+
+1. parse and validate on the server with Zod (`schemas.ts`); phone numbers are checked with `libphonenumber-js` and stored in E.164 (for example `+263771234567`);
+2. rate limit per visitor and form (5 per 10 minutes). The visitor's IP is hashed with `RATE_LIMIT_SALT` before it reaches the limiter and is never stored or logged;
+3. return field messages if anything is invalid (without spending the one-time Turnstile token);
+4. verify the Cloudflare Turnstile token server-side (fails closed);
+5. store the record in Postgres;
+6. only then send the notification email. A failed email is logged (without personal details) and never fails the submission.
+
+If the database is unavailable the visitor gets an error; a submission is never reported as saved when it was not.
+
+**Rules worth knowing**
+
+- Marketing consent is never pre-ticked. It is stored as `marketing_consent` plus `marketing_consent_at` (null when not given). The privacy acknowledgement is required and the notice version (`2026-10-pre-launch`, in `content/site.ts`) is stored with every record.
+- A pre-registration with a phone number already on file updates that record and shows the same success message. Latest submission wins for interests and marketing consent (unticked withdraws consent and clears the timestamp). A blank email never erases one already given, and the name and first campaign tags stay as first recorded.
+- Business registrations always insert a new row. The contact form's phone is optional.
+- Campaign tags (`utm_source`, `utm_medium`, `utm_campaign`) from the landing URL are remembered for the tab (session storage) and saved with the form.
+
+**Notifications:** customer and business forms email `registrations@instatickets.co.zw`; the contact form emails `info@instatickets.co.zw`. Emails are plain text with fixed subjects. The sending domain must be verified in Resend (SPF/DKIM), and both mailboxes must exist.
+
+### Environment variables
+
+See [`.env.example`](.env.example) for the full list with comments. Turnstile's site key is inlined into the browser bundle at build time, so set `NEXT_PUBLIC_TURNSTILE_SITE_KEY` in Vercel **before** the deploy that should use it. Until real keys exist, Cloudflare's published test keys can be used.
 
 ### Database migrations
 

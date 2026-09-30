@@ -173,6 +173,35 @@ export const countdown = {
   timerLabel: "Time until InstaTickets launches",
 } as const;
 
+/** Validation and submission messages shown next to the form fields. */
+export const formMessages = {
+  firstName: "Enter your first name.",
+  lastName: "Enter your last name.",
+  name: "Enter your name.",
+  phone: "Enter a valid mobile number for the selected country.",
+  phoneOptional: "Enter a valid phone number for the selected country, or leave it blank.",
+  email: "Enter a valid email address.",
+  emailRequired: "Enter your email address.",
+  organisationName: "Enter your organisation name.",
+  contactPerson: "Enter a contact person.",
+  businessType: "Choose a business type.",
+  enquiryType: "Choose an enquiry type.",
+  message: "Enter your message.",
+  website: "Enter a valid website address, for example https://example.com.",
+  privacy: "Please confirm that you have read the Pre-Launch Privacy Notice.",
+  tooLong: "This is too long.",
+  invalidChoice: "Choose one of the options shown.",
+  captcha: "Please complete the security check and try again.",
+  rateLimited: "Too many attempts. Please wait a few minutes and try again.",
+  serverError: "Something went wrong and your details were not saved. Please try again later.",
+  fixErrors: "Please correct the highlighted fields.",
+} as const;
+
+export const contactSuccess = {
+  heading: "THANK YOU. YOUR MESSAGE HAS BEEN SENT.",
+  body: "An InstaTickets representative will get back to you.",
+} as const;
+
 export const customerForm = {
   fields: {
     firstName: "First Name",
