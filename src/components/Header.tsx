@@ -14,7 +14,8 @@ export function Header() {
             alt="InstaTickets"
             width={1028}
             height={195}
-            priority
+            loading="eager"
+            sizes="(min-width: 640px) 170px, 130px"
             className="h-6 w-auto sm:h-8"
           />
         </Link>

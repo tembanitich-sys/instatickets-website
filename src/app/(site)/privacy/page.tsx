@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { privacy, ui } from "@content/site";
 import { PageIntro, Section } from "@/components/ui";
 
-export const metadata: Metadata = { title: "Pre-Launch Privacy Notice" };
+export const metadata: Metadata = { title: "Pre-Launch Privacy Notice", alternates: { canonical: "/privacy" } };
 
 /** Renders unconfirmed [BRACKETED] values highlighted so they cannot be missed. */
 function withBrackets(text: string): ReactNode[] {

@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useFormStatus } from "react-dom";
 import { useEffect, useRef, type ComponentProps, type ReactNode } from "react";
-import { getCountries, getCountryCallingCode } from "libphonenumber-js/min";
 import { ui } from "@content/site";
+import { COUNTRY_CALLING_CODES } from "@/lib/countries.generated";
 
 const controlClass =
   "block min-h-11 w-full rounded-lg border border-line bg-white px-3 py-2 text-base text-ink shadow-sm placeholder:text-muted/70 focus:border-navy aria-[invalid=true]:border-red-dark aria-[invalid=true]:ring-1 aria-[invalid=true]:ring-red-dark";
@@ -222,12 +222,11 @@ export function PrivacyCheckbox({
   );
 }
 
-// Country code selector. Options read "ZW (+263)": ISO code plus dialling code, which is
-// identical on server and client (no Intl display names, so no hydration differences).
+// Country code selector. Options read "ZW (+263)": ISO code plus dialling code. The list is
+// generated ahead of time (scripts/generate-countries.mjs) so the phone-number library is not
+// sent to the browser; validation happens on the server.
 const DEFAULT_COUNTRY = "ZW";
-const countryOptions = [...getCountries()]
-  .sort((a, b) => (a === DEFAULT_COUNTRY ? -1 : b === DEFAULT_COUNTRY ? 1 : a.localeCompare(b)))
-  .map((c) => ({ value: c, label: `${c} (+${getCountryCallingCode(c)})` }));
+const countryOptions = COUNTRY_CALLING_CODES.map(([iso, code]) => ({ value: iso, label: `${iso} (+${code})` }));
 
 /** Mobile number with a country code selector defaulting to +263 (Zimbabwe). */
 export function PhoneField({

@@ -13,6 +13,7 @@ export function Footer() {
               alt="InstaTickets: Bus, Events, Sports. A Bullion Technologies company."
               width={1800}
               height={540}
+              sizes="288px"
               className="h-auto w-72 max-w-full"
             />
             <p className="mt-6 text-lg font-extrabold tracking-tight">{footer.tagline}</p>
@@ -28,6 +29,7 @@ export function Footer() {
                   alt="Bullion Technologies"
                   width={771}
                   height={325}
+                  sizes="96px"
                   className="h-10 w-auto"
                 />
               </span>

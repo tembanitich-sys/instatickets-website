@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { comingSoonPages } from "@content/site";
 import { PageIntro, Section } from "@/components/ui";
 
-export const metadata: Metadata = { title: comingSoonPages.terms.heading };
+export const metadata: Metadata = { title: comingSoonPages.terms.heading, alternates: { canonical: "/terms" } };
 
 export default function TermsPage() {
   return (

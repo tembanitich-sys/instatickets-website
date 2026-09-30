@@ -368,6 +368,12 @@ export const contactPage = {
   businessNote: "To register a business, please use the business registration form.",
 } as const;
 
+export const notFoundPage = {
+  heading: "Page not found",
+  body: "The page you are looking for does not exist or has moved.",
+  link: "Back to the home page",
+} as const;
+
 export const comingSoonPages = {
   terms: { heading: "Terms & Conditions", label: "COMING SOON" },
   cookies: { heading: "Cookie Policy", label: "COMING SOON" },

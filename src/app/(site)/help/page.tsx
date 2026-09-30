@@ -5,7 +5,7 @@ import { ChevronDown } from "lucide-react";
 import { contact, help } from "@content/site";
 import { PageIntro, Section, WhatsAppButton } from "@/components/ui";
 
-export const metadata: Metadata = { title: "Help" };
+export const metadata: Metadata = { title: "Help", alternates: { canonical: "/help" } };
 
 const linkClass = "font-bold text-navy underline";
 

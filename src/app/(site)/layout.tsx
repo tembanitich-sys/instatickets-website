@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import type { ReactNode } from "react";
 import { ui } from "@content/site";
 import { Header } from "@/components/Header";
@@ -22,6 +23,8 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
       <Footer />
       <WhatsAppFloat />
       <UtmCapture />
+      {/* Cookieless page-view statistics. Turn on Web Analytics for the project in Vercel. */}
+      <Analytics />
     </>
   );
 }

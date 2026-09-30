@@ -4,7 +4,7 @@ import { contact, contactPage as t } from "@content/site";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { PageIntro, Section, WhatsAppButton } from "@/components/ui";
 
-export const metadata: Metadata = { title: "Contact" };
+export const metadata: Metadata = { title: "Contact", alternates: { canonical: "/contact" } };
 
 const link = "inline-flex min-h-11 items-center font-semibold text-navy underline";
 

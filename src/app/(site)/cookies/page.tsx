@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { comingSoonPages } from "@content/site";
 import { PageIntro, Section } from "@/components/ui";
 
-export const metadata: Metadata = { title: comingSoonPages.cookies.heading };
+export const metadata: Metadata = { title: comingSoonPages.cookies.heading, alternates: { canonical: "/cookies" } };
 
 export default function CookiesPage() {
   return (

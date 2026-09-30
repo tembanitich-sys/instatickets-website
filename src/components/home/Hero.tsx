@@ -13,7 +13,8 @@ export function Hero({ nowMs, getStartedUrl }: { nowMs: number; getStartedUrl: s
           alt="InstaTickets: Bus, Events, Sports. A Bullion Technologies company."
           width={1800}
           height={540}
-          priority
+          preload
+          fetchPriority="high"
           sizes="(min-width: 640px) 480px, 80vw"
           className="mx-auto h-auto w-[80vw] max-w-[480px] rounded-2xl shadow-2xl"
         />

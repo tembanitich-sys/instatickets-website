@@ -3,7 +3,7 @@ import { forBusinesses as t } from "@content/site";
 import { BusinessForm } from "@/components/forms/BusinessForm";
 import { ButtonLink, Heading, PageIntro, Section } from "@/components/ui";
 
-export const metadata: Metadata = { title: "For Businesses" };
+export const metadata: Metadata = { title: "For Businesses", alternates: { canonical: "/for-businesses" } };
 
 export default function ForBusinessesPage() {
   return (
