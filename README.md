@@ -6,6 +6,8 @@ Next.js (App Router), TypeScript (strict), Tailwind CSS, Postgres (Neon) with Dr
 
 ## Contents
 
+For the step-by-step list of what still has to be set up by hand before launch, see the **[handover checklist](docs/HANDOVER.md)**.
+
 1. [Run locally](#run-locally)
 2. [Environment variables](#environment-variables)
 3. [Changing copy](#changing-copy)
