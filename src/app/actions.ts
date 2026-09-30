@@ -1,6 +1,6 @@
 "use server";
 
-import { headers } from "next/headers";
+import { clientIp } from "@/lib/client-ip";
 import { defaultDeps } from "@/lib/forms/deps";
 import {
   submitBusiness,
@@ -8,12 +8,6 @@ import {
   submitCustomer,
   type FormState,
 } from "@/lib/forms/submit";
-
-/** The visitor's IP, used only (hashed) by the rate limiter and passed to Turnstile. */
-async function clientIp(): Promise<string | null> {
-  const h = await headers();
-  return h.get("x-real-ip") ?? h.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
-}
 
 export async function preregisterAction(_prev: FormState, formData: FormData): Promise<FormState> {
   return submitCustomer(defaultDeps(), formData, { ip: await clientIp() });

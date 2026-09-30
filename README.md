@@ -2,7 +2,7 @@
 
 Public pre-launch site for InstaTickets (www.instatickets.co.zw). Next.js App Router, TypeScript (strict), Tailwind CSS. The full build brief is in [`docs/WEBSITE_BRIEF.md`](docs/WEBSITE_BRIEF.md).
 
-> Status: **Phase 3 (forms)**. Pages, countdown and the three working forms are in place. Admin (Phase 4) and SEO/security polish (Phase 5) are still to come.
+> Status: **Phase 4 (admin)**. Pages, countdown, the three forms and the admin area are in place. SEO/security polish and the remaining docs (Phase 5) are still to come.
 
 ## Run locally
 
@@ -63,6 +63,19 @@ If the database is unavailable the visitor gets an error; a submission is never 
 ### Environment variables
 
 See [`.env.example`](.env.example) for the full list with comments. Turnstile's site key is inlined into the browser bundle at build time, so set `NEXT_PUBLIC_TURNSTILE_SITE_KEY` in Vercel **before** the deploy that should use it. Until real keys exist, Cloudflare's published test keys can be used.
+
+## Admin (`/admin`)
+
+A minimal admin area. It is not linked from the public site, sends `noindex` headers and meta tags, and is never cached.
+
+- **Sign in** with `ADMIN_PASSWORD`. The sign-in form also uses Turnstile. The session is a signed cookie (`HttpOnly`, `Secure`, `SameSite=Strict`, scoped to `/admin`, 8 hours). Changing `ADMIN_PASSWORD` or `ADMIN_SESSION_SECRET` signs everyone out. If either is missing or too weak (password under 12 characters, secret under 32), sign-in is unavailable and the reason is written to the server log.
+- **Lockout:** five wrong passwords from the same visitor lock that visitor out for 15 minutes, even for the correct password. Failed Turnstile checks do not count. Visitors are identified by a salted hash of their IP, never the IP itself. With Upstash configured the lockout is shared across all server instances; without it, it is kept per instance in memory, so set the Upstash variables for real protection.
+- **Lists:** Customers, Businesses, Enquiries and the Audit log, newest first, 50 per page, with a simple search (case-insensitive, across names, emails, phone numbers and free text; phone numbers can be typed as `077 123 4567`, `0771234567` or `+263771234567`).
+- **CSV export** of any table (the whole table, phone numbers in E.164, database column names as headers). Text that a spreadsheet could run as a formula (starting with `=`, `+`, `-`, `@`) is prefixed with an apostrophe; real E.164 numbers are left exactly as stored. Excel drops the leading `+` when it opens a CSV directly; use *Data > From Text/CSV* and set the phone column to Text to keep it.
+- **GET STARTED link:** edit it under *Settings*. It must be an `https://` link; leaving it empty resets it to the WhatsApp default. It is live for visitors immediately, without a redeploy.
+- **Audit log (`admin_audit`):** every CSV export (table and row count), every settings change (old and new value) and every successful sign-in is recorded. An export is recorded before any data is returned, and a settings change and its audit row are saved together, so neither can happen unrecorded. The log holds no personal data. It is read-only in the admin.
+
+Admin screens use plain functional wording written for staff; the public copy stays in `content/site.ts`.
 
 ### Database migrations
 

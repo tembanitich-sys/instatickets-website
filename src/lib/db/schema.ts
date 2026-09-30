@@ -1,4 +1,4 @@
-import { boolean, index, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { boolean, index, jsonb, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 const createdAt = () => timestamp("created_at", { withTimezone: true }).notNull().defaultNow();
 
@@ -78,4 +78,19 @@ export const contactEnquiries = pgTable(
     createdAt: createdAt(),
   },
   (t) => [index("contact_enquiries_created_at_idx").on(t.createdAt)],
+);
+
+/**
+ * Record of admin actions: every CSV export and settings change (and sign-in).
+ * Details never hold personal data, only what was done (table, row count, setting key).
+ */
+export const adminAudit = pgTable(
+  "admin_audit",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    action: text("action").notNull(),
+    details: jsonb("details").$type<Record<string, unknown>>().notNull().default({}),
+    createdAt: createdAt(),
+  },
+  (t) => [index("admin_audit_created_at_idx").on(t.createdAt)],
 );

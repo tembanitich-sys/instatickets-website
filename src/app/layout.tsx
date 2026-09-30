@@ -1,11 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
-import { ui } from "@content/site";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
-import { WhatsAppFloat } from "@/components/WhatsAppFloat";
-import { UtmCapture } from "@/components/UtmCapture";
 
 const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
@@ -29,21 +24,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={jakarta.variable}>
-      <body className="flex min-h-screen flex-col antialiased">
-        <a
-          href="#main"
-          className="sr-only z-50 rounded bg-white px-4 py-2 font-bold text-navy focus:not-sr-only focus:fixed focus:left-2 focus:top-2"
-        >
-          {ui.skipToContent}
-        </a>
-        <Header />
-        <main id="main" className="flex-1">
-          {children}
-        </main>
-        <Footer />
-        <WhatsAppFloat />
-        <UtmCapture />
-      </body>
+      <body className="flex min-h-screen flex-col antialiased">{children}</body>
     </html>
   );
 }
