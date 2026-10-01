@@ -105,7 +105,7 @@ Three forms, all as server actions or route handlers. Every submission must:
 
 **Phone numbers:** country code selector defaulting to +263. Validate with `libphonenumber-js` and store in E.164 format (e.g. `+263771234567`). Reject invalid numbers. This matches the phone-keyed customer identity of the InstaTickets platform, so these records can later be imported as customer profiles.
 
-**Consent:** marketing consent checkbox is unticked by default. Store `marketing_consent` (boolean) and `marketing_consent_at` (timestamp, null if not given). The privacy acknowledgement is required; store `privacy_notice_version` (e.g. `2026-10-01-agents`).
+**Consent:** marketing consent checkbox is unticked by default. Store `marketing_consent` (boolean) and `marketing_consent_at` (timestamp, null if not given). The privacy acknowledgement is required; store `privacy_notice_version` (e.g. `2026-10-01-final`).
 
 **Duplicates:** a customer pre-registration with a phone number already on file updates that record (interests, email, consent) instead of creating a new one, and shows the same success message. Do not reveal to the visitor that the number already existed.
 

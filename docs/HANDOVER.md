@@ -8,7 +8,7 @@ Everything in the brief is built, tested and deployed. What is left is **setup t
 |---|---|
 | Repository / branch | `tembanitich-sys/instatickets-website`, production branch `main` |
 | Preview | https://instatickets-website-git-clau-7a6316-tembanitich-6405s-projects.vercel.app/ |
-| Tests | 107 pass; lint, type check and build clean; Vercel install and build log has no warnings |
+| Tests | 108 pass; lint, type check and build clean; Vercel install and build log has no warnings |
 | Lighthouse (mobile, local) | Performance 96 to 98; Accessibility, Best Practices, SEO 100 |
 | Accessibility (axe, WCAG 2.2 AA) | no violations on any public page |
 | Live forms and admin | **not yet working on Vercel**: they need steps 2 to 4 below |
@@ -73,12 +73,7 @@ Full detail is in the README under *Pointing the domain at Vercel*.
 
 All in `content/site.ts` (edit, commit, push; no other file needs touching).
 
-**A. The privacy notice still shows highlighted `[brackets]`.** Replace each once confirmed:
-
-- [x] Effective date is set to **1 October 2026** (`privacy.effectiveDate`).
-- [ ] `[EXACT REGISTERED NAME]`: appears **twice** in the "Who we are" paragraph (`privacy.sections`); replace both once the registered name is confirmed.
-- [ ] `[12]`, `[24]`, `[24]`, `[12]`: retention periods in months ("How long we keep it"), in order: customer pre-registrations, business registrations, **Agent applications (new)**, contact enquiries.
-- [ ] `[30]`: days to respond to a data request ("Your choices and rights").
+**A. The privacy notice has no `[brackets]` left.** Effective date 1 October 2026, operator "Bullion Technologies (Pvt) Ltd", all retention periods 12 months and the response time 30 days are filled in (`privacy` in `content/site.ts`). A test fails the build if a highlighted bracket reappears on the notice. The retention periods are only promises in the text: nothing deletes records automatically (see section 9).
 
 **B. Wording I had to write because the brief has none.** Confirm or replace:
 
@@ -87,7 +82,7 @@ All in `content/site.ts` (edit, commit, push; no other file needs touching).
 - [ ] The 404 page text (`notFoundPage`), the "Skip to content" link and the "(optional)" label (`ui`).
 - [ ] Admin screen wording (in `src/components/admin/` and `src/app/admin/`); staff-only, low priority.
 
-**A2. Privacy notice changes for the Agent Network.** "What we collect", "Why we use it" and "How long we keep it" now cover Agent applications, and `PRIVACY_NOTICE_VERSION` is now `2026-10-01-agents` (stored with every new record; older rows keep `2026-10-pre-launch`). Check the wording with whoever advises on data protection, and confirm the **[24] months** for Agent applications.
+**A2. Privacy notice changes for the Agent Network.** "What we collect", "Why we use it" and "How long we keep it" now cover Agent applications, and `PRIVACY_NOTICE_VERSION` is now `2026-10-01-final` (stored with every new record; older rows keep their earlier version). Check the wording with whoever advises on data protection.
 
 **B2. Agent Network wording to confirm** (all in `content/site.ts`: `home.inPerson`, `agents`, the Help FAQ "How do I become an InstaTickets Agent?"). The site deliberately states **no commission rates, amounts, earnings examples or guaranteed income**, and a test (`tests/content-rules.test.ts`) fails the build if any appear. The form collects no ID numbers, bank details or documents.
 
@@ -159,4 +154,5 @@ On the real domain, once steps 1 to 5 are done:
 | Function region | `cpt1` (Cape Town), set in `vercel.json` |
 | Run locally | `npm install`, `npm run dev`, `npm test` |
 | Create or update tables | `DATABASE_URL=... npm run db:migrate` |
+| New migration after a schema change | `npm run db:generate` (drizzle-kit is a devDependency) |
 | Full detail | `README.md` and the original brief in `docs/WEBSITE_BRIEF.md` |

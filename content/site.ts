@@ -5,7 +5,7 @@
 
 export const LAUNCH_LABEL = "15 November 2026";
 
-export const PRIVACY_NOTICE_VERSION = "2026-10-01-agents";
+export const PRIVACY_NOTICE_VERSION = "2026-10-01-final";
 
 export const contact = {
   email: "info@instatickets.co.zw",
@@ -552,7 +552,7 @@ export const privacy = {
     {
       heading: "Who we are",
       paragraphs: [
-        "InstaTickets is a Bullion Technologies product, operated by [EXACT REGISTERED NAME], 153 Sam Nujoma Street Extension, Belgravia, Harare, Zimbabwe. [EXACT REGISTERED NAME] is responsible for the information described in this notice.",
+        "InstaTickets is a Bullion Technologies product, operated by Bullion Technologies (Pvt) Ltd, 153 Sam Nujoma Street Extension, Belgravia, Harare, Zimbabwe. Bullion Technologies (Pvt) Ltd is responsible for the information described in this notice.",
       ],
     },
     {
@@ -586,17 +586,17 @@ export const privacy = {
     {
       heading: "How long we keep it",
       paragraphs: [
-        "Customer pre-registration details: until you activate an InstaTickets account, or [12] months after launch if you do not, then deleted.",
-        "Business registration details: [24] months from your last contact with us, unless you become a partner, in which case your partner agreement applies.",
-        "Agent applications: [24] months from your last contact with us, unless you become an agent, in which case your agent agreement applies.",
-        "Contact form enquiries: [12] months after the enquiry is closed.",
+        "Customer pre-registration details: until you activate an InstaTickets account, or 12 months after launch if you do not, then deleted.",
+        "Business registration details: 12 months from your last contact with us, unless you become a partner, in which case your partner agreement applies.",
+        "Agent applications: 12 months from your last contact with us, unless you become an agent, in which case your agent agreement applies.",
+        "Contact form enquiries: 12 months after the enquiry is closed.",
       ],
     },
     {
       heading: "Your choices and rights",
       paragraphs: [
         "You can ask us to show you, correct or delete the information we hold about you, or stop sending you marketing messages at any time. Every marketing message will also tell you how to opt out.",
-        'To make a request, email info@instatickets.co.zw with the subject "Data Request", or message us on WhatsApp at +263 772 270 533. We will respond within [30] days.',
+        'To make a request, email info@instatickets.co.zw with the subject "Data Request", or message us on WhatsApp at +263 772 270 533. We will respond within 30 days.',
         "If you are unhappy with how we handle your information, you may complain to the Data Protection Authority (POTRAZ).",
       ],
     },

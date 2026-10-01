@@ -180,7 +180,7 @@ describe("CSV", () => {
 
 async function seed() {
   const db = await createTestDb();
-  const base = { privacyNoticeVersion: "2026-10-01-agents" };
+  const base = { privacyNoticeVersion: "2026-10-01-final" };
   await db.insert(customerPreregistrations).values([
     { ...base, firstName: "Tendai", lastName: "Moyo", phoneE164: "+263771234567", email: "tendai@example.com", interests: ["bus", "events"], createdAt: new Date("2026-10-01T08:00:00Z") },
     { ...base, firstName: "Chipo", lastName: "Ncube", phoneE164: "+263712345678", email: null, interests: ["sports"], createdAt: new Date("2026-10-03T08:00:00Z") },

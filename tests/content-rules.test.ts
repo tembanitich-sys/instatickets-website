@@ -66,6 +66,10 @@ describe("brief section 11: content rules", () => {
     expect(site.agents.note).toMatch(/does not guarantee appointment/);
   });
 
+  it("leaves no unconfirmed [bracketed] values on the privacy notice", () => {
+    expect(strings(site.privacy).filter((t) => /\[[^\]]+\]/.test(t))).toEqual([]);
+  });
+
   it("names no person and shows no personal email address", () => {
     // src/lib/email.ts holds the system "from" address, which visitors never see.
     const emails = new Set(

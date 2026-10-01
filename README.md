@@ -63,13 +63,13 @@ DATABASE_URL="postgres://..." npm run db:migrate   # apply migrations; safe to r
 npm run db:generate                                 # after changing the schema: creates a new migration
 ```
 
-Migrations are **not** run automatically during the Vercel build. `db:generate` fetches `drizzle-kit` on demand rather than installing it, which keeps the Vercel install free of warnings. `package.json` also has an `allowScripts` entry that blocks the install script of `unrs-resolver` (a linting helper): its native binary is installed as a separate package, so the script is not needed, and newer npm versions otherwise warn about unreviewed install scripts.
+Migrations are **not** run automatically during the Vercel build. `drizzle-kit` is a devDependency, so `npm run db:generate` uses the repo's own `drizzle-kit` and `drizzle-orm` from `node_modules` (no `npx` download). Commit the generated SQL and `drizzle/meta` files together. `package.json` also has an `allowScripts` entry that blocks the install script of `unrs-resolver` (a linting helper): its native binary is installed as a separate package, so the script is not needed, and newer npm versions otherwise warn about unreviewed install scripts.
 
 ## Changing copy
 
 All public copy lives in [`content/site.ts`](content/site.ts) (brief Appendix A and B). Components read from it; change wording there and you should not need to touch components. Admin screens use plain functional wording that lives with the admin components.
 
-The privacy notice (`/privacy`) keeps its unconfirmed values in square brackets, for example `[EXACT REGISTERED NAME]`, `[12]`, `[24]` and `[30]`, and renders them **highlighted** so they cannot be missed. Replace them in `content/site.ts` once confirmed. `/terms` and `/cookies` are COMING SOON placeholders; no legal text has been written.
+The privacy notice (`/privacy`) has no unconfirmed values left. If a new unconfirmed value is ever needed, put it in square brackets in `content/site.ts`: the page renders any `[bracketed]` text **highlighted** so it cannot be missed, and a test fails the build while any remain on the notice. `/terms` and `/cookies` are COMING SOON placeholders; no legal text has been written.
 
 A test (`tests/content-rules.test.ts`) fails the build if wording breaks the brief's content rules: no payment provider or wallet named, no leadership or "we own inventory" claims, no "integrates automatically" claims, no "coming soon" on Events or Sports, no prices, discounts or testimonials, no personal names or emails, no social accounts, and no raw WhatsApp address shown.
 
@@ -145,7 +145,7 @@ The customer pre-registration (home), business registration (`/for-businesses`),
 
 If the database is unavailable the visitor gets an error; a submission is never reported as saved when it was not.
 
-- Marketing consent is never pre-ticked. It is stored as `marketing_consent` plus `marketing_consent_at` (null when not given). The privacy acknowledgement is required and the notice version (`2026-10-01-agents`) is stored with every record.
+- Marketing consent is never pre-ticked. It is stored as `marketing_consent` plus `marketing_consent_at` (null when not given). The privacy acknowledgement is required and the notice version (`2026-10-01-final`) is stored with every record.
 - A pre-registration with a phone number already on file updates that record and shows the same success message. The latest submission wins for interests and marketing consent (unticked withdraws consent and clears the timestamp). A blank email never erases one already given; the name and first campaign tags stay as first recorded.
 - Business registrations always insert a new row. The contact form's phone is optional.
 - Campaign tags (`utm_source`, `utm_medium`, `utm_campaign`) from the landing URL are remembered for the tab (session storage) and saved with the form.

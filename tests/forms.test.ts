@@ -94,7 +94,7 @@ describe("consent", () => {
     expect(row.marketingConsent).toBe(false);
     expect(row.marketingConsentAt).toBeNull();
     expect(row.privacyNoticeVersion).toBe(PRIVACY_NOTICE_VERSION);
-    expect(PRIVACY_NOTICE_VERSION).toBe("2026-10-01-agents");
+    expect(PRIVACY_NOTICE_VERSION).toBe("2026-10-01-final");
   });
 
   it("is recorded with a timestamp when ticked", async () => {
