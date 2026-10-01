@@ -9,9 +9,9 @@ const pad = (n: number) => String(n).padStart(2, "0");
 
 function Tile({ value, label }: { value: string; label: string }) {
   return (
-    <div className="flex min-w-0 flex-1 flex-col items-center rounded-2xl bg-white/10 px-1 py-3 ring-1 ring-white/20 sm:px-4 sm:py-5">
-      <span className="text-3xl font-extrabold tabular-nums leading-none sm:text-6xl">{value}</span>
-      <span className="mt-2 text-[0.65rem] font-bold tracking-widest text-white/90 sm:text-xs">{label}</span>
+    <div className="flex min-w-0 flex-1 flex-col items-center rounded-2xl bg-navy-deep/50 px-1 py-2.5 sm:px-3 sm:py-3">
+      <span className="text-3xl font-extrabold tabular-nums leading-none sm:text-4xl lg:text-5xl">{value}</span>
+      <span className="mt-1.5 text-[0.65rem] font-bold tracking-widest text-white/90 sm:text-xs">{label}</span>
     </div>
   );
 }
@@ -66,13 +66,13 @@ export function Countdown({ initialNowMs, getStartedUrl }: { initialNowMs: numbe
 
   if (left.launched) {
     return (
-      <div className="mx-auto mt-8 max-w-xl rounded-3xl bg-white/10 p-6 text-center ring-1 ring-white/20 sm:p-8">
-        <p className="text-2xl font-extrabold tracking-tight sm:text-4xl">{t.liveHeading}</p>
+      <div className="rounded-3xl bg-white/10 p-5 text-center ring-1 ring-white/20 sm:p-6">
+        <p className="text-2xl font-extrabold tracking-tight sm:text-3xl">{t.liveHeading}</p>
         <a
           href={getStartedUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className={buttonClass("primary", "mt-6")}
+          className={buttonClass("primary", "mt-4")}
         >
           {t.liveButton}
         </a>
@@ -81,7 +81,11 @@ export function Countdown({ initialNowMs, getStartedUrl }: { initialNowMs: numbe
   }
 
   return (
-    <div role="timer" aria-label={t.timerLabel} className="mx-auto mt-8 flex max-w-xl gap-2 sm:gap-4">
+    <div
+      role="timer"
+      aria-label={t.timerLabel}
+      className="flex w-full gap-1.5 rounded-3xl bg-white/10 p-2 ring-1 ring-white/20 sm:gap-2 sm:p-2.5"
+    >
       <Tile value={String(left.days).padStart(2, "0")} label={t.labels.days} />
       <Tile value={pad(left.hours)} label={t.labels.hours} />
       <Tile value={pad(left.minutes)} label={t.labels.minutes} />
