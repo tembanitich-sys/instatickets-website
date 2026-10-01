@@ -148,6 +148,51 @@ const contactSchema = z.object({
     privacyAccepted: privacy,
 });
 
+const APPLICANT_TYPES = [
+  "individual",
+  "registered_business",
+  "shop_or_supermarket",
+  "existing_agent",
+  "bus_operator_office",
+  "other",
+] as const;
+const PROVINCES = [
+  "Bulawayo",
+  "Harare",
+  "Manicaland",
+  "Mashonaland Central",
+  "Mashonaland East",
+  "Mashonaland West",
+  "Masvingo",
+  "Matabeleland North",
+  "Matabeleland South",
+  "Midlands",
+] as const;
+const SELLING_LOCATIONS = ["shop_or_premises", "market_stall", "office", "no_fixed_premises", "other"] as const;
+
+const agentSchema = z.object({
+    fullName: line(150, m.name),
+    ...phone,
+    email: optionalEmail,
+    applicantType: z.enum(APPLICANT_TYPES, { error: m.applicantType }),
+    businessName: optionalLine(200),
+    province: z.enum(PROVINCES, { error: m.province }),
+    town: line(100, m.town),
+    sellingLocation: z.enum(SELLING_LOCATIONS, { error: m.sellingLocation }),
+    hasDevice: z.enum(["yes", "no"], { error: m.hasDevice }).transform((v) => v === "yes"),
+    details: z
+      .string()
+      .trim()
+      .max(2000, m.tooLong)
+      .refine((v) => !MULTILINE_CONTROL_CHARS.test(v), m.tooLong)
+      .transform((v) => v || null),
+    marketingConsent: z.boolean(),
+    privacyAccepted: privacy,
+    utmSource: utm,
+    utmMedium: utm,
+    utmCampaign: utm,
+});
+
 // --- FormData helpers -------------------------------------------------------
 
 const str = (fd: FormData, key: string) => {
@@ -283,6 +328,47 @@ export function parseContact(fd: FormData) {
   );
 }
 
+export function parseAgent(fd: FormData) {
+  const singles = [
+    "fullName",
+    "phoneCountry",
+    "phoneNational",
+    "email",
+    "applicantType",
+    "businessName",
+    "province",
+    "town",
+    "sellingLocation",
+    "hasDevice",
+    "details",
+  ];
+  const values = echo(fd, singles, [], ["marketingConsent", "privacyAccepted"]);
+  return run(
+    agentSchema,
+    {
+      fullName: str(fd, "fullName"),
+      phoneCountry: str(fd, "phoneCountry"),
+      phoneNational: str(fd, "phoneNational"),
+      email: str(fd, "email"),
+      applicantType: str(fd, "applicantType"),
+      businessName: str(fd, "businessName"),
+      province: str(fd, "province"),
+      town: str(fd, "town"),
+      sellingLocation: str(fd, "sellingLocation"),
+      hasDevice: str(fd, "hasDevice"),
+      details: str(fd, "details"),
+      marketingConsent: checked(fd, "marketingConsent"),
+      privacyAccepted: checked(fd, "privacyAccepted"),
+      utmSource: fd.get("utm_source"),
+      utmMedium: fd.get("utm_medium"),
+      utmCampaign: fd.get("utm_campaign"),
+    },
+    values,
+    true,
+  );
+}
+
 export type CustomerInput = Extract<ReturnType<typeof parseCustomer>, { ok: true }>["data"];
 export type BusinessInput = Extract<ReturnType<typeof parseBusiness>, { ok: true }>["data"];
+export type AgentInput = Extract<ReturnType<typeof parseAgent>, { ok: true }>["data"];
 export type ContactInput = Extract<ReturnType<typeof parseContact>, { ok: true }>["data"];

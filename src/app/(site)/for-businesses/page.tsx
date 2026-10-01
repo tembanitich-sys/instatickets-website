@@ -52,7 +52,7 @@ export default function ForBusinessesPage() {
         </div>
       </Section>
 
-      <Section tone="navy">
+      <Section id="build" tone="navy">
         <div className="mx-auto max-w-3xl text-center">
           <Heading>{t.build.heading}</Heading>
           <p className="mt-4 text-lg leading-relaxed text-white/90">{t.build.body}</p>

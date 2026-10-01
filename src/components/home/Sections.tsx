@@ -5,9 +5,13 @@ import {
   Car,
   ClipboardList,
   Dumbbell,
+  Gift,
+  Hourglass,
+  BellRing,
   Footprints,
   ListChecks,
   Megaphone,
+  Store,
   Music,
   PartyPopper,
   Plug,
@@ -253,18 +257,61 @@ export function PreregisterSection() {
   );
 }
 
+const benefitIcons: Record<string, LucideIcon> = { access: Hourglass, offers: Gift, updates: BellRing };
+
+export function InPersonSection() {
+  const s = home.inPerson;
+  return (
+    <Section>
+      <div className="grid items-center gap-10 lg:grid-cols-2">
+        <div>
+          <Heading>{s.heading}</Heading>
+          <p className="mt-4 text-lg leading-relaxed text-muted">{s.body}</p>
+        </div>
+        <div className="rounded-3xl bg-navy p-6 text-white shadow-xl sm:p-8 on-navy">
+          <span className="inline-flex size-12 items-center justify-center rounded-xl bg-white text-navy">
+            <Store aria-hidden className="size-6" />
+          </span>
+          <h3 className="mt-4 text-xl font-extrabold tracking-wide">{s.subHeading}</h3>
+          <p className="mt-2 leading-relaxed text-white/90">{s.subBody}</p>
+          <div className="mt-6">
+            <ButtonLink href="/agents" variant="primary">
+              {s.button}
+            </ButtonLink>
+          </div>
+        </div>
+      </div>
+    </Section>
+  );
+}
+
 export function OffersSection() {
   const s = home.offers;
   return (
-    <Section tone="navy">
+    <Section tone="mist">
       <div className="mx-auto max-w-3xl text-center">
         <Heading>{s.heading}</Heading>
-        <p className="mt-4 text-lg leading-relaxed text-white/90">{s.body}</p>
-        <div className="mt-8">
-          <ButtonLink href={nav.join.href} variant="primary">
-            {s.button}
-          </ButtonLink>
-        </div>
+        <p className="mt-4 text-lg leading-relaxed text-muted">{s.body}</p>
+      </div>
+      <div className="mt-10 grid gap-6 md:grid-cols-3">
+        {s.cards.map((c) => {
+          const Icon = benefitIcons[c.key];
+          return (
+            <article key={c.key} className="rounded-2xl bg-white p-6 shadow-md">
+              <span className="inline-flex size-12 items-center justify-center rounded-xl bg-navy text-white">
+                <Icon aria-hidden className="size-6" />
+              </span>
+              <h3 className="mt-4 text-lg font-extrabold tracking-wide text-navy">{c.title}</h3>
+              <p className="mt-2 leading-relaxed text-muted">{c.body}</p>
+            </article>
+          );
+        })}
+      </div>
+      <p className="mt-6 text-center text-sm text-muted">{s.note}</p>
+      <div className="mt-8 text-center">
+        <ButtonLink href={nav.join.href} variant="primary">
+          {s.button}
+        </ButtonLink>
       </div>
     </Section>
   );

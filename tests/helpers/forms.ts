@@ -68,6 +68,21 @@ export const validBusiness = {
   [TURNSTILE_FIELD]: "valid-token",
 };
 
+export const validAgent = {
+  fullName: "Rudo Chikwanha",
+  phoneCountry: "ZW",
+  phoneNational: "771234567",
+  email: "",
+  applicantType: "shop_or_supermarket",
+  businessName: "",
+  province: "Harare",
+  town: "Chitungwiza",
+  sellingLocation: "shop_or_premises",
+  hasDevice: "yes",
+  privacyAccepted: true as const,
+  [TURNSTILE_FIELD]: "valid-token",
+};
+
 export const validContact = {
   name: "A Visitor",
   email: "visitor@example.com",

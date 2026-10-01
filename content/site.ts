@@ -5,7 +5,7 @@
 
 export const LAUNCH_LABEL = "15 November 2026";
 
-export const PRIVACY_NOTICE_VERSION = "2026-10-pre-launch";
+export const PRIVACY_NOTICE_VERSION = "2026-10-01-agents";
 
 export const contact = {
   email: "info@instatickets.co.zw",
@@ -36,6 +36,7 @@ export const nav = {
     { label: "Events", href: "/#events" },
     { label: "Sports", href: "/#sports" },
     { label: "For Businesses", href: "/for-businesses" },
+    { label: "Agents", href: "/agents" },
     { label: "Help", href: "/help" },
     { label: "Contact", href: "/contact" },
   ],
@@ -45,26 +46,41 @@ export const nav = {
 } as const;
 
 export const footer = {
-  tagline: "ONE PLATFORM. EVERY TICKET.",
-  categories: ["BUS", "EVENTS", "SPORTS"],
-  bullionLine: "A BULLION TECHNOLOGIES COMPANY",
-  links: [
-    { label: "Home", href: "/" },
-    { label: "Bus", href: "/#bus" },
-    { label: "Events", href: "/#events" },
-    { label: "Sports", href: "/#sports" },
-    { label: "For Businesses", href: "/for-businesses" },
-    { label: "Join InstaTickets", href: "/#join" },
-    { label: "Help", href: "/help" },
-    { label: "Contact", href: "/contact" },
+  tagline: "One Platform. Every Ticket.",
+  launching: "Launching 15 November 2026",
+  whatsappLink: "Chat on WhatsApp",
+  groups: [
+    {
+      heading: "PLATFORM",
+      links: [
+        { label: "Home", href: "/" },
+        { label: "Bus Tickets", href: "/#bus" },
+        { label: "Event Tickets", href: "/#events" },
+        { label: "Sports Tickets", href: "/#sports" },
+      ],
+    },
+    {
+      heading: "BUSINESS",
+      links: [
+        { label: "For Businesses", href: "/for-businesses" },
+        { label: "Become an Agent", href: "/agents" },
+        { label: "Build with InstaTickets", href: "/for-businesses#build" },
+      ],
+    },
+    {
+      heading: "SUPPORT",
+      links: [
+        { label: "Help / FAQ", href: "/help" },
+        { label: "Contact", href: "/contact" },
+        { label: "Pre-Launch Privacy Notice", href: "/privacy" },
+        { label: "Terms & Conditions", href: "/terms" },
+        { label: "Cookie Policy", href: "/cookies" },
+      ],
+    },
   ],
-  legal: [
-    { label: "Pre-Launch Privacy Notice", href: "/privacy", comingSoon: false },
-    { label: "Terms & Conditions", href: "/terms", comingSoon: true },
-    { label: "Cookie Policy", href: "/cookies", comingSoon: true },
-  ],
+  bullionLine: "A BULLION TECHNOLOGIES PRODUCT",
+  bullionText: "InstaTickets is built and operated by Bullion Technologies.",
   copyright: "© 2026 InstaTickets. All rights reserved.",
-  comingSoon: "COMING SOON",
 } as const;
 
 export const home = {
@@ -145,9 +161,35 @@ export const home = {
     heading: "Get ready for InstaTickets",
     body: "Pre-register before launch to be among the first to hear when InstaTickets goes live. Registered users may qualify for launch promotions, discounts and special offers from participating ticket providers.",
   },
+  inPerson: {
+    heading: "InstaTickets in person",
+    body: "InstaTickets is not only online. We are building a network of registered InstaTickets Agents, so customers can buy tickets in person, with or without a smartphone.",
+    subHeading: "Become an InstaTickets Agent",
+    subBody:
+      "Turn your shop, office or stall into a ticket point and earn commission on every ticket you sell for participating providers.",
+    button: "BECOME AN AGENT",
+  },
   offers: {
-    heading: "Launch offers & promotions",
-    body: "Participating providers may offer launch promotions and discounts to registered InstaTickets users.",
+    heading: "Early access benefits",
+    body: "Pre-register now to be ready when InstaTickets goes live on 15 November 2026.",
+    cards: [
+      {
+        key: "access",
+        title: "EARLY ACCESS",
+        body: "Be among the first invited to activate your account when InstaTickets goes live.",
+      },
+      {
+        key: "offers",
+        title: "LAUNCH OFFERS",
+        body: "Participating providers may offer launch promotions to pre-registered users.",
+      },
+      {
+        key: "updates",
+        title: "UPDATES",
+        body: "Hear about new providers, routes, events and features as they join InstaTickets.",
+      },
+    ],
+    note: "Launch offers depend on provider participation and availability.",
     button: "JOIN INSTATICKETS",
   },
   launch: {
@@ -160,7 +202,7 @@ export const home = {
     heading: "About InstaTickets",
     body: [
       "InstaTickets is a digital ticketing aggregation and distribution platform connecting customers with ticket inventory across multiple categories and participating ticketing systems. It brings ticket providers, ticketing platforms and customers together in one connected digital ecosystem.",
-      "InstaTickets is a Bullion Technologies company.",
+      "InstaTickets is a Bullion Technologies product.",
     ],
   },
 } as const;
@@ -183,6 +225,11 @@ export const formMessages = {
   email: "Enter a valid email address.",
   emailRequired: "Enter your email address.",
   organisationName: "Enter your organisation name.",
+  applicantType: "Choose how you are applying.",
+  province: "Choose your province.",
+  town: "Enter your town or city.",
+  sellingLocation: "Choose where you would sell.",
+  hasDevice: "Tell us whether you have a smartphone or tablet.",
   contactPerson: "Enter a contact person.",
   businessType: "Choose a business type.",
   enquiryType: "Choose an enquiry type.",
@@ -299,6 +346,114 @@ export const forBusinesses = {
   },
 } as const;
 
+export const agents = {
+  hero: {
+    headline: "EARN WITH INSTATICKETS",
+    subheadline: "Join the InstaTickets Agent Network",
+    body: "InstaTickets Agents sell bus, event and sports tickets on behalf of participating providers and earn commission on every ticket sold. Add a new income stream to your existing business, or start a new one.",
+    button: "APPLY TO BECOME AN AGENT",
+  },
+  why: {
+    heading: "Why become an agent",
+    cards: [
+      { key: "commission", title: "EARN COMMISSION", body: "Earn commission on every ticket you sell." },
+      {
+        key: "customers",
+        title: "MORE CUSTOMERS",
+        body: "Bring new customers through your door with a service people need.",
+      },
+      {
+        key: "platform",
+        title: "ONE PLATFORM",
+        body: "Sell tickets from multiple participating providers in one place.",
+      },
+      {
+        key: "support",
+        title: "ONBOARDING SUPPORT",
+        body: "Approved agents are set up and trained before they start selling.",
+      },
+    ],
+  },
+  who: {
+    heading: "Who can apply",
+    items: [
+      "Individuals",
+      "Shops and supermarkets",
+      "Existing agents for other services",
+      "Bus operator offices",
+      "Other businesses with customer-facing premises",
+    ],
+  },
+  how: {
+    heading: "How it works",
+    steps: [
+      { title: "REGISTER", body: "Submit your details." },
+      { title: "REVIEW", body: "We assess your application." },
+      {
+        title: "REQUIREMENTS AND TERMS",
+        body: "We share the full requirements, commission terms and agent agreement with you.",
+      },
+      { title: "ONBOARDING", body: "Approved agents are set up and trained." },
+    ],
+  },
+  note: "Commission rates and agent terms are shared with registered applicants. Earnings depend on the tickets you sell. Registration does not guarantee appointment as an InstaTickets Agent.",
+  form: {
+    heading: "Apply to become an agent",
+    fields: {
+      fullName: "Full Name",
+      mobile: "Mobile Number",
+      email: "Email Address",
+      applicantType: "I am applying as",
+      businessName: "Business or trading name",
+      province: "Province",
+      town: "Town or city",
+      sellingLocation: "Where would you sell?",
+      hasDevice: "Do you have a smartphone or tablet you could use for sales?",
+      details: "Tell us about your business",
+      choose: "Choose…",
+    },
+    applicantTypes: [
+      { value: "individual", label: "Individual" },
+      { value: "registered_business", label: "Registered business" },
+      { value: "shop_or_supermarket", label: "Shop or supermarket" },
+      { value: "existing_agent", label: "Existing agent for another service" },
+      { value: "bus_operator_office", label: "Bus operator office" },
+      { value: "other", label: "Other" },
+    ],
+    provinces: [
+      "Bulawayo",
+      "Harare",
+      "Manicaland",
+      "Mashonaland Central",
+      "Mashonaland East",
+      "Mashonaland West",
+      "Masvingo",
+      "Matabeleland North",
+      "Matabeleland South",
+      "Midlands",
+    ],
+    sellingLocations: [
+      { value: "shop_or_premises", label: "Shop or premises" },
+      { value: "market_stall", label: "Market stall" },
+      { value: "office", label: "Office" },
+      { value: "no_fixed_premises", label: "No fixed premises" },
+      { value: "other", label: "Other" },
+    ],
+    hasDevice: [
+      { value: "yes", label: "Yes" },
+      { value: "no", label: "No" },
+    ],
+    marketing: "I would like to receive InstaTickets updates by SMS, WhatsApp or email.",
+    privacyPrefix: "I have read the InstaTickets",
+    privacyLink: "Pre-Launch Privacy Notice",
+    privacySuffix: ".",
+    button: "APPLY TO BECOME AN AGENT",
+    successHeading: "THANK YOU. YOUR APPLICATION HAS BEEN RECEIVED.",
+    successBody:
+      "An InstaTickets representative will contact you with the full requirements, commission terms and next steps.",
+  },
+} as const;
+
 export const help = {
   heading: "Help",
   whatsappButton: "CHAT ON WHATSAPP",
@@ -317,7 +472,11 @@ export const help = {
       q: "I run a ticketing system. Do I have to replace it?",
       a: "Not necessarily. Systems that meet our integration requirements may be connected, subject to approval.",
     },
-    { q: "Who is behind InstaTickets?", a: "InstaTickets is a Bullion Technologies company." },
+    { q: "Who is behind InstaTickets?", a: "InstaTickets is a Bullion Technologies product." },
+    {
+      q: "How do I become an InstaTickets Agent?",
+      a: "Apply on the Become an Agent page. We'll review your application and share the full requirements, commission terms and next steps.",
+    },
     {
       q: "How do I get help?",
       a: "Chat with us on WhatsApp or use the contact form.",
@@ -386,14 +545,14 @@ export const comingSoonPages = {
  */
 export const privacy = {
   title: "INSTATICKETS PRE-LAUNCH PRIVACY NOTICE",
-  effectiveDate: "[DATE PUBLISHED]",
+  effectiveDate: "1 October 2026",
   intro:
     "This notice explains how InstaTickets handles the personal information you give us through this website before the InstaTickets platform launches on 15 November 2026. A full Privacy Policy will be published at launch.",
   sections: [
     {
       heading: "Who we are",
       paragraphs: [
-        "InstaTickets is operated by [REGISTERED COMPANY NAME], a Bullion Technologies company, 153 Sam Nujoma Street Extension, Belgravia, Harare, Zimbabwe. We are responsible for the information described in this notice.",
+        "InstaTickets is a Bullion Technologies product, operated by [EXACT REGISTERED NAME], 153 Sam Nujoma Street Extension, Belgravia, Harare, Zimbabwe. [EXACT REGISTERED NAME] is responsible for the information described in this notice.",
       ],
     },
     {
@@ -401,6 +560,7 @@ export const privacy = {
       paragraphs: [
         "Customer pre-registration: first name, last name, mobile number, email address (if you give it), the ticket categories you are interested in, and whether you want marketing messages.",
         "Business registration: organisation name, contact person, mobile number, email address, business type, the tickets you want to offer, details of any existing ticketing system, and anything you tell us about your tickets.",
+        "Agent applications: your name, mobile number, email address (if you give it), applicant type, business name, location, where you would sell, whether you have a device for sales, and anything you tell us about your business.",
         "Contact form: your name, email, phone number, enquiry type and message.",
         "Website use: basic, anonymous usage statistics. See the Cookie Policy.",
       ],
@@ -411,6 +571,7 @@ export const privacy = {
         "To tell you when InstaTickets launches and invite you to activate your account.",
         "To send launch updates, offers and promotions, only if you ticked the marketing box.",
         "To contact businesses about partnership, onboarding, verification and integration.",
+        "To assess and respond to InstaTickets Agent applications.",
         "To answer enquiries sent through the contact form.",
         "To keep the website secure and understand how it is used.",
       ],
@@ -427,6 +588,7 @@ export const privacy = {
       paragraphs: [
         "Customer pre-registration details: until you activate an InstaTickets account, or [12] months after launch if you do not, then deleted.",
         "Business registration details: [24] months from your last contact with us, unless you become a partner, in which case your partner agreement applies.",
+        "Agent applications: [24] months from your last contact with us, unless you become an agent, in which case your agent agreement applies.",
         "Contact form enquiries: [12] months after the enquiry is closed.",
       ],
     },

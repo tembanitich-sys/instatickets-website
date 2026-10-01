@@ -5,6 +5,7 @@ import { SITE_URL } from "@/lib/site-url";
 const PAGES = [
   { path: "/", priority: 1 },
   { path: "/for-businesses", priority: 0.8 },
+  { path: "/agents", priority: 0.7 },
   { path: "/help", priority: 0.6 },
   { path: "/contact", priority: 0.6 },
   { path: "/privacy", priority: 0.3 },

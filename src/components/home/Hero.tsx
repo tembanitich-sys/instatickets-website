@@ -50,9 +50,9 @@ export function Hero({ nowMs, getStartedUrl }: { nowMs: number; getStartedUrl: s
         <div className="contents lg:flex lg:w-full lg:max-w-[520px] lg:flex-col lg:items-stretch lg:justify-self-end">
           <Image
             src="/brand/logo-full.png"
-            alt="InstaTickets: Bus, Events, Sports. A Bullion Technologies company."
+            alt="InstaTickets: Bus, Events, Sports. A Bullion Technologies product."
             width={1800}
-            height={540}
+            height={521}
             preload
             fetchPriority="high"
             sizes="(min-width: 1024px) 520px, 240px"

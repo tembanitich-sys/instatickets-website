@@ -60,11 +60,11 @@ Files in `public/brand/`:
 
 | File | Size | Use |
 |---|---|---|
-| `logo-full.png` | 1800 x 540 px, transparent | Hero and footer |
+| `logo-full.png` | 1800 x 521 px, transparent | Hero |
 | `logo-compact.png` | 1028 x 195 px, transparent | Header and mobile |
 | `favicon.png` | 512 x 512 px, transparent | Favicon, Apple touch icon, web manifest (generate the smaller sizes from it) |
-| `bullion-full.png` | 1157 x 532 px, transparent | Footer, beside "A BULLION TECHNOLOGIES COMPANY" |
-| `bullion-compact.png` | 771 x 325 px, transparent | Small placements, e.g. next to the gold company line |
+| `bullion-full.png` | 1157 x 532 px, transparent | Footer, beside "A BULLION TECHNOLOGIES PRODUCT" |
+| `bullion-compact.png` | 771 x 325 px, transparent | Small placements, e.g. next to the gold product line |
 
 Use the logos exactly as supplied. Never redraw, crop, recolour or recreate them in CSS or SVG. Use `next/image` with correct width and height and priority loading for the hero logo.
 
@@ -105,7 +105,7 @@ Three forms, all as server actions or route handlers. Every submission must:
 
 **Phone numbers:** country code selector defaulting to +263. Validate with `libphonenumber-js` and store in E.164 format (e.g. `+263771234567`). Reject invalid numbers. This matches the phone-keyed customer identity of the InstaTickets platform, so these records can later be imported as customer profiles.
 
-**Consent:** marketing consent checkbox is unticked by default. Store `marketing_consent` (boolean) and `marketing_consent_at` (timestamp, null if not given). The privacy acknowledgement is required; store `privacy_notice_version` (e.g. `2026-10-pre-launch`).
+**Consent:** marketing consent checkbox is unticked by default. Store `marketing_consent` (boolean) and `marketing_consent_at` (timestamp, null if not given). The privacy acknowledgement is required; store `privacy_notice_version` (e.g. `2026-10-01-agents`).
 
 **Duplicates:** a customer pre-registration with a phone number already on file updates that record (interests, email, consent) instead of creating a new one, and shows the same success message. Do not reveal to the visitor that the number already existed.
 
@@ -238,7 +238,7 @@ Buttons: JOIN INSTATICKETS, REGISTER YOUR BUSINESS.
 
 **10. About InstaTickets**
 InstaTickets is a digital ticketing aggregation and distribution platform connecting customers with ticket inventory across multiple categories and participating ticketing systems. It brings ticket providers, ticketing platforms and customers together in one connected digital ecosystem.
-InstaTickets is a Bullion Technologies company.
+InstaTickets is a Bullion Technologies product.
 
 ### For Businesses
 
@@ -279,7 +279,7 @@ Button: REGISTER YOUR INTEREST (links to the business form).
 - **Is pre-registration free?** Yes.
 - **Does pre-registering create my account?** Not yet. It reserves your place for launch updates. At launch we'll invite you to verify your number and activate your account.
 - **I run a ticketing system. Do I have to replace it?** Not necessarily. Systems that meet our integration requirements may be connected, subject to approval.
-- **Who is behind InstaTickets?** InstaTickets is a Bullion Technologies company.
+- **Who is behind InstaTickets?** InstaTickets is a Bullion Technologies product.
 - **How do I get help?** Chat with us on WhatsApp or use the contact form.
 
 ### Contact
@@ -297,7 +297,7 @@ All phone numbers are `tel:` links; the email is a `mailto:` link.
 
 ### Footer (every page)
 
-Full logo. ONE PLATFORM. EVERY TICKET. BUS | EVENTS | SPORTS. A BULLION TECHNOLOGIES COMPANY (gold, with Bullion logo).
+Full logo. ONE PLATFORM. EVERY TICKET. BUS | EVENTS | SPORTS. A BULLION TECHNOLOGIES PRODUCT (gold, with Bullion logo).
 Links: Home, Bus, Events, Sports, For Businesses, Join InstaTickets, Help, Contact.
 Contact: info@instatickets.co.zw, WhatsApp +263 772 270 533, +263 771 802 240, +263 719 802 240, 153 Sam Nujoma Street Extension, Belgravia, Harare, Zimbabwe.
 Legal: Pre-Launch Privacy Notice, Terms & Conditions (COMING SOON), Cookie Policy (COMING SOON).
@@ -315,7 +315,7 @@ Effective date: [DATE PUBLISHED]
 This notice explains how InstaTickets handles the personal information you give us through this website before the InstaTickets platform launches on 15 November 2026. A full Privacy Policy will be published at launch.
 
 **Who we are**
-InstaTickets is operated by [REGISTERED COMPANY NAME], a Bullion Technologies company, 153 Sam Nujoma Street Extension, Belgravia, Harare, Zimbabwe. We are responsible for the information described in this notice.
+InstaTickets is operated by [REGISTERED COMPANY NAME], a Bullion Technologies product, 153 Sam Nujoma Street Extension, Belgravia, Harare, Zimbabwe. We are responsible for the information described in this notice.
 
 **What we collect**
 Customer pre-registration: first name, last name, mobile number, email address (if you give it), the ticket categories you are interested in, and whether you want marketing messages.

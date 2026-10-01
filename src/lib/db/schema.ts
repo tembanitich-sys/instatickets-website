@@ -80,6 +80,35 @@ export const contactEnquiries = pgTable(
   (t) => [index("contact_enquiries_created_at_idx").on(t.createdAt)],
 );
 
+/** InstaTickets Agent applications. Every submission is a new row. No ID numbers, bank details or documents are collected. */
+export const agentApplications = pgTable(
+  "agent_applications",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    fullName: text("full_name").notNull(),
+    phoneE164: text("phone_e164").notNull(),
+    email: text("email"),
+    /** individual, registered_business, shop_or_supermarket, existing_agent, bus_operator_office, other */
+    applicantType: text("applicant_type").notNull(),
+    businessName: text("business_name"),
+    province: text("province").notNull(),
+    town: text("town").notNull(),
+    /** shop_or_premises, market_stall, office, no_fixed_premises, other */
+    sellingLocation: text("selling_location").notNull(),
+    /** Has a smartphone or tablet for sales. */
+    hasDevice: boolean("has_device").notNull(),
+    details: text("details"),
+    marketingConsent: boolean("marketing_consent").notNull().default(false),
+    marketingConsentAt: timestamp("marketing_consent_at", { withTimezone: true }),
+    privacyNoticeVersion: text("privacy_notice_version").notNull(),
+    utmSource: text("utm_source"),
+    utmMedium: text("utm_medium"),
+    utmCampaign: text("utm_campaign"),
+    createdAt: createdAt(),
+  },
+  (t) => [index("agent_applications_created_at_idx").on(t.createdAt)],
+);
+
 /**
  * Record of admin actions: every CSV export and settings change (and sign-in).
  * Details never hold personal data, only what was done (table, row count, setting key).

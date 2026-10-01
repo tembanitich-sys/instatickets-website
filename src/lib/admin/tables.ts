@@ -3,6 +3,7 @@ import type { AnyPgColumn, PgTable } from "drizzle-orm/pg-core";
 import type { Db } from "../db/client";
 import {
   adminAudit,
+  agentApplications as a,
   businessRegistrations as b,
   contactEnquiries as e,
   customerPreregistrations as c,
@@ -23,7 +24,7 @@ export type Column = {
 };
 
 export type TableDef = {
-  slug: "customers" | "businesses" | "enquiries" | "settings" | "audit";
+  slug: "customers" | "businesses" | "agents" | "enquiries" | "settings" | "audit";
   title: string;
   table: PgTable;
   /** Newest first. */
@@ -88,6 +89,44 @@ export const TABLES: Record<TableDef["slug"], TableDef> = {
       col("hasTicketingSystem", "Has ticketing system", "has_ticketing_system"),
       col("ticketingSystemName", "Ticketing system", "ticketing_system_name"),
       col("website", "Website", "website"),
+      col("details", "Details", "details", true),
+      col("marketingConsent", "Marketing consent", "marketing_consent"),
+      col("marketingConsentAt", "Consent given", "marketing_consent_at"),
+      col("privacyNoticeVersion", "Notice version", "privacy_notice_version"),
+      col("utmSource", "utm source", "utm_source"),
+      col("utmMedium", "utm medium", "utm_medium"),
+      col("utmCampaign", "utm campaign", "utm_campaign"),
+      col("id", "ID", "id"),
+    ],
+  },
+  agents: {
+    slug: "agents",
+    title: "Agent applications",
+    table: a,
+    order: a.createdAt,
+    search: [
+      a.fullName,
+      a.phoneE164,
+      a.email,
+      a.applicantType,
+      a.businessName,
+      a.province,
+      a.town,
+      a.sellingLocation,
+      a.details,
+    ],
+    phoneSearch: [a.phoneE164],
+    columns: [
+      col("createdAt", "Received", "created_at"),
+      col("fullName", "Name", "full_name"),
+      col("phoneE164", "Mobile", "phone_e164"),
+      col("email", "Email", "email"),
+      col("applicantType", "Applying as", "applicant_type"),
+      col("businessName", "Business name", "business_name"),
+      col("province", "Province", "province"),
+      col("town", "Town or city", "town"),
+      col("sellingLocation", "Would sell at", "selling_location"),
+      col("hasDevice", "Has device", "has_device"),
       col("details", "Details", "details", true),
       col("marketingConsent", "Marketing consent", "marketing_consent"),
       col("marketingConsentAt", "Consent given", "marketing_consent_at"),

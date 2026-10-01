@@ -4,8 +4,9 @@ import type { Notifier } from "../email";
 import type { RateLimiter } from "../ratelimit";
 import { hashIp } from "../ratelimit";
 import { TURNSTILE_FIELD, type VerifyTurnstile } from "../turnstile";
-import { businessEmail, contactEmail, customerEmail } from "./notifications";
+import { agentEmail, businessEmail, contactEmail, customerEmail } from "./notifications";
 import {
+  parseAgent,
   parseBusiness,
   parseContact,
   parseCustomer,
@@ -13,7 +14,7 @@ import {
   type Parsed,
   type Values,
 } from "./schemas";
-import { saveBusiness, saveContact, saveCustomer } from "./store";
+import { saveAgent, saveBusiness, saveContact, saveCustomer } from "./store";
 
 export type FormState =
   | { status: "idle" }
@@ -33,7 +34,7 @@ export type Deps = {
 
 export type RequestContext = { ip: string | null };
 
-type FormKind = "customer" | "business" | "contact";
+type FormKind = "customer" | "business" | "contact" | "agent";
 
 const fail = (message: string, values: Values, fieldErrors: FieldErrors = {}): FormState => ({
   status: "error",
@@ -100,6 +101,12 @@ export function submitCustomer(deps: Deps, formData: FormData, ctx: RequestConte
 export function submitBusiness(deps: Deps, formData: FormData, ctx: RequestContext) {
   return handle(deps, "business", formData, ctx, parseBusiness(formData), saveBusiness, (data, saved) =>
     businessEmail(data, { id: saved.id }),
+  );
+}
+
+export function submitAgent(deps: Deps, formData: FormData, ctx: RequestContext) {
+  return handle(deps, "agent", formData, ctx, parseAgent(formData), saveAgent, (data, saved) =>
+    agentEmail(data, { id: saved.id }),
   );
 }
 

@@ -1,6 +1,6 @@
 import { contact } from "@content/site";
 import type { EmailMessage } from "../email";
-import type { BusinessInput, ContactInput } from "./schemas";
+import type { AgentInput, BusinessInput, ContactInput } from "./schemas";
 
 const yn = (v: boolean) => (v ? "Yes" : "No");
 const list = (v: readonly string[]) => (v.length ? v.join(", ") : "-");
@@ -61,6 +61,29 @@ export function businessEmail(input: BusinessInput, meta: { id: string }): Email
       ["Ticketing system", or(input.ticketingSystemName)],
       ["Website", or(input.website)],
       ["Marketing consent (email)", yn(input.marketingConsent)],
+      ["Source", `${or(input.utmSource)} / ${or(input.utmMedium)} / ${or(input.utmCampaign)}`],
+      ["Record", meta.id],
+      ["Details", `\n${or(input.details)}`],
+    ]),
+  };
+}
+
+export function agentEmail(input: AgentInput, meta: { id: string }): EmailMessage {
+  return {
+    to: contact.registrationsEmail,
+    subject: "New InstaTickets Agent application",
+    replyTo: input.email ?? undefined,
+    text: lines([
+      ["Name", input.fullName],
+      ["Mobile", input.phoneE164 ?? "-"],
+      ["Email", or(input.email)],
+      ["Applying as", input.applicantType],
+      ["Business or trading name", or(input.businessName)],
+      ["Province", input.province],
+      ["Town or city", input.town],
+      ["Would sell at", input.sellingLocation],
+      ["Has smartphone or tablet", yn(input.hasDevice)],
+      ["Marketing consent", yn(input.marketingConsent)],
       ["Source", `${or(input.utmSource)} / ${or(input.utmMedium)} / ${or(input.utmCampaign)}`],
       ["Record", meta.id],
       ["Details", `\n${or(input.details)}`],

@@ -9,6 +9,7 @@ import {
   EventsSection,
   FindSection,
   HowSection,
+  InPersonSection,
   LaunchSection,
   OffersSection,
   PreregisterSection,
@@ -32,6 +33,7 @@ export default async function HomePage() {
       <EventsSection />
       <SportsSection />
       <HowSection />
+      <InPersonSection />
       <PreregisterSection />
       <OffersSection />
       <LaunchSection />

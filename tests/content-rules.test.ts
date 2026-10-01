@@ -59,6 +59,13 @@ describe("brief section 11: content rules", () => {
     expect(hits(/testimonial|trusted by|as seen (on|in)|our partners include|\b\d[\d,]*\+? (customers|users|operators|transactions)/i)).toEqual([]);
   });
 
+  it("states no commission rate, amount, earnings example or guaranteed income", () => {
+    const noCss = (files: string[]) => files.filter((f) => !f.endsWith(".css"));
+    expect(noCss(hits(/\d\s?%|\bpercent|\bcommission (rate )?(of|is|at|from) |\bearn(s|ing)?\s+(up to|about|around|over|from)\b|\bguaranteed (income|earnings|commission|pay)|\b(income|earnings) (is|are) guaranteed|\bper (ticket|sale)\b/i))).toEqual([]);
+    // The only "guarantee" wording allowed is the disclaimer.
+    expect(site.agents.note).toMatch(/does not guarantee appointment/);
+  });
+
   it("names no person and shows no personal email address", () => {
     // src/lib/email.ts holds the system "from" address, which visitors never see.
     const emails = new Set(

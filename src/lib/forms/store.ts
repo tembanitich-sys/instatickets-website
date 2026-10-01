@@ -1,8 +1,8 @@
 import { sql } from "drizzle-orm";
 import { PRIVACY_NOTICE_VERSION } from "@content/site";
 import type { Db } from "../db/client";
-import { businessRegistrations, contactEnquiries, customerPreregistrations } from "../db/schema";
-import type { BusinessInput, ContactInput, CustomerInput } from "./schemas";
+import { agentApplications, businessRegistrations, contactEnquiries, customerPreregistrations } from "../db/schema";
+import type { AgentInput, BusinessInput, ContactInput, CustomerInput } from "./schemas";
 
 /** Consent is recorded with its moment; withdrawing it clears both. */
 const consent = (given: boolean, now: Date) => ({
@@ -88,6 +88,32 @@ export async function saveBusiness(db: Db, input: BusinessInput, now: Date) {
       createdAt: now,
     })
     .returning({ id: businessRegistrations.id });
+  return row;
+}
+
+/** Every application is a new row; nothing is merged or overwritten. */
+export async function saveAgent(db: Db, input: AgentInput, now: Date) {
+  const [row] = await db
+    .insert(agentApplications)
+    .values({
+      fullName: input.fullName,
+      phoneE164: input.phoneE164!,
+      email: input.email,
+      applicantType: input.applicantType,
+      businessName: input.businessName,
+      province: input.province,
+      town: input.town,
+      sellingLocation: input.sellingLocation,
+      hasDevice: input.hasDevice,
+      details: input.details,
+      ...consent(input.marketingConsent, now),
+      privacyNoticeVersion: PRIVACY_NOTICE_VERSION,
+      utmSource: input.utmSource,
+      utmMedium: input.utmMedium,
+      utmCampaign: input.utmCampaign,
+      createdAt: now,
+    })
+    .returning({ id: agentApplications.id });
   return row;
 }
 

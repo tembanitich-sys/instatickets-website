@@ -69,7 +69,7 @@ Migrations are **not** run automatically during the Vercel build. `db:generate` 
 
 All public copy lives in [`content/site.ts`](content/site.ts) (brief Appendix A and B). Components read from it; change wording there and you should not need to touch components. Admin screens use plain functional wording that lives with the admin components.
 
-The privacy notice (`/privacy`) keeps its unconfirmed values in square brackets, for example `[DATE PUBLISHED]`, `[REGISTERED COMPANY NAME]`, `[12]`, `[24]` and `[30]`, and renders them **highlighted** so they cannot be missed. Replace them in `content/site.ts` once confirmed. `/terms` and `/cookies` are COMING SOON placeholders; no legal text has been written.
+The privacy notice (`/privacy`) keeps its unconfirmed values in square brackets, for example `[EXACT REGISTERED NAME]`, `[12]`, `[24]` and `[30]`, and renders them **highlighted** so they cannot be missed. Replace them in `content/site.ts` once confirmed. `/terms` and `/cookies` are COMING SOON placeholders; no legal text has been written.
 
 A test (`tests/content-rules.test.ts`) fails the build if wording breaks the brief's content rules: no payment provider or wallet named, no leadership or "we own inventory" claims, no "integrates automatically" claims, no "coming soon" on Events or Sports, no prices, discounts or testimonials, no personal names or emails, no social accounts, and no raw WhatsApp address shown.
 
@@ -134,7 +134,7 @@ The GET STARTED link is stored in the `site_settings` table (`get_started_url`),
 
 ### Forms
 
-The customer pre-registration (home), business registration (`/for-businesses`) and contact (`/contact`) forms are Next.js server actions in [`src/app/actions.ts`](src/app/actions.ts); the logic is in `src/lib/forms/`. Every submission goes through the same steps, in this order:
+The customer pre-registration (home), business registration (`/for-businesses`), Agent application (`/agents`, table `agent_applications`, a new row every time, notifies `registrations@`) and contact (`/contact`) forms are Next.js server actions in [`src/app/actions.ts`](src/app/actions.ts); the logic is in `src/lib/forms/`. Every submission goes through the same steps, in this order:
 
 1. parse and validate on the server with Zod; phone numbers are checked with `libphonenumber-js` and stored in E.164 (for example `+263771234567`);
 2. rate limit per visitor and form (5 per 10 minutes); the IP is hashed and never stored or logged;
@@ -145,7 +145,7 @@ The customer pre-registration (home), business registration (`/for-businesses`) 
 
 If the database is unavailable the visitor gets an error; a submission is never reported as saved when it was not.
 
-- Marketing consent is never pre-ticked. It is stored as `marketing_consent` plus `marketing_consent_at` (null when not given). The privacy acknowledgement is required and the notice version (`2026-10-pre-launch`) is stored with every record.
+- Marketing consent is never pre-ticked. It is stored as `marketing_consent` plus `marketing_consent_at` (null when not given). The privacy acknowledgement is required and the notice version (`2026-10-01-agents`) is stored with every record.
 - A pre-registration with a phone number already on file updates that record and shows the same success message. The latest submission wins for interests and marketing consent (unticked withdraws consent and clears the timestamp). A blank email never erases one already given; the name and first campaign tags stay as first recorded.
 - Business registrations always insert a new row. The contact form's phone is optional.
 - Campaign tags (`utm_source`, `utm_medium`, `utm_campaign`) from the landing URL are remembered for the tab (session storage) and saved with the form.
@@ -179,6 +179,6 @@ Not linked from the public site, `noindex`, and never cached.
 
 Brand files live in `public/brand/` and are used as supplied. Vector replacements can be dropped into the same folder without code changes.
 
-**`logo-full.png` note:** the supplied file reached the build as a WebP image (1800 x 540, with transparency). At the owner's approval it was saved as `logo-full.png` by a format change only: same 1800 x 540 pixels, no resizing, cropping or recolouring (checked pixel for pixel). It is not the original upload, so replace it with the original PNG if one is available.
+**`logo-full.png` note:** all logos are interim stand-ins; designer versions will replace them later under the same file names. The current file reads "A BULLION TECHNOLOGIES PRODUCT". The supplied file reached the build as a WebP image (1800 x 521 in its current version, with transparency). At the owner's approval it was saved as `logo-full.png` by a format change only: same 1800 x 521 pixels, no resizing, cropping or recolouring (checked pixel for pixel). It is not the original upload, so replace it with the original PNG if one is available.
 
-Files generated from the supplied ones (allowed by the brief): `src/app/icon.png`, `src/app/apple-icon.png` and `public/brand/favicon-192.png` (smaller sizes of `favicon.png`), and `src/app/opengraph-image.png` / `twitter-image.png` (the full logo, scaled and centred on brand navy, never cropped or recoloured).
+Files generated from the supplied ones (allowed by the brief): `src/app/icon.png`, `src/app/apple-icon.png` and `public/brand/favicon-192.png` (smaller sizes of `favicon.png`), and `src/app/opengraph-image.png` / `twitter-image.png` (the full logo, scaled and centred on brand navy, never cropped or recoloured; regenerated from the 1800 x 521 "A BULLION TECHNOLOGIES PRODUCT" logo).

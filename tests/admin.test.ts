@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { eq } from "drizzle-orm";
-import { adminAudit, businessRegistrations, contactEnquiries, customerPreregistrations, siteSettings } from "@/lib/db/schema";
+import { adminAudit, agentApplications, businessRegistrations, contactEnquiries, customerPreregistrations, siteSettings } from "@/lib/db/schema";
 import { writeAudit } from "@/lib/admin/audit";
 import { adminConfigProblem, getAdminConfig } from "@/lib/admin/config";
 import { csvField, toCsv } from "@/lib/admin/csv";
@@ -180,7 +180,7 @@ describe("CSV", () => {
 
 async function seed() {
   const db = await createTestDb();
-  const base = { privacyNoticeVersion: "2026-10-pre-launch" };
+  const base = { privacyNoticeVersion: "2026-10-01-agents" };
   await db.insert(customerPreregistrations).values([
     { ...base, firstName: "Tendai", lastName: "Moyo", phoneE164: "+263771234567", email: "tendai@example.com", interests: ["bus", "events"], createdAt: new Date("2026-10-01T08:00:00Z") },
     { ...base, firstName: "Chipo", lastName: "Ncube", phoneE164: "+263712345678", email: null, interests: ["sports"], createdAt: new Date("2026-10-03T08:00:00Z") },
@@ -188,6 +188,7 @@ async function seed() {
   ]);
   await db.insert(businessRegistrations).values({ ...base, organisationName: "Example Coaches", contactPerson: "A Contact", phoneE164: "+263771111111", email: "ops@example.com", businessType: "bus_operator", offerings: ["bus"], details: "Harare to Bulawayo, 60 seats" });
   await db.insert(contactEnquiries).values({ ...base, name: "A Visitor", email: "v@example.com", phoneE164: null, enquiryType: "general", message: "Hello, is there a route to Mutare?" });
+  await db.insert(agentApplications).values({ ...base, fullName: "Rudo Chikwanha", phoneE164: "+263772222222", applicantType: "individual", province: "Midlands", town: "Gweru", sellingLocation: "market_stall", hasDevice: true });
   return db;
 }
 
@@ -229,6 +230,20 @@ describe("admin lists", () => {
     expect((await listRows(db, TABLES.businesses, { q: "bulawayo" })).total).toBe(1);
     expect((await listRows(db, TABLES.enquiries, { q: "mutare" })).total).toBe(1);
     expect((await listRows(db, TABLES.enquiries, { q: "0771234567" })).total).toBe(0);
+  });
+
+  it("list, search and export agent applications", async () => {
+    const db = await seed();
+    expect((await listRows(db, TABLES.agents, {})).total).toBe(1);
+    expect((await listRows(db, TABLES.agents, { q: "gweru" })).total).toBe(1);
+    expect((await listRows(db, TABLES.agents, { q: "077 222 2222" })).total).toBe(1);
+    expect((await listRows(db, TABLES.agents, { q: "nobody" })).total).toBe(0);
+    const { csv, rows, filename } = await exportTable(db, TABLES.agents, new Date("2026-10-05T10:00:00Z"));
+    expect([rows, filename]).toEqual([1, "instatickets-agents-2026-10-05.csv"]);
+    expect(csv.split("\r\n")[0]).toContain("full_name,phone_e164,email,applicant_type,business_name,province,town,selling_location,has_device");
+    expect(csv).toContain("+263772222222");
+    const audit = await db.select().from(adminAudit);
+    expect(audit.map((a) => a.details)).toContainEqual({ table: "agents", rows: 1 });
   });
 
   it("paginate", async () => {

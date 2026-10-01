@@ -4,7 +4,7 @@ import { requireAdmin } from "@/lib/admin/auth";
 import { TABLES, countRows } from "@/lib/admin/tables";
 import { getDb } from "@/lib/db/client";
 
-const CARDS = ["customers", "businesses", "enquiries"] as const;
+const CARDS = ["customers", "businesses", "agents", "enquiries"] as const;
 
 export default async function AdminOverviewPage() {
   await requireAdmin();
@@ -16,7 +16,7 @@ export default async function AdminOverviewPage() {
       {!counts ? (
         <NoDatabase />
       ) : (
-        <ul className="grid gap-4 sm:grid-cols-3">
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {CARDS.map((slug, i) => (
             <li key={slug}>
               <Link href={`/admin/${slug}`} className="block rounded-2xl bg-white p-6 shadow-md hover:shadow-lg">

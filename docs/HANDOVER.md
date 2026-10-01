@@ -6,9 +6,9 @@ Everything in the brief is built, tested and deployed. What is left is **setup t
 
 | | |
 |---|---|
-| Repository / branch | `tembanitich-sys/instatickets-website`, branch `claude/admiring-allen-96aj86` |
+| Repository / branch | `tembanitich-sys/instatickets-website`, production branch `main` |
 | Preview | https://instatickets-website-git-clau-7a6316-tembanitich-6405s-projects.vercel.app/ |
-| Tests | 95 pass; lint, type check and build clean; Vercel install and build log has no warnings |
+| Tests | 107 pass; lint, type check and build clean; Vercel install and build log has no warnings |
 | Lighthouse (mobile, local) | Performance 96 to 98; Accessibility, Best Practices, SEO 100 |
 | Accessibility (axe, WCAG 2.2 AA) | no violations on any public page |
 | Live forms and admin | **not yet working on Vercel**: they need steps 2 to 4 below |
@@ -56,6 +56,7 @@ In Vercel: **Settings > Environment Variables**, for **Production** (and Preview
   DATABASE_URL="<the Neon connection string>" npm run db:migrate
   ```
   *Check:* it prints `Migrations applied.` Running it again is safe.
+  *New (Agent Network):* migration `0003_agent_applications.sql` creates the `agent_applications` table. If the database already existed, **run this command again** so the new table is created; until then the /agents form cannot store applications.
 - [ ] **Enable Web Analytics:** Vercel project > **Analytics** tab > *Enable*. The script is already on the site. Until you enable it the script returns a 404, which shows up as a console error and costs Lighthouse Best Practices points.
 
 ## 5. Point the domain at Vercel (DNS is at Vertico)
@@ -74,9 +75,9 @@ All in `content/site.ts` (edit, commit, push; no other file needs touching).
 
 **A. The privacy notice still shows highlighted `[brackets]`.** Replace each once confirmed:
 
-- [ ] `[DATE PUBLISHED]`: effective date (`privacy.effectiveDate`).
-- [ ] `[REGISTERED COMPANY NAME]`: in the "Who we are" paragraph.
-- [ ] `[12]`, `[24]`, `[12]`: retention periods in months ("How long we keep it"); the second is for business registrations, the third for contact enquiries.
+- [x] Effective date is set to **1 October 2026** (`privacy.effectiveDate`).
+- [ ] `[EXACT REGISTERED NAME]`: appears **twice** in the "Who we are" paragraph (`privacy.sections`); replace both once the registered name is confirmed.
+- [ ] `[12]`, `[24]`, `[24]`, `[12]`: retention periods in months ("How long we keep it"), in order: customer pre-registrations, business registrations, **Agent applications (new)**, contact enquiries.
 - [ ] `[30]`: days to respond to a data request ("Your choices and rights").
 
 **B. Wording I had to write because the brief has none.** Confirm or replace:
@@ -85,6 +86,12 @@ All in `content/site.ts` (edit, commit, push; no other file needs touching).
 - [ ] Form error messages (`formMessages`), for example "Enter a valid mobile number for the selected country."
 - [ ] The 404 page text (`notFoundPage`), the "Skip to content" link and the "(optional)" label (`ui`).
 - [ ] Admin screen wording (in `src/components/admin/` and `src/app/admin/`); staff-only, low priority.
+
+**A2. Privacy notice changes for the Agent Network.** "What we collect", "Why we use it" and "How long we keep it" now cover Agent applications, and `PRIVACY_NOTICE_VERSION` is now `2026-10-01-agents` (stored with every new record; older rows keep `2026-10-pre-launch`). Check the wording with whoever advises on data protection, and confirm the **[24] months** for Agent applications.
+
+**B2. Agent Network wording to confirm** (all in `content/site.ts`: `home.inPerson`, `agents`, the Help FAQ "How do I become an InstaTickets Agent?"). The site deliberately states **no commission rates, amounts, earnings examples or guaranteed income**, and a test (`tests/content-rules.test.ts`) fails the build if any appear. The form collects no ID numbers, bank details or documents.
+
+**B3. Brand.** All logos are interim stand-ins; designer versions will replace them later under the same file names. `logo-full.png` is now 1800 x 521 and reads "A BULLION TECHNOLOGIES PRODUCT"; if the designer's version has a different height, update `width`/`height` in `Hero.tsx`, regenerate `src/app/opengraph-image.png` and `twitter-image.png`, and the brief's Section 5 table.
 
 **C. Legal pages.** `/terms` and `/cookies` say COMING SOON, as the brief asks, and no legal text was written. The privacy notice says "See the Cookie Policy", which currently says COMING SOON. Decide whether the Cookie Policy must exist before launch (the site itself sets no cookies; the admin session cookie is only set when staff sign in).
 
@@ -96,9 +103,9 @@ On the real domain, once steps 1 to 5 are done:
 
 - [ ] **Pre-register** on the home page with your own number. Expected: "YOU'RE ON THE LIST." A row appears in the admin, and an email arrives at `registrations@`.
 - [ ] **Register again** with the same number written differently (`0771234567` vs `+263771234567`). Expected: the same success message, **still one row**.
-- [ ] **Business form** and **contact form**: each shows its success message, saves a row, and emails the right mailbox (`registrations@` and `info@`).
+- [ ] **Business form**, **Agent form** (`/agents`) and **contact form**: each shows its success message, saves a row, and emails the right mailbox (`registrations@` for business and agents, `info@` for contact). Submitting the Agent form twice gives **two rows**.
 - [ ] **Bad input:** a wrong phone number and a missing privacy tick show field messages and keep what you typed.
-- [ ] **Admin** at `/admin`: sign in; lists show newest first; search finds a number typed as `077 123 4567`; **Export CSV** downloads with `+263...` numbers; the Audit log shows your export and sign-in. Sign out and confirm `/admin` sends you to the sign-in page.
+- [ ] **Admin** at `/admin`: sign in; lists (including **Agents**) show newest first; search finds a number typed as `077 123 4567`; **Export CSV** downloads with `+263...` numbers; the Audit log shows your export and sign-in. Sign out and confirm `/admin` sends you to the sign-in page.
 - [ ] **Wrong password five times** locks you out for 15 minutes (do this last, and expect to wait).
 - [ ] **GET STARTED link:** Admin > Settings: enter an `https://` link, save; view page source or a launched preview to see it in use. **Clear the field to reset it to WhatsApp.**
 - [ ] **Countdown:** matches Harare time (00:00 on 15 November). On a **preview** deployment (not production) open `/?now=2026-11-14T21:59:50Z` and watch it flip to **INSTATICKETS IS NOW LIVE** with a **GET STARTED** button.
@@ -118,6 +125,7 @@ On the real domain, once steps 1 to 5 are done:
 - **Deleting old data.** The privacy notice promises deletion after the retention periods. Nothing deletes records automatically; someone needs to do it (or ask for a scheduled clean-up to be built).
 - **Sending launch messages.** The site stores who ticked marketing consent (`marketing_consent`, with the time). It does not send SMS, WhatsApp or email campaigns.
 - **Turning pre-registrations into accounts.** Numbers are stored in E.164, ready to import, but there is no link to the back office.
+- **Agent appointments.** The site only collects applications (admin > Agents). Review, requirements, terms, agreements and onboarding happen outside the website.
 - **Data requests.** People email `info@instatickets.co.zw` or WhatsApp; someone has to find and delete or correct their row (search the number in the admin; deleting is done in the database).
 
 ## 10. Keeping an eye on it
@@ -142,12 +150,12 @@ On the real domain, once steps 1 to 5 are done:
 
 | | |
 |---|---|
-| Public site | `/`, `/for-businesses`, `/help`, `/contact`, `/privacy`, `/terms`, `/cookies` |
+| Public site | `/`, `/for-businesses`, `/agents`, `/help`, `/contact`, `/privacy`, `/terms`, `/cookies` |
 | Admin | `/admin` (not linked anywhere; bookmark it) |
 | Change wording | `content/site.ts` |
 | Countdown target | `src/lib/countdown.ts`: `2026-11-14T22:00:00Z` |
-| Database tables | `customer_preregistrations`, `business_registrations`, `contact_enquiries`, `site_settings`, `admin_audit` |
-| Notifications go to | customers and businesses: `registrations@instatickets.co.zw`; contact form: `info@instatickets.co.zw` |
+| Database tables | `customer_preregistrations`, `business_registrations`, `agent_applications` (new, migration `0003`), `contact_enquiries`, `site_settings`, `admin_audit` |
+| Notifications go to | customers, businesses and agent applications: `registrations@instatickets.co.zw`; contact form: `info@instatickets.co.zw` |
 | Function region | `cpt1` (Cape Town), set in `vercel.json` |
 | Run locally | `npm install`, `npm run dev`, `npm test` |
 | Create or update tables | `DATABASE_URL=... npm run db:migrate` |
