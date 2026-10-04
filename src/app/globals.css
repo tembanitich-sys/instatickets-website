@@ -58,3 +58,10 @@ body {
   background-repeat: repeat-x;
   height: 6px;
 }
+
+/* A white edge that follows the ticket's silhouette (notches included), so the navy
+   end of the ticket logo stays visible on navy backgrounds. */
+.ticket-edge {
+  filter: drop-shadow(1.5px 0 0 #fff) drop-shadow(-1.5px 0 0 #fff) drop-shadow(0 1.5px 0 #fff)
+    drop-shadow(0 -1.5px 0 #fff) drop-shadow(0 8px 14px rgb(0 0 0 / 0.35));
+}

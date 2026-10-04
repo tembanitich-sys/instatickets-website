@@ -14,7 +14,7 @@ export function Footer() {
               width={1028}
               height={298}
               sizes="160px"
-              className="h-12 w-auto"
+              className="ticket-edge h-12 w-auto"
             />
             <p className="mt-5 text-lg font-extrabold tracking-tight">{footer.tagline}</p>
             <p className="mt-1 text-sm font-semibold text-white/80">{footer.launching}</p>

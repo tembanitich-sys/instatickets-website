@@ -54,7 +54,7 @@ export function Hero({ nowMs, getStartedUrl }: { nowMs: number; getStartedUrl: s
             preload
             fetchPriority="high"
             sizes="(min-width: 1024px) 520px, 240px"
-            className="order-7 mx-auto mt-6 h-auto w-[62vw] max-w-[240px] rounded-xl shadow-2xl lg:order-none lg:mt-0 lg:w-full lg:max-w-[520px] lg:rounded-2xl"
+            className="order-7 mx-auto mt-6 h-auto w-[62vw] max-w-[240px] ticket-edge lg:order-none lg:mt-0 lg:w-full lg:max-w-[520px]"
           />
 
           <div className="order-5 mt-5 w-full max-w-md lg:order-none lg:mt-5 lg:max-w-none">
