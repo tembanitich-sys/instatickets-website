@@ -144,3 +144,15 @@ body {
     transition: none;
   }
 }
+
+/* The Bullion Technologies mark inline in a sentence. The image's baseline is its bottom margin
+   edge, so the -0.45em margins (which keep it from stretching the line) are offset by the
+   vertical-align to centre the mark on the line of text. */
+.bullion-logo {
+  display: inline-block;
+  height: 1.9em;
+  width: auto;
+  vertical-align: -0.1em;
+  margin-block: -0.5em -0.45em;
+  margin-inline: 0.05em;
+}
