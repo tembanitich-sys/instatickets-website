@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { home, nav } from "@content/site";
 import { Countdown } from "../Countdown";
-import { ButtonLink } from "../ui";
+import { ButtonLink, JoinButton } from "../ui";
 
 /**
  * Hero layout.
@@ -37,9 +37,7 @@ export function Hero({ nowMs, getStartedUrl }: { nowMs: number; getStartedUrl: s
           </p>
 
           <div className="order-6 mt-5 flex w-full flex-col items-stretch gap-3 sm:w-auto sm:flex-row sm:items-center lg:mt-7">
-            <ButtonLink href={nav.join.href} variant="primary">
-              {h.primary}
-            </ButtonLink>
+            <JoinButton />
             <ButtonLink href={nav.registerBusiness.href} variant="secondaryOnDark">
               {h.secondary}
             </ButtonLink>

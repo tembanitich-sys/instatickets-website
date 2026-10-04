@@ -30,7 +30,7 @@ import {
 } from "lucide-react";
 import { home, nav } from "@content/site";
 import { CustomerForm } from "../forms/CustomerForm";
-import { ButtonLink, Heading, Perforation, Section } from "../ui";
+import { ButtonLink, Heading, JoinButton, Perforation, Section } from "../ui";
 
 const findIcons: Record<string, LucideIcon> = { bus: Bus, events: Ticket, sports: Trophy };
 const findAccent: Record<string, string> = {
@@ -309,9 +309,7 @@ export function OffersSection() {
       </div>
       <p className="mt-6 text-center text-sm text-muted">{s.note}</p>
       <div className="mt-8 text-center">
-        <ButtonLink href={nav.join.href} variant="primary">
-          {s.button}
-        </ButtonLink>
+        <JoinButton />
       </div>
     </Section>
   );
@@ -325,9 +323,7 @@ export function LaunchSection() {
         <Heading>{s.heading}</Heading>
         <p className="mt-4 text-lg leading-relaxed text-muted">{s.body}</p>
         <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row">
-          <ButtonLink href={nav.join.href} variant="primary">
-            {s.primary}
-          </ButtonLink>
+          <JoinButton />
           <ButtonLink href={nav.registerBusiness.href} variant="primary">
             {s.secondary}
           </ButtonLink>

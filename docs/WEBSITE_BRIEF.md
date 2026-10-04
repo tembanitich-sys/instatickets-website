@@ -61,7 +61,8 @@ Files in `public/brand/`:
 | File | Size | Use |
 |---|---|---|
 | `logo-full.png` | 1800 x 521 px, transparent | Hero |
-| `logo-compact.png` | 1028 x 298 px, transparent | Header and mobile |
+| `logo-plain.png` | 1028 x 224 px, transparent | Header, admin and the JOIN button: the plain InstaTickets wordmark without the ticket outline (page 1 of the final artwork) |
+| `logo-compact.png` | 1028 x 298 px, transparent | Footer (ticket outline, white panel, works on navy) |
 | `favicon.png` | 512 x 512 px, transparent | Favicon, Apple touch icon, web manifest (generate the smaller sizes from it) |
 | `bullion-full.png` | 1157 x 532 px, transparent | Footer, beside "A BULLION TECHNOLOGIES PRODUCT" |
 | `bullion-compact.png` | 771 x 325 px, transparent | Small placements, e.g. next to the gold product line |

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 import { MessageCircle } from "lucide-react";
@@ -24,6 +25,41 @@ export function ButtonLink({
   ...props
 }: ComponentProps<typeof Link> & { variant?: Variant }) {
   return <Link {...props} className={buttonClass(variant, className)} />;
+}
+
+/**
+ * The JOIN INSTATICKETS call to action as a ticket stub: a red "JOIN" end, a
+ * perforation, and the InstaTickets logo on white, so the brand name is the
+ * logo itself and not uppercase text. The accessible name stays the full label.
+ */
+export function JoinButton({ size = "md", className = "" }: { size?: "sm" | "md"; className?: string }) {
+  const sm = size === "sm";
+  return (
+    <Link
+      href={nav.join.href}
+      aria-label={nav.join.label}
+      className={`group inline-flex min-h-11 items-stretch overflow-hidden rounded-full border-2 border-red shadow-sm transition-shadow hover:shadow-md ${className}`}
+    >
+      <span
+        className={`flex items-center bg-red font-bold tracking-wide text-white transition-colors group-hover:bg-red-dark ${
+          sm ? "px-3 text-xs sm:px-5 sm:text-sm" : "px-5 text-sm"
+        }`}
+      >
+        {nav.join.stub}
+      </span>
+      <span aria-hidden className="w-0 self-stretch border-l-2 border-dashed border-white/80" />
+      <span className={`flex flex-1 items-center justify-center bg-white ${sm ? "px-2 sm:px-3" : "px-4"}`}>
+        <Image
+          src="/brand/logo-plain.png"
+          alt=""
+          width={1028}
+          height={224}
+          sizes="120px"
+          className={sm ? "h-3.5 w-auto sm:h-5" : "h-5 w-auto"}
+        />
+      </span>
+    </Link>
+  );
 }
 
 /** In-page WhatsApp button. The wa.me address is never displayed. */

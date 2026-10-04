@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { nav } from "@content/site";
-import { buttonClass } from "./ui";
+import { JoinButton } from "./ui";
 import { MobileMenu } from "./MobileMenu";
 
 export function Header() {
@@ -10,13 +10,13 @@ export function Header() {
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
         <Link href="/" aria-label="InstaTickets home" className="flex shrink-0 items-center">
           <Image
-            src="/brand/logo-compact.png"
+            src="/brand/logo-plain.png"
             alt="InstaTickets"
             width={1028}
-            height={298}
+            height={224}
             loading="eager"
-            sizes="(min-width: 640px) 140px, 112px"
-            className="h-8 w-auto sm:h-10"
+            sizes="(min-width: 640px) 160px, 96px"
+            className="h-5 w-auto sm:h-8"
           />
         </Link>
 
@@ -33,12 +33,7 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link
-            href={nav.join.href}
-            className={buttonClass("primary", "!px-2.5 !py-2 text-xs sm:!px-6 sm:!py-3 sm:text-sm")}
-          >
-            {nav.join.label}
-          </Link>
+          <JoinButton size="sm" />
           <MobileMenu />
         </div>
       </div>

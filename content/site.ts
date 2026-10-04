@@ -40,7 +40,8 @@ export const nav = {
     { label: "Help", href: "/help" },
     { label: "Contact", href: "/contact" },
   ],
-  join: { label: "JOIN INSTATICKETS", href: "/#join" },
+  // The visible button shows `stub` plus the InstaTickets logo; `label` is its accessible name.
+  join: { label: "JOIN INSTATICKETS", stub: "JOIN", href: "/#join" },
   registerBusiness: { label: "REGISTER YOUR BUSINESS", href: "/for-businesses#register" },
   whatsappButton: "CHAT ON WHATSAPP",
 } as const;
