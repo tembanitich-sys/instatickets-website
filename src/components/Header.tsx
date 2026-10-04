@@ -13,10 +13,10 @@ export function Header() {
             src="/brand/logo-compact.png"
             alt="InstaTickets"
             width={1028}
-            height={195}
+            height={298}
             loading="eager"
-            sizes="(min-width: 640px) 170px, 130px"
-            className="h-6 w-auto sm:h-8"
+            sizes="(min-width: 640px) 140px, 112px"
+            className="h-8 w-auto sm:h-10"
           />
         </Link>
 

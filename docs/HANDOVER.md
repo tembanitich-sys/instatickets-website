@@ -86,7 +86,7 @@ All in `content/site.ts` (edit, commit, push; no other file needs touching).
 
 **B2. Agent Network wording to confirm** (all in `content/site.ts`: `home.inPerson`, `agents`, the Help FAQ "How do I become an InstaTickets Agent?"). The site deliberately states **no commission rates, amounts, earnings examples or guaranteed income**, and a test (`tests/content-rules.test.ts`) fails the build if any appear. The form collects no ID numbers, bank details or documents.
 
-**B3. Brand.** All logos are interim stand-ins; designer versions will replace them later under the same file names. `logo-full.png` is now 1800 x 521 and reads "A BULLION TECHNOLOGIES PRODUCT"; if the designer's version has a different height, update `width`/`height` in `Hero.tsx`, regenerate `src/app/opengraph-image.png` and `twitter-image.png`, and the brief's Section 5 table.
+**B3. Brand.** The logos are now the designer's final artwork (`InstaTickets_Logo_Final.pdf`), rendered to the same file names in `public/brand/` and recoloured to the site palette. Two derived files to approve: `favicon.png` is an "IT" monogram built from the PDF's own letter shapes (the PDF has no square mark), and the Bullion files are a crop of the mark from page 6. `logo-compact.png` is now 1028 x 298 (taller than before). If the designer supplies a square favicon or standalone Bullion logo, replace the files under the same names; if sizes differ, update `width`/`height` in `Header.tsx`, `Footer.tsx`, `Hero.tsx`, `AdminShell.tsx` and regenerate `src/app/opengraph-image.png` / `twitter-image.png`.
 
 **C. Legal pages.** `/terms` and `/cookies` say COMING SOON, as the brief asks, and no legal text was written. The privacy notice says "See the Cookie Policy", which currently says COMING SOON. Decide whether the Cookie Policy must exist before launch (the site itself sets no cookies; the admin session cookie is only set when staff sign in).
 
@@ -134,7 +134,6 @@ On the real domain, once steps 1 to 5 are done:
 
 - **Content Security Policy allows inline scripts.** A stricter nonce-based policy would make every page render per request and remove the fast static home page. The site renders no user-supplied HTML, so the risk is low; the README explains it.
 - **Without Upstash,** the admin lockout and form rate limits are kept per server in memory, so a determined attacker gets more attempts. Set Upstash before relying on them.
-- **`logo-full.png` is not the original file.** It reached the build as a WebP; it was saved as a PNG with identical pixels (approved). Replace it with the original PNG if you have it; nothing else needs to change.
 - **Excel drops the `+`** from phone numbers when it opens a CSV directly. Import the column as Text (README explains).
 - **`x-robots-tag: noindex`** on the `vercel.json` preview address is Vercel's own; it will not apply on `www.instatickets.co.zw`.
 - **Notification emails are plain text** with fixed subjects (a deliberate safety choice).

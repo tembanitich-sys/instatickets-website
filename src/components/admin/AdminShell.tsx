@@ -19,7 +19,7 @@ export function AdminShell({ active, title, children }: { active: string; title:
     <>
       <header className="border-b border-line bg-white">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3 sm:px-6">
-          <Image src="/brand/logo-compact.png" alt="InstaTickets" width={1028} height={195} sizes="150px" className="h-7 w-auto" />
+          <Image src="/brand/logo-compact.png" alt="InstaTickets" width={1028} height={298} sizes="130px" className="h-9 w-auto" />
           <span className="text-sm font-bold uppercase tracking-widest text-muted">Admin</span>
           <nav aria-label="Admin" className="flex flex-1 flex-wrap gap-1">
             {NAV.map((n) => (

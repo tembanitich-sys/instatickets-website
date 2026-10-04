@@ -8,17 +8,14 @@ export function Footer() {
       <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1.2fr]">
           <div>
-            {/* The compact logo is dark-on-light artwork, so it sits on a white chip. */}
-            <span className="inline-block rounded-lg bg-white px-3 py-2">
-              <Image
-                src="/brand/logo-compact.png"
-                alt="InstaTickets"
-                width={1028}
-                height={195}
-                sizes="160px"
-                className="h-8 w-auto"
-              />
-            </span>
+            <Image
+              src="/brand/logo-compact.png"
+              alt="InstaTickets"
+              width={1028}
+              height={298}
+              sizes="160px"
+              className="h-12 w-auto"
+            />
             <p className="mt-5 text-lg font-extrabold tracking-tight">{footer.tagline}</p>
             <p className="mt-1 text-sm font-semibold text-white/80">{footer.launching}</p>
             <a
