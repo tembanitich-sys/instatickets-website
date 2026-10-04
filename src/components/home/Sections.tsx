@@ -29,6 +29,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { home, nav } from "@content/site";
+import { brand } from "../Brand";
 import { CustomerForm } from "../forms/CustomerForm";
 import { ButtonLink, Heading, JoinButton, Perforation, Section } from "../ui";
 
@@ -57,7 +58,7 @@ export function FindSection() {
               </span>
               <Perforation className="my-5 text-line" />
               <h3 className="text-xl font-extrabold tracking-wide text-navy">{c.title}</h3>
-              <p className="mt-2 leading-relaxed text-muted">{c.body}</p>
+              <p className="mt-2 leading-relaxed text-muted">{brand(c.body)}</p>
             </article>
           );
         })}
@@ -73,14 +74,14 @@ export function BusSection() {
       <div className="grid items-center gap-10 lg:grid-cols-2">
         <div>
           <Heading>{s.heading}</Heading>
-          <p className="mt-4 text-lg leading-relaxed text-muted">{s.body}</p>
+          <p className="mt-4 text-lg leading-relaxed text-muted">{brand(s.body)}</p>
           <div className="mt-6">
             <ButtonLink href={nav.join.href} variant="secondary">
               {s.button}
             </ButtonLink>
           </div>
           <p className="mt-6 text-muted">
-            {s.operators}{" "}
+            {brand(s.operators)}{" "}
             <Link href={nav.registerBusiness.href} className="font-bold text-navy underline">
               {s.operatorsLink}
             </Link>
@@ -132,8 +133,8 @@ export function EventsSection() {
         </div>
         <div className="order-1 lg:order-2">
           <Heading>{s.heading}</Heading>
-          <p className="mt-4 text-lg leading-relaxed text-muted">{s.body}</p>
-          <p className="mt-4 leading-relaxed text-muted">{s.organisers}</p>
+          <p className="mt-4 text-lg leading-relaxed text-muted">{brand(s.body)}</p>
+          <p className="mt-4 leading-relaxed text-muted">{brand(s.organisers)}</p>
           <div className="mt-6">
             <ButtonLink href={nav.registerBusiness.href} variant="secondary">
               {s.button}
@@ -163,8 +164,8 @@ export function SportsSection() {
       <div className="grid items-center gap-10 lg:grid-cols-2">
         <div>
           <Heading>{s.heading}</Heading>
-          <p className="mt-4 text-lg leading-relaxed text-muted">{s.body}</p>
-          <p className="mt-4 leading-relaxed text-muted">{s.organisations}</p>
+          <p className="mt-4 text-lg leading-relaxed text-muted">{brand(s.body)}</p>
+          <p className="mt-4 leading-relaxed text-muted">{brand(s.organisations)}</p>
           <div className="mt-6">
             <ButtonLink href={nav.registerBusiness.href} variant="secondary">
               {s.button}
@@ -212,7 +213,7 @@ export function HowSection() {
                 <span className="text-sm font-bold text-muted">0{i + 1}</span>
               </div>
               <h4 className="mt-3 text-lg font-extrabold tracking-wide text-navy">{step.title}</h4>
-              <p className="mt-1 text-muted">{step.body}</p>
+              <p className="mt-1 text-muted">{brand(step.body)}</p>
             </li>
           );
         })}
@@ -235,7 +236,7 @@ export function HowSection() {
           );
         })}
       </ol>
-      <p className="mt-4 max-w-3xl leading-relaxed text-muted">{s.businessesNote}</p>
+      <p className="mt-4 max-w-3xl leading-relaxed text-muted">{brand(s.businessesNote)}</p>
     </Section>
   );
 }
@@ -247,7 +248,7 @@ export function PreregisterSection() {
       <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-start">
         <div>
           <Heading>{s.heading}</Heading>
-          <p className="mt-4 text-lg leading-relaxed text-muted">{s.body}</p>
+          <p className="mt-4 text-lg leading-relaxed text-muted">{brand(s.body)}</p>
         </div>
         <div className="rounded-3xl border border-line bg-white p-6 shadow-xl sm:p-8">
           <CustomerForm />
@@ -266,14 +267,14 @@ export function InPersonSection() {
       <div className="grid items-center gap-10 lg:grid-cols-2">
         <div>
           <Heading>{s.heading}</Heading>
-          <p className="mt-4 text-lg leading-relaxed text-muted">{s.body}</p>
+          <p className="mt-4 text-lg leading-relaxed text-muted">{brand(s.body)}</p>
         </div>
         <div className="rounded-3xl bg-navy p-6 text-white shadow-xl sm:p-8 on-navy">
           <span className="inline-flex size-12 items-center justify-center rounded-xl bg-white text-navy">
             <Store aria-hidden className="size-6" />
           </span>
-          <h3 className="mt-4 text-xl font-extrabold tracking-wide">{s.subHeading}</h3>
-          <p className="mt-2 leading-relaxed text-white/90">{s.subBody}</p>
+          <h3 className="mt-4 text-xl font-extrabold tracking-wide">{brand(s.subHeading)}</h3>
+          <p className="mt-2 leading-relaxed text-white/90">{brand(s.subBody)}</p>
           <div className="mt-6">
             <ButtonLink href="/agents" variant="primary">
               {s.button}
@@ -291,7 +292,7 @@ export function OffersSection() {
     <Section tone="mist">
       <div className="mx-auto max-w-3xl text-center">
         <Heading>{s.heading}</Heading>
-        <p className="mt-4 text-lg leading-relaxed text-muted">{s.body}</p>
+        <p className="mt-4 text-lg leading-relaxed text-muted">{brand(s.body)}</p>
       </div>
       <div className="mt-10 grid gap-6 md:grid-cols-3">
         {s.cards.map((c) => {
@@ -302,12 +303,12 @@ export function OffersSection() {
                 <Icon aria-hidden className="size-6" />
               </span>
               <h3 className="mt-4 text-lg font-extrabold tracking-wide text-navy">{c.title}</h3>
-              <p className="mt-2 leading-relaxed text-muted">{c.body}</p>
+              <p className="mt-2 leading-relaxed text-muted">{brand(c.body)}</p>
             </article>
           );
         })}
       </div>
-      <p className="mt-6 text-center text-sm text-muted">{s.note}</p>
+      <p className="mt-6 text-center text-sm text-muted">{brand(s.note)}</p>
       <div className="mt-8 text-center">
         <JoinButton />
       </div>
@@ -321,7 +322,7 @@ export function LaunchSection() {
     <Section>
       <div className="mx-auto max-w-3xl text-center">
         <Heading>{s.heading}</Heading>
-        <p className="mt-4 text-lg leading-relaxed text-muted">{s.body}</p>
+        <p className="mt-4 text-lg leading-relaxed text-muted">{brand(s.body)}</p>
         <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row">
           <JoinButton />
           <ButtonLink href={nav.registerBusiness.href} variant="primary">
@@ -341,7 +342,7 @@ export function AboutSection() {
         <Heading>{s.heading}</Heading>
         {s.body.map((p) => (
           <p key={p} className="mt-4 text-lg leading-relaxed text-muted">
-            {p}
+            {brand(p)}
           </p>
         ))}
       </div>

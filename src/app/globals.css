@@ -65,3 +65,75 @@ body {
   filter: drop-shadow(1.5px 0 0 #fff) drop-shadow(-1.5px 0 0 #fff) drop-shadow(0 1.5px 0 #fff)
     drop-shadow(0 -1.5px 0 #fff) drop-shadow(0 8px 14px rgb(0 0 0 / 0.35));
 }
+
+/* The brand name is shown as the logo. Colour on light backgrounds, white on navy/red.
+   The nearest .on-navy / .on-light ancestor decides (custom properties inherit). */
+:root {
+  --bc: inline-block;
+  --bw: none;
+}
+.on-navy {
+  --bc: none;
+  --bw: inline-block;
+}
+.on-light {
+  --bc: inline-block;
+  --bw: none;
+}
+.brand-inline {
+  white-space: nowrap;
+}
+.brand-logo {
+  height: 1.05em;
+  width: auto;
+  vertical-align: -0.2em;
+  margin-inline: 0.08em;
+}
+.brand-color {
+  display: var(--bc);
+}
+.brand-white {
+  display: var(--bw);
+}
+/* Buttons flip their own background on hover, so the logo flips with it. */
+.btn-secondary:hover {
+  --bc: none;
+  --bw: inline-block;
+}
+.btn-ondark:hover {
+  --bc: inline-block;
+  --bw: none;
+}
+
+/* Top menu: on hover or keyboard focus the pill fills with the ticket gradient (navy to red)
+   and the text turns white. The gradient is a layer that fades in, because gradients
+   themselves cannot be transitioned. */
+.nav-link {
+  position: relative;
+  isolation: isolate;
+  transition: color 0.25s ease;
+}
+.nav-link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--color-navy), var(--color-red));
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.nav-link:hover,
+.nav-link:focus-visible {
+  color: #fff;
+}
+.nav-link:hover::before,
+.nav-link:focus-visible::before {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-link,
+  .nav-link::before {
+    transition: none;
+  }
+}

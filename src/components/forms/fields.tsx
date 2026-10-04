@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useFormStatus } from "react-dom";
 import { useEffect, useRef, type ComponentProps, type ReactNode } from "react";
 import { ui } from "@content/site";
+import { brand } from "../Brand";
 import { COUNTRY_CALLING_CODES } from "@/lib/countries.generated";
 
 const controlClass =
@@ -42,7 +43,7 @@ export function Field({
   return (
     <div>
       <label htmlFor={htmlFor} className="mb-1.5 block text-sm font-bold text-navy">
-        {label}
+        {brand(label)}
         {required && (
           <span aria-hidden className="text-red">
             {" "}
@@ -110,7 +111,7 @@ export function Checkbox({
         className="mt-0.5 size-5 shrink-0 accent-navy"
         {...aria}
       />
-      <span>{children}</span>
+      <span>{typeof children === "string" ? brand(children) : children}</span>
     </label>
   );
 }
@@ -133,7 +134,7 @@ export function CheckboxGroup({
   return (
     <fieldset>
       <legend className="mb-1 text-sm font-bold text-navy">
-        {legend}
+        {brand(legend)}
         {optional && <span className="ml-1 font-medium text-muted">{ui.optional}</span>}
       </legend>
       <div className="flex flex-wrap gap-x-6">
@@ -170,7 +171,7 @@ export function RadioGroup({
 }) {
   return (
     <fieldset>
-      <legend className="mb-1 text-sm font-bold text-navy">{legend}</legend>
+      <legend className="mb-1 text-sm font-bold text-navy">{brand(legend)}</legend>
       <div className="flex flex-wrap gap-x-6">
         {options.map((o) => (
           <label key={o.value} htmlFor={`${name}-${o.value}`} className="flex min-h-11 cursor-pointer items-center gap-3 text-sm">
@@ -211,7 +212,7 @@ export function PrivacyCheckbox({
   return (
     <div>
       <Checkbox id={id} name="privacyAccepted" required defaultChecked={defaultChecked} {...errProps("privacyAccepted", error)}>
-        {prefix}{" "}
+        {brand(prefix)}{" "}
         <Link href="/privacy" className="font-semibold text-navy underline">
           {link}
         </Link>
@@ -305,8 +306,8 @@ export function SuccessPanel({ heading, body }: { heading: string; body: string 
   useEffect(() => ref.current?.focus(), []);
   return (
     <div ref={ref} tabIndex={-1} role="status" className="rounded-2xl bg-mist p-6 outline-none">
-      <p className="text-2xl font-extrabold tracking-tight text-navy">{heading}</p>
-      <p className="mt-3 leading-relaxed text-ink">{body}</p>
+      <p className="text-2xl font-extrabold tracking-tight text-navy">{brand(heading)}</p>
+      <p className="mt-3 leading-relaxed text-ink">{brand(body)}</p>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { home, nav } from "@content/site";
+import { brand } from "../Brand";
 import { Countdown } from "../Countdown";
 import { ButtonLink, JoinButton } from "../ui";
 
@@ -30,7 +31,7 @@ export function Hero({ nowMs, getStartedUrl }: { nowMs: number; getStartedUrl: s
             {h.headline}
           </h1>
 
-          <p className="order-3 mt-3 max-w-xl text-base text-white/90 sm:text-lg lg:mt-4">{h.subheading}</p>
+          <p className="order-3 mt-3 max-w-xl text-base text-white/90 sm:text-lg lg:mt-4">{brand(h.subheading)}</p>
 
           <p className="order-4 mt-3 text-xs font-bold tracking-[0.3em] sm:text-sm lg:mt-5">
             {h.categories.join(" | ")}

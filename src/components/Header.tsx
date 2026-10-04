@@ -25,7 +25,7 @@ export function Header() {
             <Link
               key={l.label}
               href={l.href}
-              className="inline-flex min-h-11 items-center rounded-full px-3 text-sm font-semibold text-navy hover:bg-mist"
+              className="nav-link inline-flex min-h-11 items-center rounded-full px-3 text-sm font-semibold text-navy"
             >
               {l.label}
             </Link>

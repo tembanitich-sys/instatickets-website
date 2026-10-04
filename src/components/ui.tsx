@@ -3,16 +3,18 @@ import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 import { MessageCircle } from "lucide-react";
 import { contact, nav } from "@content/site";
+import { brand } from "./Brand";
 
 type Variant = "primary" | "secondary" | "secondaryOnDark";
 
 const base =
   "inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-6 py-3 text-center text-sm font-bold tracking-wide transition-colors";
 
+// on-navy / on-light / btn-* tell the brand logo (see Brand.tsx) which colour version to show.
 const variants: Record<Variant, string> = {
-  primary: "bg-red text-white shadow-sm hover:bg-red-dark",
-  secondary: "border-2 border-navy bg-white text-navy hover:bg-navy hover:text-white",
-  secondaryOnDark: "border-2 border-white bg-transparent text-white hover:bg-white hover:text-navy",
+  primary: "on-navy bg-red text-white shadow-sm hover:bg-red-dark",
+  secondary: "on-light btn-secondary border-2 border-navy bg-white text-navy hover:bg-navy hover:text-white",
+  secondaryOnDark: "on-navy btn-ondark border-2 border-white bg-transparent text-white hover:bg-white hover:text-navy",
 };
 
 export function buttonClass(variant: Variant = "secondary", extra = "") {
@@ -24,7 +26,12 @@ export function ButtonLink({
   className = "",
   ...props
 }: ComponentProps<typeof Link> & { variant?: Variant }) {
-  return <Link {...props} className={buttonClass(variant, className)} />;
+  const { children, ...rest } = props;
+  return (
+    <Link {...rest} className={buttonClass(variant, className)}>
+      {typeof children === "string" ? brand(children) : children}
+    </Link>
+  );
 }
 
 /**
@@ -117,7 +124,7 @@ export function Heading({
 }) {
   return (
     <Tag className={`text-balance text-3xl font-extrabold tracking-tight sm:text-4xl ${className}`}>
-      {children}
+      {typeof children === "string" ? brand(children) : children}
     </Tag>
   );
 }

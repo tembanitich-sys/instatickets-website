@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Check, Coins, GraduationCap, Layers, Store } from "lucide-react";
 import { agents as t } from "@content/site";
+import { brand } from "@/components/Brand";
 import { AgentForm } from "@/components/forms/AgentForm";
 import { ButtonLink, Heading, PageIntro, Section } from "@/components/ui";
 
@@ -17,10 +18,10 @@ export default function AgentsPage() {
     <>
       <PageIntro>
         <h1 className="max-w-3xl text-balance text-4xl font-extrabold tracking-tight sm:text-5xl">
-          {t.hero.headline}
+          {brand(t.hero.headline)}
         </h1>
-        <p className="mt-3 text-xl font-bold text-white/95">{t.hero.subheadline}</p>
-        <p className="mt-4 max-w-2xl text-lg text-white/90">{t.hero.body}</p>
+        <p className="mt-3 text-xl font-bold text-white/95">{brand(t.hero.subheadline)}</p>
+        <p className="mt-4 max-w-2xl text-lg text-white/90">{brand(t.hero.body)}</p>
         <div className="mt-8">
           <ButtonLink href="#apply" variant="primary">
             {t.hero.button}
@@ -76,7 +77,7 @@ export default function AgentsPage() {
             </ol>
           </div>
         </div>
-        <p className="mt-10 max-w-3xl leading-relaxed text-muted">{t.note}</p>
+        <p className="mt-10 max-w-3xl leading-relaxed text-muted">{brand(t.note)}</p>
       </Section>
 
       <Section id="apply" tone="mist">

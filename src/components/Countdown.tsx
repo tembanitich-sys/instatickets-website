@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { countdown as t } from "@content/site";
 import { estimateClockOffset, getTimeLeft, isPreviewAllowed, parsePreviewNow } from "@/lib/countdown";
+import { brand } from "./Brand";
 import { buttonClass } from "./ui";
 
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -67,7 +68,7 @@ export function Countdown({ initialNowMs, getStartedUrl }: { initialNowMs: numbe
   if (left.launched) {
     return (
       <div className="rounded-3xl bg-white/10 p-5 text-center ring-1 ring-white/20 sm:p-6">
-        <p className="text-2xl font-extrabold tracking-tight sm:text-3xl">{t.liveHeading}</p>
+        <p className="text-2xl font-extrabold tracking-tight sm:text-3xl">{brand(t.liveHeading)}</p>
         <a
           href={getStartedUrl}
           target="_blank"

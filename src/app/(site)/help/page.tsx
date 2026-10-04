@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { ChevronDown } from "lucide-react";
 import { contact, help } from "@content/site";
+import { brand } from "@/components/Brand";
 import { PageIntro, Section, WhatsAppButton } from "@/components/ui";
 
 export const metadata: Metadata = { title: "Help", alternates: { canonical: "/help" } };
@@ -44,11 +45,11 @@ export default function HelpPage() {
             {help.faq.map((item, i) => (
               <details key={item.q} className="group p-5">
                 <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 text-lg font-bold text-navy">
-                  {item.q}
+                  <span>{brand(item.q)}</span>
                   <ChevronDown aria-hidden className="size-5 shrink-0 transition-transform group-open:rotate-180" />
                 </summary>
                 <p className="mt-2 leading-relaxed text-muted">
-                  {i === last ? withHelpLinks(item.a) : item.a}
+                  {i === last ? withHelpLinks(item.a) : brand(item.a)}
                 </p>
               </details>
             ))}

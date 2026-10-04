@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { contact, footer } from "@content/site";
+import { brand } from "./Brand";
 
 export function Footer() {
   return (
@@ -38,7 +39,7 @@ export function Footer() {
                       href={l.href}
                       className="flex min-h-11 items-center text-sm font-semibold text-white/90 hover:text-white hover:underline"
                     >
-                      {l.label}
+                      <span>{brand(l.label)}</span>
                     </Link>
                   </li>
                 ))}
@@ -62,7 +63,7 @@ export function Footer() {
             </span>
             <div>
               <p className="text-sm font-extrabold tracking-wider text-gold">{footer.bullionLine}</p>
-              <p className="mt-1 text-sm text-white/90">{footer.bullionText}</p>
+              <p className="mt-1 text-sm text-white/90">{brand(footer.bullionText)}</p>
             </div>
           </div>
 
@@ -93,7 +94,7 @@ export function Footer() {
             </ul>
             <p className="mt-1 leading-relaxed">{contact.address.line}</p>
           </address>
-          <p className="mt-4 text-sm text-white/80">{footer.copyright}</p>
+          <p className="mt-4 text-sm text-white/80">{brand(footer.copyright)}</p>
         </div>
       </div>
     </footer>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { privacy, ui } from "@content/site";
+import { brand } from "@/components/Brand";
 import { PageIntro, Section } from "@/components/ui";
 
 export const metadata: Metadata = { title: "Pre-Launch Privacy Notice", alternates: { canonical: "/privacy" } };
@@ -13,7 +14,7 @@ function withBrackets(text: string): ReactNode[] {
         {part}
       </mark>
     ) : (
-      part
+      <span key={i}>{brand(part)}</span>
     ),
   );
 }
@@ -22,12 +23,12 @@ export default function PrivacyPage() {
   return (
     <>
       <PageIntro>
-        <h1 className="max-w-3xl text-3xl font-extrabold tracking-tight sm:text-4xl">{privacy.title}</h1>
+        <h1 className="max-w-3xl text-3xl font-extrabold tracking-tight sm:text-4xl">{brand(privacy.title)}</h1>
         <p className="mt-4 text-white/90">{ui.effectiveDate} {withBrackets(privacy.effectiveDate)}</p>
       </PageIntro>
       <Section>
         <article className="mx-auto max-w-3xl">
-          <p className="text-lg leading-relaxed">{privacy.intro}</p>
+          <p className="text-lg leading-relaxed">{brand(privacy.intro)}</p>
           {privacy.sections.map((s) => (
             <section key={s.heading} className="mt-10">
               <h2 className="text-2xl font-extrabold text-navy">{s.heading}</h2>
@@ -40,7 +41,7 @@ export default function PrivacyPage() {
               {"bullets" in s && (
                 <ul className="mt-3 list-disc space-y-2 pl-6 leading-relaxed">
                   {s.bullets.map((b) => (
-                    <li key={b}>{b}</li>
+                    <li key={b}>{brand(b)}</li>
                   ))}
                 </ul>
               )}

@@ -9,12 +9,14 @@ describe("Countdown (server-rendered first value)", () => {
   it("shows the four units before launch", () => {
     const html = renderToString(<Countdown initialNowMs={LAUNCH_AT_MS - 1000} getStartedUrl={url} />);
     for (const label of ["DAYS", "HOURS", "MINUTES", "SECONDS"]) expect(html).toContain(label);
-    expect(html).not.toContain("INSTATICKETS IS NOW LIVE");
+    expect(html).not.toContain("IS NOW LIVE");
   });
 
-  it("shows INSTATICKETS IS NOW LIVE and a GET STARTED link from the launch instant", () => {
+  it("shows the logo, IS NOW LIVE and a GET STARTED link from the launch instant", () => {
     const html = renderToString(<Countdown initialNowMs={LAUNCH_AT_MS} getStartedUrl={url} />);
-    expect(html).toContain("INSTATICKETS IS NOW LIVE");
+    // The brand name is the logo (alt text "InstaTickets"), not plain text.
+    expect(html).toContain('alt="InstaTickets"');
+    expect(html).toContain("IS NOW LIVE");
     expect(html).toContain("GET STARTED");
     expect(html).toContain(`href="${url}"`);
     expect(html).not.toContain("SECONDS");
