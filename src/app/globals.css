@@ -84,10 +84,17 @@ body {
   white-space: nowrap;
 }
 .brand-logo {
-  height: 1.05em;
+  /* The wordmark's lettering sits in the top ~63% of the image and the swoosh hangs below it.
+     Sizing and shifting by those fractions puts the lettering on the text baseline, like a
+     word in the sentence, with the swoosh acting as a descender. */
+  height: 1.2em;
   width: auto;
-  vertical-align: -0.2em;
-  margin-inline: 0.08em;
+  /* An image's baseline is its bottom margin edge, so the -0.4em bottom margin (which keeps the
+     logo from stretching the line) is cancelled out: the image bottom ends up 0.44em below
+     the baseline, which puts the lettering on it. */
+  vertical-align: -0.04em;
+  margin-block: -0.5em -0.4em;
+  margin-inline: -0.04em 0.02em;
 }
 .brand-color {
   display: var(--bc);
