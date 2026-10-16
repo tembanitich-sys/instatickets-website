@@ -1,23 +1,10 @@
 import type { Metadata } from "next";
-import type { ReactNode } from "react";
 import { privacy, ui } from "@content/site";
 import { brand } from "@/components/Brand";
+import { withBrackets } from "@/components/Bracketed";
 import { PageIntro, Section } from "@/components/ui";
 
-export const metadata: Metadata = { title: "Pre-Launch Privacy Notice", alternates: { canonical: "/privacy" } };
-
-/** Renders unconfirmed [BRACKETED] values highlighted so they cannot be missed. */
-function withBrackets(text: string): ReactNode[] {
-  return text.split(/(\[[^\]]+\])/g).map((part, i) =>
-    /^\[[^\]]+\]$/.test(part) ? (
-      <mark key={i} className="rounded bg-yellow-200 px-1 font-bold text-ink">
-        {part}
-      </mark>
-    ) : (
-      <span key={i}>{brand(part)}</span>
-    ),
-  );
-}
+export const metadata: Metadata = { title: "Privacy Notice", alternates: { canonical: "/privacy" } };
 
 export default function PrivacyPage() {
   return (

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ChevronDown } from "lucide-react";
+import { partnerVisible } from "@content/facts";
 import { contact, help } from "@content/site";
 import { brand } from "@/components/Brand";
 import { PageIntro, Section, WhatsAppButton } from "@/components/ui";
@@ -49,7 +50,9 @@ export default function HelpPage() {
                   <ChevronDown aria-hidden className="size-5 shrink-0 transition-transform group-open:rotate-180" />
                 </summary>
                 <p className="mt-2 leading-relaxed text-muted">
-                  {i === last ? withHelpLinks(item.a) : brand(item.a)}
+                  {i === last
+                    ? withHelpLinks(item.a)
+                    : brand("aPartner" in item && partnerVisible("ecocash") ? item.aPartner : item.a)}
                 </p>
               </details>
             ))}

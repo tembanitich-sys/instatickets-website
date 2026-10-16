@@ -5,13 +5,16 @@ import {
   Car,
   ClipboardList,
   Dumbbell,
-  Gift,
-  Hourglass,
-  BellRing,
   Footprints,
   ListChecks,
   Megaphone,
+  Globe,
+  Hash,
+  MapPin,
+  MessageCircle,
+  Smartphone,
   Store,
+  Wallet,
   Music,
   PartyPopper,
   Plug,
@@ -28,10 +31,11 @@ import {
   Users,
   type LucideIcon,
 } from "lucide-react";
+import Image from "next/image";
+import { appStoreUrl, bookingUrl, facts, partnerVisible, playStoreUrl, type PartnerKey } from "@content/facts";
 import { home, nav } from "@content/site";
 import { brand } from "../Brand";
-import { CustomerForm } from "../forms/CustomerForm";
-import { ButtonLink, Heading, JoinButton, Perforation, Section } from "../ui";
+import { BookButton, ButtonLink, Heading, Perforation, Section } from "../ui";
 
 const findIcons: Record<string, LucideIcon> = { bus: Bus, events: Ticket, sports: Trophy };
 const findAccent: Record<string, string> = {
@@ -43,7 +47,7 @@ const findAccent: Record<string, string> = {
 export function FindSection() {
   const s = home.find;
   return (
-    <Section tone="mist">
+    <Section id="tickets" tone="mist">
       <Heading className="text-center">{s.heading}</Heading>
       <div className="mt-10 grid gap-6 md:grid-cols-3">
         {s.cards.map((c) => {
@@ -76,7 +80,7 @@ export function BusSection() {
           <Heading>{s.heading}</Heading>
           <p className="mt-4 text-lg leading-relaxed text-muted">{brand(s.body)}</p>
           <div className="mt-6">
-            <ButtonLink href={nav.join.href} variant="secondary">
+            <ButtonLink href={bookingUrl} variant="secondary">
               {s.button}
             </ButtonLink>
           </div>
@@ -241,35 +245,122 @@ export function HowSection() {
   );
 }
 
-export function PreregisterSection() {
-  const s = home.preregister;
+const channelIcons: Record<string, LucideIcon> = {
+  ecocashApp: Wallet,
+  app: Smartphone,
+  web: Globe,
+  whatsapp: MessageCircle,
+  ussd: Hash,
+  agents: Store,
+};
+
+type Channel = { key: string; partner?: string };
+
+/** A channel shows unless it is switched off, or it needs a partner that has not approved the site. */
+function visibleChannel(c: Channel): boolean {
+  const status = facts.channels[c.key as keyof typeof facts.channels];
+  if (status === "hidden") return false;
+  return !c.partner || partnerVisible(c.partner as PartnerKey);
+}
+
+export function ChannelsSection() {
+  const s = home.channels;
+  const cards = s.cards.filter(visibleChannel);
+  const showEcoCash = partnerVisible("ecocash");
   return (
-    <Section id="join">
-      <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-start">
-        <div>
-          <Heading>{s.heading}</Heading>
-          <p className="mt-4 text-lg leading-relaxed text-muted">{brand(s.body)}</p>
-        </div>
-        <div className="rounded-3xl border border-line bg-white p-6 shadow-xl sm:p-8">
-          <CustomerForm />
-        </div>
+    <Section id="how-to-buy">
+      <div className="mx-auto max-w-3xl text-center">
+        <Heading>{s.heading}</Heading>
+        <p className="mt-4 text-lg leading-relaxed text-muted">{brand(s.body)}</p>
       </div>
+
+      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {cards.map((c) => {
+          const Icon = channelIcons[c.key];
+          const soon = facts.channels[c.key as keyof typeof facts.channels] === "soon";
+          return (
+            <article key={c.key} className="relative flex flex-col rounded-2xl border border-line bg-white p-6 shadow-sm">
+              <span className="inline-flex size-12 items-center justify-center rounded-xl bg-navy text-white">
+                <Icon aria-hidden className="size-6" />
+              </span>
+              {soon && (
+                <span className="absolute right-4 top-4 rounded-full bg-mist px-3 py-1 text-xs font-extrabold tracking-wider text-navy">
+                  {s.soon}
+                </span>
+              )}
+              <h3 className="mt-4 text-lg font-extrabold tracking-wide text-navy">{brand(c.title)}</h3>
+              <p className="mt-2 leading-relaxed text-muted">{brand(c.body)}</p>
+            </article>
+          );
+        })}
+      </div>
+
+      <p className="mt-6 text-center text-sm text-muted">{brand(s.ticketNote)}</p>
+
+      {(showEcoCash || appStoreUrl || playStoreUrl) && (
+        <div className={`mt-10 grid gap-6 ${showEcoCash && (appStoreUrl || playStoreUrl) ? "md:grid-cols-2" : ""}`}>
+          {showEcoCash && (
+            <div className="flex flex-col items-start gap-4 rounded-2xl bg-mist p-6">
+              <p className="text-xs font-extrabold uppercase tracking-[0.25em] text-red">{s.payLabel}</p>
+              <Image
+                src="/brand/partners/ecocash.png"
+                alt="EcoCash"
+                width={2000}
+                height={389}
+                sizes="180px"
+                className="h-9 w-auto"
+              />
+              <div>
+                <h3 className="text-lg font-extrabold text-navy">{s.payHeading}</h3>
+                <p className="mt-1 leading-relaxed text-muted">{brand(s.payBody)}</p>
+              </div>
+            </div>
+          )}
+          {(appStoreUrl || playStoreUrl) && (
+            <div className="flex flex-col items-start gap-4 rounded-2xl bg-mist p-6">
+              <h3 className="text-lg font-extrabold text-navy">{s.storeHeading}</h3>
+              <div className="flex flex-wrap gap-3">
+                {appStoreUrl && (
+                  <ButtonLink href={appStoreUrl} variant="secondary">
+                    {s.appStore}
+                  </ButtonLink>
+                )}
+                {playStoreUrl && (
+                  <ButtonLink href={playStoreUrl} variant="secondary">
+                    {s.playStore}
+                  </ButtonLink>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </Section>
   );
 }
 
-const benefitIcons: Record<string, LucideIcon> = { access: Hourglass, offers: Gift, updates: BellRing };
-
 export function InPersonSection() {
   const s = home.inPerson;
+  // Naming the outlets needs Econet and TN CyberTech Bank to have approved the site.
+  const named = partnerVisible("econet") && partnerVisible("tn");
   return (
-    <Section>
-      <div className="grid items-center gap-10 lg:grid-cols-2">
-        <div>
+    <Section tone="mist">
+      <div className="grid items-stretch gap-6 lg:grid-cols-2">
+        <div className="flex flex-col rounded-3xl bg-white p-6 shadow-md sm:p-8">
           <Heading>{s.heading}</Heading>
           <p className="mt-4 text-lg leading-relaxed text-muted">{brand(s.body)}</p>
+          <h3 className="mt-6 flex items-center gap-2 text-xl font-extrabold text-navy">
+            <MapPin aria-hidden className="size-6 shrink-0 text-red" />
+            {brand(s.findHeading)}
+          </h3>
+          <p className="mt-2 leading-relaxed text-muted">{brand(named ? s.findBody : s.findBodyGeneric)}</p>
+          <div className="mt-6">
+            <ButtonLink href="/find-an-agent" variant="primary">
+              {s.findButton}
+            </ButtonLink>
+          </div>
         </div>
-        <div className="rounded-3xl bg-navy p-6 text-white shadow-xl sm:p-8 on-navy">
+        <div className="on-navy flex flex-col rounded-3xl bg-navy p-6 text-white shadow-xl sm:p-8">
           <span className="inline-flex size-12 items-center justify-center rounded-xl bg-white text-navy">
             <Store aria-hidden className="size-6" />
           </span>
@@ -286,36 +377,30 @@ export function InPersonSection() {
   );
 }
 
-export function OffersSection() {
-  const s = home.offers;
+const differentIcons: Record<string, LucideIcon> = { one: Ticket, every: Globe, phone: Smartphone, providers: Plug };
+
+export function DifferentSection() {
+  const s = home.different;
   return (
-    <Section tone="mist">
-      <div className="mx-auto max-w-3xl text-center">
-        <Heading>{s.heading}</Heading>
-        <p className="mt-4 text-lg leading-relaxed text-muted">{brand(s.body)}</p>
-      </div>
-      <div className="mt-10 grid gap-6 md:grid-cols-3">
+    <Section>
+      <Heading className="text-center">{s.heading}</Heading>
+      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {s.cards.map((c) => {
-          const Icon = benefitIcons[c.key];
+          const Icon = differentIcons[c.key];
           return (
-            <article key={c.key} className="rounded-2xl bg-white p-6 shadow-md">
+            <article key={c.key} className="rounded-2xl border-t-4 border-red bg-mist p-6">
               <span className="inline-flex size-12 items-center justify-center rounded-xl bg-navy text-white">
                 <Icon aria-hidden className="size-6" />
               </span>
-              <h3 className="mt-4 text-lg font-extrabold tracking-wide text-navy">{c.title}</h3>
+              <h3 className="mt-4 text-lg font-extrabold tracking-wide text-navy">{brand(c.title)}</h3>
               <p className="mt-2 leading-relaxed text-muted">{brand(c.body)}</p>
             </article>
           );
         })}
       </div>
-      <p className="mt-6 text-center text-sm text-muted">{brand(s.note)}</p>
-      <div className="mt-8 text-center">
-        <JoinButton />
-      </div>
     </Section>
   );
 }
-
 export function LaunchSection() {
   const s = home.launch;
   return (
@@ -324,7 +409,7 @@ export function LaunchSection() {
         <Heading>{s.heading}</Heading>
         <p className="mt-4 text-lg leading-relaxed text-muted">{brand(s.body)}</p>
         <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row">
-          <JoinButton />
+          <BookButton />
           <ButtonLink href={nav.registerBusiness.href} variant="primary">
             {s.secondary}
           </ButtonLink>

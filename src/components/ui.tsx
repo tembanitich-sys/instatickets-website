@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 import { MessageCircle } from "lucide-react";
 import { contact, nav } from "@content/site";
+import { bookingUrl } from "@content/facts";
 import { brand } from "./Brand";
 
 type Variant = "primary" | "secondary" | "secondaryOnDark";
@@ -35,16 +36,16 @@ export function ButtonLink({
 }
 
 /**
- * The JOIN INSTATICKETS call to action as a ticket stub: a red "JOIN" end, a
+ * The booking call to action as a ticket stub: a red "BOOK" end, a
  * perforation, and the InstaTickets logo on white, so the brand name is the
  * logo itself and not uppercase text. The accessible name stays the full label.
  */
-export function JoinButton({ size = "md", className = "" }: { size?: "sm" | "md"; className?: string }) {
+export function BookButton({ size = "md", className = "" }: { size?: "sm" | "md"; className?: string }) {
   const sm = size === "sm";
   return (
     <Link
-      href={nav.join.href}
-      aria-label={nav.join.label}
+      href={bookingUrl}
+      aria-label={nav.book.label}
       className={`group inline-flex min-h-11 items-stretch overflow-hidden rounded-full border-2 border-red shadow-sm transition-shadow hover:shadow-md ${className}`}
     >
       <span
@@ -52,7 +53,7 @@ export function JoinButton({ size = "md", className = "" }: { size?: "sm" | "md"
           sm ? "px-3 text-xs sm:px-5 sm:text-sm" : "px-5 text-sm"
         }`}
       >
-        {nav.join.stub}
+        {nav.book.stub}
       </span>
       <span aria-hidden className="w-0 self-stretch border-l-2 border-dashed border-white/80" />
       <span className={`flex flex-1 items-center justify-center bg-white ${sm ? "px-2 sm:px-3" : "px-4"}`}>

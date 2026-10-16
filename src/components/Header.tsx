@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { nav } from "@content/site";
-import { JoinButton } from "./ui";
+import { BookButton } from "./ui";
 import { MobileMenu } from "./MobileMenu";
 
 export function Header() {
@@ -20,12 +20,12 @@ export function Header() {
           />
         </Link>
 
-        <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
+        <nav aria-label="Main" className="hidden items-center gap-1 xl:flex">
           {nav.links.map((l) => (
             <Link
               key={l.label}
               href={l.href}
-              className="nav-link inline-flex min-h-11 items-center rounded-full px-3 text-sm font-semibold text-navy"
+              className="nav-link inline-flex min-h-11 items-center whitespace-nowrap rounded-full px-3 text-sm font-semibold text-navy"
             >
               {l.label}
             </Link>
@@ -33,7 +33,7 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <JoinButton size="sm" />
+          <BookButton size="sm" />
           <MobileMenu />
         </div>
       </div>

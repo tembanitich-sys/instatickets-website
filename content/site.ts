@@ -3,9 +3,7 @@
  * only; components read from it and contain no marketing text of their own.
  */
 
-export const LAUNCH_LABEL = "15 November 2026";
-
-export const PRIVACY_NOTICE_VERSION = "2026-10-01-final";
+export const PRIVACY_NOTICE_VERSION = "2026-11-live";
 
 export const contact = {
   email: "info@instatickets.co.zw",
@@ -31,24 +29,25 @@ export const contact = {
 
 export const nav = {
   links: [
-    { label: "Home", href: "/" },
-    { label: "Bus", href: "/#bus" },
-    { label: "Events", href: "/#events" },
-    { label: "Sports", href: "/#sports" },
+    { label: "Tickets", href: "/#tickets" },
+    { label: "How to buy", href: "/#how-to-buy" },
+    { label: "Find an Agent", href: "/find-an-agent" },
     { label: "For Businesses", href: "/for-businesses" },
-    { label: "Agents", href: "/agents" },
+    { label: "Become an Agent", href: "/agents" },
     { label: "Help", href: "/help" },
     { label: "Contact", href: "/contact" },
   ],
   // The visible button shows `stub` plus the InstaTickets logo; `label` is its accessible name.
-  join: { label: "JOIN INSTATICKETS", stub: "JOIN", href: "/#join" },
+  // The address comes from content/facts.ts (the booking address supplied by the back office).
+  book: { label: "BOOK A TICKET", stub: "BOOK" },
+  findAgent: { label: "FIND AN AGENT", href: "/find-an-agent" },
   registerBusiness: { label: "REGISTER YOUR BUSINESS", href: "/for-businesses#register" },
   whatsappButton: "CHAT ON WHATSAPP",
 } as const;
 
 export const footer = {
   tagline: "One Platform. Every Ticket.",
-  launching: "Launching 15 November 2026",
+  launching: "Buy online. Buy in person.",
   whatsappLink: "Chat on WhatsApp",
   groups: [
     {
@@ -58,6 +57,8 @@ export const footer = {
         { label: "Bus Tickets", href: "/#bus" },
         { label: "Event Tickets", href: "/#events" },
         { label: "Sports Tickets", href: "/#sports" },
+        { label: "How to Buy", href: "/#how-to-buy" },
+        { label: "Find an Agent", href: "/find-an-agent" },
       ],
     },
     {
@@ -73,7 +74,7 @@ export const footer = {
       links: [
         { label: "Help / FAQ", href: "/help" },
         { label: "Contact", href: "/contact" },
-        { label: "Pre-Launch Privacy Notice", href: "/privacy" },
+        { label: "Privacy Notice", href: "/privacy" },
         { label: "Terms & Conditions", href: "/terms" },
         { label: "Cookie Policy", href: "/cookies" },
       ],
@@ -89,9 +90,19 @@ export const home = {
     headline: "ONE PLATFORM. EVERY TICKET.",
     subheading: "Discover, connect and access tickets through InstaTickets.",
     categories: ["BUS", "EVENTS", "SPORTS"],
-    launchLine: "LAUNCHING 15 NOVEMBER 2026",
-    primary: "JOIN INSTATICKETS",
-    secondary: "REGISTER YOUR BUSINESS",
+    launchLine: "BUY ONLINE. BUY IN PERSON.",
+    channelsHeading: "BUY ANYWHERE",
+    secondary: "FIND AN AGENT",
+    soon: "COMING SOON",
+    // Chips under the hero logo. `partner` chips only show once that partner has approved the site.
+    chips: [
+      { key: "ecocashApp", label: "EcoCash app", partner: "ecocash" },
+      { key: "app", label: "InstaTickets app" },
+      { key: "web", label: "Website" },
+      { key: "whatsapp", label: "WhatsApp" },
+      { key: "ussd", label: "USSD", partner: "ecocash" },
+      { key: "agents", label: "Agents" },
+    ],
   },
   find: {
     heading: "What can you find on InstaTickets?",
@@ -158,45 +169,85 @@ export const home = {
     businessesNote:
       "Participating businesses register, complete verification, connect their ticket inventory and publish through InstaTickets, subject to approval and technical requirements.",
   },
-  preregister: {
-    heading: "Get ready for InstaTickets",
-    body: "Pre-register before launch to be among the first to hear when InstaTickets goes live. Registered users may qualify for launch promotions, discounts and special offers from participating ticket providers.",
+  channels: {
+    heading: "Buy your way",
+    body: "Every way of buying is part of one platform, so you can book wherever is easiest for you.",
+    // `partner` cards show only once that partner has approved the site (content/facts.ts).
+    cards: [
+      {
+        key: "ecocashApp",
+        title: "IN THE ECOCASH APP",
+        body: "Find InstaTickets inside the EcoCash app and pay from your wallet.",
+        partner: "ecocash",
+      },
+      {
+        key: "app",
+        title: "THE INSTATICKETS APP",
+        body: "Download the app for iPhone and Android and keep your tickets with you.",
+      },
+      { key: "web", title: "ON THE WEBSITE", body: "Search and book right here, on any phone or computer." },
+      { key: "whatsapp", title: "ON WHATSAPP", body: "Chat to book and receive your ticket on WhatsApp." },
+      {
+        key: "ussd",
+        title: "BY USSD",
+        body: "Dial a code on any phone. No smartphone or data needed.",
+        partner: "ecocash",
+      },
+      {
+        key: "agents",
+        title: "WITH AN AGENT",
+        body: "Pay a registered InstaTickets Agent and get your ticket by SMS.",
+      },
+    ],
+    soon: "COMING SOON",
+    ticketNote: "Your ticket is sent to you by SMS, and by WhatsApp, email or in the app where available.",
+    payHeading: "Pay with the wallet you already use",
+    payBody: "InstaTickets works with EcoCash, so you can pay from your mobile wallet.",
+    payLabel: "Payment partner",
+    storeHeading: "Get the InstaTickets app",
+    appStore: "DOWNLOAD ON THE APP STORE",
+    playStore: "GET IT ON GOOGLE PLAY",
   },
   inPerson: {
     heading: "InstaTickets in person",
-    body: "InstaTickets is not only online. We are building a network of registered InstaTickets Agents, so customers can buy tickets in person, with or without a smartphone.",
+    body: "Not everyone wants to book on a phone. Buy from a registered InstaTickets Agent, with or without a smartphone.",
+    findHeading: "Find an InstaTickets Agent near you",
+    findBody: "Search by town or city to find an agent, an Econet Shop or a TN CyberTech Bank agent.",
+    findBodyGeneric: "Search by town or city to find a registered agent near you.",
+    findButton: "FIND AN AGENT",
     subHeading: "Become an InstaTickets Agent",
     subBody:
       "Turn your shop, office or stall into a ticket point and earn commission on every ticket you sell for participating providers.",
     button: "BECOME AN AGENT",
   },
-  offers: {
-    heading: "Early access benefits",
-    body: "Pre-register now to be ready when InstaTickets goes live on 15 November 2026.",
+  different: {
+    heading: "Why InstaTickets",
     cards: [
       {
-        key: "access",
-        title: "EARLY ACCESS",
-        body: "Be among the first invited to activate your account when InstaTickets goes live.",
+        key: "one",
+        title: "ONE PLACE",
+        body: "Bus, events and sports from participating providers, together in one platform.",
       },
       {
-        key: "offers",
-        title: "LAUNCH OFFERS",
-        body: "Participating providers may offer launch promotions to pre-registered users.",
+        key: "every",
+        title: "EVERY WAY TO BUY",
+        body: "Online, in the apps, on WhatsApp and in person, so no customer is left out.",
       },
       {
-        key: "updates",
-        title: "UPDATES",
-        body: "Hear about new providers, routes, events and features as they join InstaTickets.",
+        key: "phone",
+        title: "ANY PHONE",
+        body: "Registered agents sell to customers with or without a smartphone.",
+      },
+      {
+        key: "providers",
+        title: "BUILT FOR PROVIDERS",
+        body: "Providers list once and reach customers through every channel.",
       },
     ],
-    note: "Launch offers depend on provider participation and availability.",
-    button: "JOIN INSTATICKETS",
   },
   launch: {
-    heading: "Be part of the InstaTickets launch",
-    body: "InstaTickets launches on 15 November 2026. Customers can pre-register now. Businesses can register their interest and start the partner conversation.",
-    primary: "JOIN INSTATICKETS",
+    heading: "Ready to travel?",
+    body: "Search for a bus, event or fixture and book in minutes, or find an agent near you.",
     secondary: "REGISTER YOUR BUSINESS",
   },
   about: {
@@ -206,14 +257,6 @@ export const home = {
       "InstaTickets is a Bullion Technologies product.",
     ],
   },
-} as const;
-
-export const countdown = {
-  labels: { days: "DAYS", hours: "HOURS", minutes: "MINUTES", seconds: "SECONDS" },
-  liveHeading: "INSTATICKETS IS NOW LIVE",
-  liveButton: "GET STARTED",
-  // Accessible name for the timer; not shown on screen.
-  timerLabel: "Time until InstaTickets launches",
 } as const;
 
 /** Validation and submission messages shown next to the form fields. */
@@ -236,7 +279,7 @@ export const formMessages = {
   enquiryType: "Choose an enquiry type.",
   message: "Enter your message.",
   website: "Enter a valid website address, for example https://example.com.",
-  privacy: "Please confirm that you have read the Pre-Launch Privacy Notice.",
+  privacy: "Please confirm that you have read the Privacy Notice.",
   tooLong: "This is too long.",
   invalidChoice: "Choose one of the options shown.",
   captcha: "Please complete the security check and try again.",
@@ -248,30 +291,6 @@ export const formMessages = {
 export const contactSuccess = {
   heading: "THANK YOU. YOUR MESSAGE HAS BEEN SENT.",
   body: "An InstaTickets representative will get back to you.",
-} as const;
-
-export const customerForm = {
-  fields: {
-    firstName: "First Name",
-    lastName: "Last Name",
-    mobile: "Mobile Number",
-    email: "Email Address",
-    interestedIn: "Interested in",
-  },
-  interests: [
-    { value: "bus", label: "Bus" },
-    { value: "events", label: "Events" },
-    { value: "sports", label: "Sports" },
-  ],
-  marketing:
-    "I would like to receive InstaTickets launch updates, offers and promotions by SMS, WhatsApp or email.",
-  privacyPrefix: "I have read the InstaTickets",
-  privacyLink: "Pre-Launch Privacy Notice",
-  privacySuffix: ".",
-  button: "PRE-REGISTER",
-  successHeading: "YOU'RE ON THE LIST.",
-  successBody:
-    "Thank you for pre-registering. When InstaTickets launches, we'll invite you to verify your number and activate your account.",
 } as const;
 
 export const forBusinesses = {
@@ -293,6 +312,13 @@ export const forBusinesses = {
     body: "Connect your ticketing system to InstaTickets. You do not necessarily need to replace it. If your system meets InstaTickets integration requirements, your ticket inventory may be connected to the platform, subject to integration requirements and approval.",
     partnerButton: "BECOME AN INSTATICKETS PARTNER",
     integrationButton: "INTEGRATION ENQUIRY",
+  },
+  channels: {
+    heading: "Sell through every channel",
+    body: "List your tickets once and customers can buy them in the InstaTickets app, on the website, on WhatsApp and in person from registered agents.",
+    // Added only once EcoCash has approved the site (content/facts.ts).
+    partnerBody: "They can also buy in the EcoCash app, and by USSD, which is coming soon.",
+    button: "REGISTER YOUR BUSINESS",
   },
   form: {
     heading: "Have tickets to sell?",
@@ -333,7 +359,7 @@ export const forBusinesses = {
     ],
     marketing: "I would like to receive InstaTickets updates by email.",
     privacyPrefix: "I have read the InstaTickets",
-    privacyLink: "Pre-Launch Privacy Notice",
+    privacyLink: "Privacy Notice",
     privacySuffix: ".",
     button: "REGISTER MY BUSINESS",
     successHeading: "THANK YOU. YOUR REGISTRATION HAS BEEN RECEIVED.",
@@ -446,7 +472,7 @@ export const agents = {
     ],
     marketing: "I would like to receive InstaTickets updates by SMS, WhatsApp or email.",
     privacyPrefix: "I have read the InstaTickets",
-    privacyLink: "Pre-Launch Privacy Notice",
+    privacyLink: "Privacy Notice",
     privacySuffix: ".",
     button: "APPLY TO BECOME AN AGENT",
     successHeading: "THANK YOU. YOUR APPLICATION HAS BEEN RECEIVED.",
@@ -463,11 +489,24 @@ export const help = {
       q: "What is InstaTickets?",
       a: "A digital platform that brings bus, event and sports tickets from participating providers into one place.",
     },
-    { q: "When does it launch?", a: "15 November 2026." },
-    { q: "Is pre-registration free?", a: "Yes." },
     {
-      q: "Does pre-registering create my account?",
-      a: "Not yet. It reserves your place for launch updates. At launch we'll invite you to verify your number and activate your account.",
+      q: "How can I buy a ticket?",
+      a: "Book on this website, in the InstaTickets app or on WhatsApp, or pay a registered InstaTickets Agent in person.",
+      // Used instead of `a` once EcoCash has approved the site (content/facts.ts).
+      aPartner:
+        "Book on this website, in the InstaTickets app or on WhatsApp, in the EcoCash app, or pay a registered InstaTickets Agent in person.",
+    },
+    {
+      q: "Do I need a smartphone?",
+      a: "No. Registered InstaTickets Agents can sell you a ticket in person.",
+      aPartner:
+        "No. Registered InstaTickets Agents can sell you a ticket in person, and USSD booking is coming soon.",
+    },
+    { q: "How do I pay?", a: "You can pay from your mobile wallet, or pay an InstaTickets Agent." },
+    { q: "Where is my ticket sent?", a: "Your ticket is sent to you by SMS, and by WhatsApp, email or in the app where available." },
+    {
+      q: "What if I pay and do not get a ticket?",
+      a: "If you pay and do not receive a ticket, InstaTickets returns your money automatically.",
     },
     {
       q: "I run a ticketing system. Do I have to replace it?",
@@ -521,7 +560,7 @@ export const contactPage = {
       { value: "other", label: "Other" },
     ],
     privacyPrefix: "I have read the InstaTickets",
-    privacyLink: "Pre-Launch Privacy Notice",
+    privacyLink: "Privacy Notice",
     privacySuffix: ".",
     button: "SEND MESSAGE",
   },
@@ -535,7 +574,6 @@ export const notFoundPage = {
 } as const;
 
 export const comingSoonPages = {
-  terms: { heading: "Terms & Conditions", label: "COMING SOON" },
   cookies: { heading: "Cookie Policy", label: "COMING SOON" },
 } as const;
 
@@ -545,10 +583,10 @@ export const comingSoonPages = {
  * until the value is confirmed.
  */
 export const privacy = {
-  title: "INSTATICKETS PRE-LAUNCH PRIVACY NOTICE",
+  title: "INSTATICKETS PRIVACY NOTICE",
   effectiveDate: "1 October 2026",
   intro:
-    "This notice explains how InstaTickets handles the personal information you give us through this website before the InstaTickets platform launches on 15 November 2026. A full Privacy Policy will be published at launch.",
+    "This notice explains how InstaTickets handles the personal information you give us through this website.",
   sections: [
     {
       heading: "Who we are",
@@ -559,7 +597,6 @@ export const privacy = {
     {
       heading: "What we collect",
       paragraphs: [
-        "Customer pre-registration: first name, last name, mobile number, email address (if you give it), the ticket categories you are interested in, and whether you want marketing messages.",
         "Business registration: organisation name, contact person, mobile number, email address, business type, the tickets you want to offer, details of any existing ticketing system, and anything you tell us about your tickets.",
         "Agent applications: your name, mobile number, email address (if you give it), applicant type, business name, location, where you would sell, whether you have a device for sales, and anything you tell us about your business.",
         "Contact form: your name, email, phone number, enquiry type and message.",
@@ -569,8 +606,7 @@ export const privacy = {
     {
       heading: "Why we use it",
       bullets: [
-        "To tell you when InstaTickets launches and invite you to activate your account.",
-        "To send launch updates, offers and promotions, only if you ticked the marketing box.",
+        "To send updates, offers and promotions, only if you ticked the marketing box.",
         "To contact businesses about partnership, onboarding, verification and integration.",
         "To assess and respond to InstaTickets Agent applications.",
         "To answer enquiries sent through the contact form.",
@@ -581,13 +617,12 @@ export const privacy = {
       heading: "Who can see it",
       paragraphs: [
         "Only authorised InstaTickets staff and the service providers that host our website, database and email, who act on our instructions. Some of these providers may store information outside Zimbabwe; where they do, we take steps to protect it as required by law.",
-        "We do not sell your information. We do not share customer details with ticket providers or other companies for their own marketing. Launch offers from participating providers are sent to you by InstaTickets.",
+        "We do not sell your information. We do not share customer details with ticket providers or other companies for their own marketing.",
       ],
     },
     {
       heading: "How long we keep it",
       paragraphs: [
-        "Customer pre-registration details: until you activate an InstaTickets account, or 12 months after launch if you do not, then deleted.",
         "Business registration details: 12 months from your last contact with us, unless you become a partner, in which case your partner agreement applies.",
         "Agent applications: 12 months from your last contact with us, unless you become an agent, in which case your agent agreement applies.",
         "Contact form enquiries: 12 months after the enquiry is closed.",
@@ -608,4 +643,26 @@ export const privacy = {
       ],
     },
   ],
+} as const;
+
+export const findAgent = {
+  headline: "FIND AN INSTATICKETS AGENT NEAR YOU",
+  intro: "Buy your ticket in person from a registered InstaTickets Agent, with or without a smartphone.",
+  introNamed: "Buy your ticket in person from a registered InstaTickets Agent, at an Econet Shop or a TN CyberTech Bank agent.",
+  search: "Town, city or outlet",
+  searchHint: "For example Harare or Mutare",
+  province: "Province",
+  type: "Type of outlet",
+  all: "All",
+  allTypes: "All outlets",
+  kinds: { econet_shop: "Econet Shop", tn_agent: "TN CyberTech Bank agent" },
+  results: (n: number) => (n === 1 ? "1 outlet found" : `${n} outlets found`),
+  directions: "Get directions",
+  empty: "No outlets match your search. Try a nearby town, or chat with us on WhatsApp and we will help you find one.",
+  noneYet: "The list of agent locations is being updated. Chat with us on WhatsApp and we will point you to an agent near you.",
+  checkFirst: "Opening hours and availability can change. Please check with the outlet before you travel.",
+  becomeAgent: "Want to sell InstaTickets tickets yourself?",
+  becomeAgentLink: "BECOME AN AGENT",
+  reviewNote: "PREVIEW: this list includes outlets not yet confirmed. Only confirmed outlets appear on the live site.",
+  unconfirmed: "UNCONFIRMED",
 } as const;

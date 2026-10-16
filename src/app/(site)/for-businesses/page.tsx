@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { partnerVisible } from "@content/facts";
 import { forBusinesses as t } from "@content/site";
 import { brand } from "@/components/Brand";
 import { BusinessForm } from "@/components/forms/BusinessForm";
@@ -41,7 +42,22 @@ export default function ForBusinessesPage() {
         </div>
       </Section>
 
-      <Section id="register">
+      <Section>
+        <div className="mx-auto max-w-3xl text-center">
+          <Heading>{t.channels.heading}</Heading>
+          <p className="mt-4 text-lg leading-relaxed text-muted">
+            {brand(t.channels.body)}
+            {partnerVisible("ecocash") && <> {brand(t.channels.partnerBody)}</>}
+          </p>
+          <div className="mt-8">
+            <ButtonLink href="#register" variant="secondary">
+              {t.channels.button}
+            </ButtonLink>
+          </div>
+        </div>
+      </Section>
+
+      <Section id="register" tone="mist">
         <div className="grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-start">
           <div>
             <Heading>{t.form.heading}</Heading>

@@ -88,38 +88,36 @@ All in `content/site.ts` (edit, commit, push; no other file needs touching).
 
 **B3. Brand.** The logos are now the designer's final artwork (`InstaTickets_Logo_Final.pdf`), rendered to the same file names in `public/brand/` and recoloured to the site palette. Two derived files to approve: `favicon.png` is an "IT" monogram built from the PDF's own letter shapes (the PDF has no square mark), and the Bullion files are a crop of the mark from page 6. `logo-plain.png` (new, 1028 x 224, no ticket outline) is the header and JOIN-button logo; `logo-compact.png` (1028 x 298) is the footer logo. If the designer supplies a square favicon or standalone Bullion logo, replace the files under the same names; if sizes differ, update `width`/`height` in `Header.tsx`, `Footer.tsx`, `Hero.tsx`, `AdminShell.tsx` and regenerate `src/app/opengraph-image.png` / `twitter-image.png`.
 
-**C. Legal pages.** `/terms` and `/cookies` say COMING SOON, as the brief asks, and no legal text was written. The privacy notice says "See the Cookie Policy", which currently says COMING SOON. Decide whether the Cookie Policy must exist before launch (the site itself sets no cookies; the admin session cookie is only set when staff sign in).
+**C. Legal pages.** `/terms` now shows the draft Terms supplied for legal review, with a DRAFT notice and highlighted `[brackets]` (version, effective date, partner bank, response times and the operators page). Set `termsFinal` once signed off. `/cookies` still says COMING SOON. The Terms are bus-only and state a US$0.30 service fee, which the site now publishes: confirm both. The privacy notice now describes the website forms only; the Terms refer to a Privacy Policy covering bookings, which legal must supply. The privacy notice says "See the Cookie Policy", which currently says COMING SOON. Decide whether the Cookie Policy must exist before launch (the site itself sets no cookies; the admin session cookie is only set when staff sign in).
 
-**D. Launch offers.** The "may qualify for launch promotions, discounts and special offers" wording is used exactly as in the brief. Nothing on the site promises a specific discount.
+**D. Partners and channels.** The EcoCash, Econet and TN CyberTech Bank wording, the EcoCash logo and the channel list need each partner's written approval; see `docs/APPROVAL_PACK.md`. Until approved they stay hidden in production.
 
 ## 7. Test it live (20 minutes)
 
 On the real domain, once steps 1 to 5 are done:
 
-- [ ] **Pre-register** on the home page with your own number. Expected: "YOU'RE ON THE LIST." A row appears in the admin, and an email arrives at `registrations@`.
 - [ ] **Register again** with the same number written differently (`0771234567` vs `+263771234567`). Expected: the same success message, **still one row**.
 - [ ] **Business form**, **Agent form** (`/agents`) and **contact form**: each shows its success message, saves a row, and emails the right mailbox (`registrations@` for business and agents, `info@` for contact). Submitting the Agent form twice gives **two rows**.
 - [ ] **Bad input:** a wrong phone number and a missing privacy tick show field messages and keep what you typed.
 - [ ] **Admin** at `/admin`: sign in; lists (including **Agents**) show newest first; search finds a number typed as `077 123 4567`; **Export CSV** downloads with `+263...` numbers; the Audit log shows your export and sign-in. Sign out and confirm `/admin` sends you to the sign-in page.
 - [ ] **Wrong password five times** locks you out for 15 minutes (do this last, and expect to wait).
-- [ ] **GET STARTED link:** Admin > Settings: enter an `https://` link, save; view page source or a launched preview to see it in use. **Clear the field to reset it to WhatsApp.**
-- [ ] **Countdown:** matches Harare time (00:00 on 15 November). On a **preview** deployment (not production) open `/?now=2026-11-14T21:59:50Z` and watch it flip to **INSTATICKETS IS NOW LIVE** with a **GET STARTED** button.
+- [ ] **BOOK button:** opens the booking subdomain (`NEXT_PUBLIC_BOOKING_URL`). **Find an Agent:** search a town and check each listed outlet.
+- [ ] **Partner content:** on the production site no EcoCash, Econet or TN CyberTech Bank name appears until `partnerApproved` is switched on; on a preview link everything shows for review.
 - [ ] **Speed and quality:** run PageSpeed Insights (pagespeed.web.dev) on `https://www.instatickets.co.zw` for mobile. Target: all four scores at least 90. Local results were 96 to 98 for Performance and 100 for the rest.
 - [ ] **Share preview:** paste the site address into WhatsApp; it should show the InstaTickets logo card and the title.
 
-## 8. Launch day (15 November 2026)
+## 8. Launch day (Friday 13 November 2026)
 
-- [ ] Earlier that week: Admin > Settings: set the **GET STARTED** link (or leave the WhatsApp default). It applies immediately with no redeploy, so it can also be changed on the day.
+- [ ] Earlier that week: confirm each channel switch in `content/facts.ts` matches what is live (USSD stays COMING SOON until certified), `partnerApproved` flags are on, `termsFinal` is set, and the outlet list is confirmed.
 - [ ] Confirm the real Turnstile keys are in place (not the test keys), and the privacy notice has no `[brackets]` left.
 - [ ] Do not deploy code in the last hour before launch unless it is a fix.
-- [ ] **00:00 Harare time:** the countdown switches to **INSTATICKETS IS NOW LIVE** by itself, for every visitor, whatever their device clock says. Check it on a phone.
-- [ ] Export the customer and business lists (Admin > each list > Export) before launch as a backup and to plan the "verify your number and activate your account" invitations.
+- [ ] **Go-live:** point `www.instatickets.co.zw` at Vercel (DNS at Vertico) only when approvals and certification are done. Check the site on a phone.
+- [ ] Export the business and agent lists (Admin > each list > Export) as a backup.
 
 ## 9. After launch: not built (outside the brief)
 
 - **Deleting old data.** The privacy notice promises deletion after the retention periods. Nothing deletes records automatically; someone needs to do it (or ask for a scheduled clean-up to be built).
 - **Sending launch messages.** The site stores who ticked marketing consent (`marketing_consent`, with the time). It does not send SMS, WhatsApp or email campaigns.
-- **Turning pre-registrations into accounts.** Numbers are stored in E.164, ready to import, but there is no link to the back office.
 - **Agent appointments.** The site only collects applications (admin > Agents). Review, requirements, terms, agreements and onboarding happen outside the website.
 - **Data requests.** People email `info@instatickets.co.zw` or WhatsApp; someone has to find and delete or correct their row (search the number in the admin; deleting is done in the database).
 
@@ -147,7 +145,9 @@ On the real domain, once steps 1 to 5 are done:
 | Public site | `/`, `/for-businesses`, `/agents`, `/help`, `/contact`, `/privacy`, `/terms`, `/cookies` |
 | Admin | `/admin` (not linked anywhere; bookmark it) |
 | Change wording | `content/site.ts` |
-| Countdown target | `src/lib/countdown.ts`: `2026-11-14T22:00:00Z` |
+| Go-live switches | `content/facts.ts` (channels, partner approvals, terms status) |
+| Outlet list | `content/locations.ts` |
+| Terms text | `content/terms.ts` |
 | Database tables | `customer_preregistrations`, `business_registrations`, `agent_applications` (new, migration `0003`), `contact_enquiries`, `site_settings`, `admin_audit` |
 | Notifications go to | customers, businesses and agent applications: `registrations@instatickets.co.zw`; contact form: `info@instatickets.co.zw` |
 | Function region | `cpt1` (Cape Town), set in `vercel.json` |

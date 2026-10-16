@@ -1,6 +1,6 @@
-# InstaTickets pre-launch website
+# InstaTickets website
 
-Public pre-launch site for InstaTickets ([www.instatickets.co.zw](https://www.instatickets.co.zw)), launching **15 November 2026, 00:00 Harare time**. It builds anticipation, collects customer pre-registrations and business leads, and is the front door of the larger platform. It has no booking, customer accounts or partner portal.
+The InstaTickets website ([www.instatickets.co.zw](https://www.instatickets.co.zw)), launching **Friday 13 November 2026** together with the platform. It explains how tickets are sold (channels and payment partners), helps customers find an agent, and takes business, agent and contact enquiries. Web booking is provided by the back office at its own subdomain; this site links to it (`NEXT_PUBLIC_BOOKING_URL`).
 
 Next.js (App Router), TypeScript (strict), Tailwind CSS, Postgres (Neon) with Drizzle, Cloudflare Turnstile, Resend, Upstash Redis, Vercel Web Analytics. The full build brief is in [`docs/WEBSITE_BRIEF.md`](docs/WEBSITE_BRIEF.md).
 
@@ -14,7 +14,7 @@ For the step-by-step list of what still has to be set up by hand before launch, 
 4. [Deploying to Vercel](#deploying-to-vercel)
 5. [Pointing the domain at Vercel (DNS at Vertico)](#pointing-the-domain-at-vercel-dns-at-vertico)
 6. [Launch-day checklist](#launch-day-checklist)
-7. [How it works](#how-it-works): countdown, forms, admin
+7. [How it works](#how-it-works): go-live switches, agent finder, terms, forms, admin
 8. [Security, SEO and quality](#security-seo-and-quality)
 9. [Brand assets](#brand-assets)
 
@@ -29,7 +29,7 @@ npx tsc --noEmit
 npm run build
 ```
 
-Node 22 or newer. Copy `.env.example` to `.env.local` for local settings. With nothing configured the site still runs: the GET STARTED link falls back to WhatsApp, forms refuse to save (they never pretend to), and in development the Cloudflare test keys are used for Turnstile automatically.
+Node 22 or newer. Copy `.env.example` to `.env.local` for local settings. With nothing configured the site still runs: the booking button falls back to the page's own "How to buy" section, forms refuse to save (they never pretend to), and in development the Cloudflare test keys are used for Turnstile automatically.
 
 ## Environment variables
 
@@ -37,7 +37,7 @@ Set these in Vercel (**Project > Settings > Environment Variables**). [`.env.exa
 
 | Variable | Needed for | Notes |
 |---|---|---|
-| `DATABASE_URL` | forms, admin, GET STARTED link | Neon pooled connection string (from the Vercel Marketplace). Run `npm run db:migrate` once after setting it. |
+| `DATABASE_URL` | forms, admin | Neon pooled connection string (from the Vercel Marketplace). Run `npm run db:migrate` once after setting it. |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | forms, admin sign-in | **Baked into the browser bundle at build time**, so set it *before* the deploy that should use it. |
 | `TURNSTILE_SECRET_KEY` | forms, admin sign-in | Server side. In production, missing keys mean every submission is refused (fail closed). |
 | `RESEND_API_KEY`, `EMAIL_FROM` | notification emails | `EMAIL_FROM` must be on a verified sending domain, for example `InstaTickets Website <website@instatickets.co.zw>`. Without a key, submissions still save and the failed email is logged. |
@@ -46,6 +46,8 @@ Set these in Vercel (**Project > Settings > Environment Variables**). [`.env.exa
 | `ADMIN_PASSWORD` | `/admin` | At least 12 characters; use a long passphrase. |
 | `ADMIN_SESSION_SECRET` | `/admin` | At least 32 random characters (`openssl rand -hex 32`). Changing it or the password signs everyone out. |
 | `NEXT_PUBLIC_SITE_URL` | metadata, sitemap | Defaults to `https://www.instatickets.co.zw`. |
+| `NEXT_PUBLIC_BOOKING_URL` | BOOK buttons | The booking subdomain supplied by the back office. Until set, BOOK scrolls to "How to buy". |
+| `NEXT_PUBLIC_APP_STORE_URL`, `NEXT_PUBLIC_PLAY_STORE_URL` | app download buttons | Store links. A button shows only when its link is set. Replace the text buttons with the official store badges when you have the artwork. |
 
 Until real Cloudflare keys exist, Cloudflare's published **test keys** can be used (they always pass, so they give no spam protection):
 
@@ -118,25 +120,31 @@ A bare domain cannot use a `CNAME`, which is why it uses an `A` record. If a rec
 - [ ] `main` is the production branch; domain and HTTPS working; Web Analytics enabled.
 - [ ] Upstash configured so the admin lockout and rate limits are shared across servers.
 - [ ] Test each form once in production and confirm the row and the email arrive.
-- [ ] Admin > Settings: set the **GET STARTED link** (or leave it as the WhatsApp default). It takes effect immediately, with no redeploy.
-- [ ] At **00:00 on 15 November** the countdown switches to **INSTATICKETS IS NOW LIVE** by itself.
+- [ ] Partner approvals recorded and `partnerApproved` switched on in `content/facts.ts` (see [`docs/APPROVAL_PACK.md`](docs/APPROVAL_PACK.md)).
+- [ ] Each channel in `content/facts.ts` matches what is live that day (USSD stays `soon` until certified).
+- [ ] Locations in `content/locations.ts` confirmed; `NEXT_PUBLIC_BOOKING_URL` and store links set; Terms signed off (`termsFinal`).
 
 ## How it works
 
-### Countdown
+### Go-live switches and partner approval
 
-The launch instant is hard-coded in [`src/lib/countdown.ts`](src/lib/countdown.ts) as `2026-11-14T22:00:00Z` (00:00 on 15 November 2026 in Harare). The home page is re-rendered at most once a minute, so the server-rendered first value is close to current and nothing jumps. In the browser the clock is corrected against `/api/now` (server time), so a wrong device clock cannot show the wrong countdown or switch to "live" early. From the launch instant the countdown is replaced by **INSTATICKETS IS NOW LIVE** and a **GET STARTED** button.
+[`content/facts.ts`](content/facts.ts) holds one value per channel (`live`, `soon` or `hidden`) and a `partnerApproved` flag for EcoCash, Econet and TN CyberTech Bank. The site only claims what is switched on:
 
-**Previewing the after-launch state** (local development and Vercel preview deployments only; ignored in production):
+- **Production** hides every partner name, logo and channel that needs a partner (the EcoCash app, USSD, the named outlet types) until that partner's flag is `true`. USSD shows a COMING SOON label while its channel is `soon`.
+- **Preview deployments and local builds** show everything, with an UNCONFIRMED tag on unverified outlets, so a partner can review the real pages.
+- Adding a payment partner later (for example InnBucks) means adding it to the partner list and copy in `content/site.ts` and its flag here, and adding its name to the allowed list in `tests/content-rules.test.ts`.
 
-- `/?launched=1` jumps to the launch instant.
-- `/?now=2026-11-14T21:59:50Z` simulates that moment, then keeps counting, so you can watch the switch.
+### Find an Agent
 
-The GET STARTED link is stored in the `site_settings` table (`get_started_url`), read at most once a minute, and refreshed at once when saved in the admin. Only `https://` links are accepted. Default: the WhatsApp chat link.
+`/find-an-agent` searches `content/locations.ts` by town, province and outlet type. Production shows only entries with `confirmed: true`. The seed list holds Econet Shop names found on public web pages (not verified with Econet); no TN CyberTech Bank outlet list was found. Replace the file with the confirmed lists from Econet, the bank or the back office, and set `confirmed: true`.
+
+### Terms and Conditions
+
+`/terms` renders [`content/terms.ts`](content/terms.ts), the draft supplied for legal review. Square-bracketed values are highlighted and a DRAFT notice shows until `termsFinal` is `true` in `content/facts.ts`.
 
 ### Forms
 
-The customer pre-registration (home), business registration (`/for-businesses`), Agent application (`/agents`, table `agent_applications`, a new row every time, notifies `registrations@`) and contact (`/contact`) forms are Next.js server actions in [`src/app/actions.ts`](src/app/actions.ts); the logic is in `src/lib/forms/`. Every submission goes through the same steps, in this order:
+The business registration (`/for-businesses`), Agent application (`/agents`, table `agent_applications`, a new row every time, notifies `registrations@`) and contact (`/contact`) forms are Next.js server actions in [`src/app/actions.ts`](src/app/actions.ts); the logic is in `src/lib/forms/`. Every submission goes through the same steps, in this order:
 
 1. parse and validate on the server with Zod; phone numbers are checked with `libphonenumber-js` and stored in E.164 (for example `+263771234567`);
 2. rate limit per visitor and form (5 per 10 minutes); the IP is hashed and never stored or logged;
@@ -147,8 +155,8 @@ The customer pre-registration (home), business registration (`/for-businesses`),
 
 If the database is unavailable the visitor gets an error; a submission is never reported as saved when it was not.
 
-- Marketing consent is never pre-ticked. It is stored as `marketing_consent` plus `marketing_consent_at` (null when not given). The privacy acknowledgement is required and the notice version (`2026-10-01-final`) is stored with every record.
-- A pre-registration with a phone number already on file updates that record and shows the same success message. The latest submission wins for interests and marketing consent (unticked withdraws consent and clears the timestamp). A blank email never erases one already given; the name and first campaign tags stay as first recorded.
+- Marketing consent is never pre-ticked. It is stored as `marketing_consent` plus `marketing_consent_at` (null when not given). The privacy acknowledgement is required and the notice version (`2026-11-live`) is stored with every record.
+- Customer pre-registration was retired when the site became the live launch site. Existing `customer_preregistrations` rows stay in the database and the admin (the server code is kept, the form is gone); a repeat registration with the same phone number updated that row.
 - Business registrations always insert a new row. The contact form's phone is optional.
 - Campaign tags (`utm_source`, `utm_medium`, `utm_campaign`) from the landing URL are remembered for the tab (session storage) and saved with the form.
 
@@ -162,7 +170,7 @@ Not linked from the public site, `noindex`, and never cached.
 - **Lockout:** five wrong passwords from the same visitor lock that visitor out for 15 minutes, even for the correct password. With Upstash configured the lockout is shared across servers; without it, it is per instance.
 - **Lists** of Customers, Businesses, Enquiries and the Audit log, newest first, 50 per page, with simple search (phone numbers can be typed as `077 123 4567`, `0771234567` or `+263771234567`).
 - **CSV export** of any table: the whole table, phone numbers in E.164, database column names as headers. Text a spreadsheet could run as a formula (starting `=`, `+`, `-`, `@`) is prefixed with an apostrophe; real E.164 numbers are left exact. Excel drops the leading `+` when it opens a CSV directly; use *Data > From Text/CSV* and set the phone column to Text.
-- **GET STARTED link** under *Settings*; leave it empty to reset to the WhatsApp default.
+- **Settings** still holds the old GET STARTED link, which the site no longer uses.
 - **Audit log (`admin_audit`):** every export (table and row count), settings change (old and new value) and sign-in. An export is recorded before any data is returned, and a settings change is saved together with its audit row, so neither can happen unrecorded. It holds no personal data.
 
 ## Security, SEO and quality
@@ -171,11 +179,11 @@ Not linked from the public site, `noindex`, and never cached.
 
 **SEO:** title `InstaTickets | One Platform. Every Ticket.`, the brief's meta description, canonical URLs, Open Graph and Twitter cards with a social image built from the full logo, `sitemap.xml`, `robots.txt` (blocks `/admin` and `/api/`), a web manifest and icons generated from `favicon.png`, and Organization structured data with the head office address. `/terms` and `/cookies` (placeholders) are left out of the sitemap.
 
-**Accessibility:** mobile first, tap targets of at least 44 px, skip link, labelled fields with linked error messages, and a timer with an accessible name. Automated checks with axe-core (WCAG 2.2 AA plus best practices) found no violations on any public page at 360 px and 1280 px, including the open mobile menu and the 404 page. Text over the hero gradient was measured separately (lowest contrast 5.0:1).
+**Accessibility:** mobile first, tap targets of at least 44 px, skip link, labelled fields with linked error messages, and an accessible name on every image. Automated checks with axe-core (WCAG 2.2 AA plus best practices) found no violations on any public page at 360 px and 1280 px, including the open mobile menu and the 404 page. Text over the hero gradient was measured separately (lowest contrast 5.0:1).
 
 **Lighthouse (mobile, production build):** Performance 96 to 98, Accessibility 100, Best Practices 100, SEO 100 on `/`, `/for-businesses`, `/contact`, `/help` and `/privacy`. Measured locally with the Cloudflare and Vercel Analytics requests blocked (neither is reachable from a local run). Re-run against the live domain once it is up.
 
-**Tests:** `npm test` runs the suite, including phone validation and E.164 storage, duplicate-phone handling, consent defaults, the countdown switch at `2026-11-14T22:00:00Z`, notification failure not blocking a submission, the admin (session, lockout, export, audit, settings), and the content rules.
+**Tests:** `npm test` runs the suite, including phone validation and E.164 storage, consent defaults, notification failure not blocking a submission, the admin (session, lockout, export, audit, settings), and the content rules (including that partner names appear only behind the partner switches).
 
 ## Brand assets
 

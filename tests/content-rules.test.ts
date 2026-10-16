@@ -30,8 +30,19 @@ const everything = [...copy.map((text) => ({ file: "content/site.ts", text })), 
 const hits = (pattern: RegExp) => everything.filter(({ text }) => pattern.test(text)).map((e) => e.file);
 
 describe("brief section 11: content rules", () => {
-  it("names no payment provider or mobile wallet", () => {
-    expect(hits(/ecocash|onemoney|telecash|innbucks|paynow|zipit|omari|mukuru|paypal|stripe|mastercard|\bvisa\b|apple pay|google pay|m-?pesa|flutterwave|pesepay/i)).toEqual([]);
+  it("names no payment provider or mobile wallet except the approved partner", () => {
+    // EcoCash is the one approved payment partner (its wording is approved before launch and is
+    // hidden in production until content/facts.ts says so). Add a name here only once that partner
+    // has approved the site; every other provider stays banned.
+    expect(hits(/onemoney|telecash|innbucks|paynow|zipit|omari|mukuru|paypal|stripe|mastercard|\bvisa\b|apple pay|google pay|m-?pesa|flutterwave|pesepay/i)).toEqual([]);
+  });
+
+  it("shows partner names only through the partner switches", () => {
+    // Partner names appear in copy that components gate with partnerVisible(); the source files
+    // themselves must not hard-code them outside the copy, the facts file and the locations list.
+    const outside = publicSource.filter(({ text }) => /EcoCash|Econet|TN CyberTech/.test(text)).map((e) => e.file);
+    // Only the section that renders the partner logo (inside a partnerVisible() check) may hard-code a name.
+    expect(outside).toEqual(["src/components/home/Sections.tsx"]);
   });
 
   it("makes no claim of market leadership or of owning ticket inventory", () => {
@@ -48,8 +59,7 @@ describe("brief section 11: content rules", () => {
     const { home } = site;
     const eventsAndSports = strings([home.find.cards, home.events, home.sports]);
     for (const text of eventsAndSports) expect(text).not.toMatch(/coming soon/i);
-    // COMING SOON is only for the terms and cookie placeholder pages.
-    expect(site.comingSoonPages.terms.label).toBe("COMING SOON");
+    // COMING SOON is for the cookie placeholder page, and for channels not live yet (USSD).
     expect(site.comingSoonPages.cookies.label).toBe("COMING SOON");
   });
 
