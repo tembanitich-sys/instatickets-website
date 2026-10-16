@@ -14,8 +14,8 @@ The site launches on **Friday 13 November 2026**. USSD is shown as COMING SOON, 
 
 Each channel has a guide with a "where to start" control. The steps were **drafted by InstaTickets** from the customer Terms and the agreed architecture; each partner is asked to confirm or correct the steps for its channel before launch.
 
-- **EcoCash app:** path shown as EcoCash app > Bill Payments > Bus Tickets > InstaTickets, then seven steps (sign in, Bill Payments, choose Bus Tickets and InstaTickets, enter trip details, check fare, service fee, total and refund policy, pay from the wallet, ticket by SMS with booking reference and QR code). EcoCash to confirm the menu names after Bill Payments and the steps.
-- **USSD (COMING SOON):** dial *151#, then Bill Payments, Bus Tickets, InstaTickets, prompts, PIN. EcoCash to confirm the menu path.
+- **EcoCash app:** path taken from the customer wireframe: EcoCash app > Pay Biller > Online Billers > InstaTickets > Bus Tickets, then search, results, seats, passenger details, review and PIN, ticket by SMS with booking reference and QR code. EcoCash to confirm the menu names (we had also heard "Bill Payments").
+- **USSD (COMING SOON):** from the USSD storyboard: dial *151#, Pay Bill, InstaTickets, Buy bus ticket, from, to, date, trip, class, who is travelling, next of kin, PIN. EcoCash to confirm.
 - **WhatsApp:** save +263 772 270 533 as InstaTickets, open the chat, send "Hi", choose to book, answer the questions, tap Accept and pay. InstaTickets to confirm this is the booking number and that "Hi" starts the session.
 - **InstaTickets app and website:** download or open, search, choose a trip and seat, accept the Terms, pay, ticket by SMS. Driven by the back office; to be confirmed against the real flow.
 - **Econet Shops and TN CyberTech Bank agents:** find an agent, tell the agent the trip, the agent explains the bus company's refund policy before taking payment, pay and keep the receipt, ticket by SMS. Econet and TN CyberTech Bank to confirm; TN to say whether it has other channels (for example mobile banking) that should have their own guide.

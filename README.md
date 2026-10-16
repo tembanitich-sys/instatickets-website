@@ -136,7 +136,7 @@ A bare domain cannot use a `CNAME`, which is why it uses an `A` record. If a rec
 
 ### How to buy
 
-`/how-to-buy` holds a step-by-step guide per channel, written in `howToBuy` in `content/site.ts`: the EcoCash app (under Bill Payments), the InstaTickets app, the website, WhatsApp (number to save and a chat link), USSD (`*151#` dial link, COMING SOON), Econet Shops and TN CyberTech Bank agents. Each guide shows where to start. Partner guides follow the partner switches; the steps are drafts for the partners to confirm. The hero icons, the nav and the "Buy your way" cards link to the guides.
+`/how-to-buy` holds a step-by-step guide per channel, written in `howToBuy` in `content/site.ts`: the EcoCash app (Pay Biller > Online Billers, per the wireframes), the InstaTickets app, the website, WhatsApp (number to save and a chat link), USSD (`*151#` dial link, COMING SOON), Econet Shops and TN CyberTech Bank agents. Each guide shows where to start. Partner guides follow the partner switches; the steps are drafts for the partners to confirm. The hero icons, the nav and the "Buy your way" cards link to the guides.
 
 ### Demo booking page
 
