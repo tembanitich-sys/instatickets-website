@@ -94,14 +94,16 @@ export const home = {
     channelsHeading: "BUY ANYWHERE",
     secondary: "FIND AN AGENT",
     soon: "COMING SOON",
-    // Chips under the hero logo. `partner` chips only show once that partner has approved the site.
+    soonShort: "SOON",
+    // Icons under the hero logo; `label` is the accessible name and tooltip. `partner` icons only
+    // show once that partner has approved the site. The website icon links to the tickets section.
     chips: [
-      { key: "ecocashApp", label: "EcoCash app", partner: "ecocash" },
-      { key: "app", label: "InstaTickets app" },
-      { key: "web", label: "Website" },
-      { key: "whatsapp", label: "WhatsApp" },
-      { key: "ussd", label: "USSD", partner: "ecocash" },
-      { key: "agents", label: "Agents" },
+      { key: "ecocashApp", label: "EcoCash app", href: "/#how-to-buy", partner: "ecocash" },
+      { key: "app", label: "InstaTickets app", href: "/#how-to-buy" },
+      { key: "web", label: "Website", href: "/#tickets" },
+      { key: "whatsapp", label: "WhatsApp", href: contact.whatsapp.href },
+      { key: "ussd", label: "USSD *151#", href: "/#how-to-buy", partner: "ecocash" },
+      { key: "agents", label: "Find an agent", href: "/find-an-agent" },
     ],
   },
   find: {
@@ -190,7 +192,7 @@ export const home = {
       {
         key: "ussd",
         title: "BY USSD",
-        body: "Dial a code on any phone. No smartphone or data needed.",
+        body: "Dial *151# on any phone. No smartphone or data needed.",
         partner: "ecocash",
       },
       {

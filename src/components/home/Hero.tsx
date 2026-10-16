@@ -2,6 +2,7 @@ import Image from "next/image";
 import { facts, partnerVisible, type PartnerKey } from "@content/facts";
 import { home } from "@content/site";
 import { brand } from "../Brand";
+import { ChannelIcon, type ChannelKey } from "../ChannelIcon";
 import { StoreBadges } from "../StoreBadges";
 import { BookButton, ButtonLink } from "../ui";
 
@@ -66,16 +67,27 @@ export function Hero() {
 
           <div className="order-5 mt-5 w-full max-w-md rounded-3xl bg-white/10 p-4 ring-1 ring-white/20 lg:order-none lg:mt-5 lg:max-w-none">
             <p className="text-xs font-bold tracking-[0.25em] text-white/90">{h.channelsHeading}</p>
-            <ul className="mt-3 flex flex-wrap justify-center gap-2 lg:justify-start">
+            <ul className="mt-3 flex flex-wrap justify-center gap-3 lg:justify-start">
               {chips.map((c) => {
                 const soon = facts.channels[c.key as keyof typeof facts.channels] === "soon";
+                const external = c.href.startsWith("http");
                 return (
-                  <li
-                    key={c.key}
-                    className="rounded-full bg-navy-deep/60 px-3 py-1.5 text-sm font-semibold ring-1 ring-white/15"
-                  >
-                    {c.label}
-                    {soon && <span className="ml-2 text-xs font-bold tracking-wider text-white/80">{h.soon}</span>}
+                  <li key={c.key} className="relative">
+                    <a
+                      href={c.href}
+                      aria-label={soon ? `${c.label}, ${h.soon}` : c.label}
+                      title={c.label}
+                      target={external ? "_blank" : undefined}
+                      rel={external ? "noopener noreferrer" : undefined}
+                      className="block rounded-[1.1rem] transition-transform hover:-translate-y-0.5"
+                    >
+                      <ChannelIcon channel={c.key as ChannelKey} size={56} />
+                    </a>
+                    {soon && (
+                      <span className="absolute -right-1 -top-2 rounded-full bg-red px-1.5 py-0.5 text-[0.6rem] font-extrabold tracking-wider text-white">
+                        {h.soonShort}
+                      </span>
+                    )}
                   </li>
                 );
               })}

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { partnerVisible } from "@content/facts";
-import { forBusinesses as t } from "@content/site";
+import { partnerVisible, type PartnerKey } from "@content/facts";
+import { forBusinesses as t, home } from "@content/site";
 import { brand } from "@/components/Brand";
+import { ChannelIcon, channelVisible, type ChannelKey } from "@/components/ChannelIcon";
 import { BusinessForm } from "@/components/forms/BusinessForm";
 import { ButtonLink, Heading, PageIntro, Section } from "@/components/ui";
 
@@ -49,6 +50,15 @@ export default function ForBusinessesPage() {
             {brand(t.channels.body)}
             {partnerVisible("ecocash") && <> {brand(t.channels.partnerBody)}</>}
           </p>
+          <ul className="mt-6 flex flex-wrap justify-center gap-3" aria-label={t.channels.heading}>
+            {home.channels.cards
+              .filter((c) => channelVisible(c.key as ChannelKey, "partner" in c ? (c.partner as PartnerKey) : undefined))
+              .map((c) => (
+                <li key={c.key} title={c.title}>
+                  <ChannelIcon channel={c.key as ChannelKey} size={56} />
+                </li>
+              ))}
+          </ul>
           <div className="mt-8">
             <ButtonLink href="#register" variant="secondary">
               {t.channels.button}

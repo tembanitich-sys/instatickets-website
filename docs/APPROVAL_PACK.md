@@ -12,12 +12,16 @@ The site launches on **Friday 13 November 2026**. USSD is shown as COMING SOON, 
 
 ## EcoCash
 
-Logo: the EcoCash wordmark supplied by InstaTickets (`public/brand/partners/ecocash.png`), shown on a white label in the "Pay with the wallet you already use" block (headed "Payment partner"), on the two EcoCash channel cards, and in the footer "Our partners" row. Please confirm it is the current logo and may be used this way.
+Logo: the EcoCash wordmark supplied by InstaTickets (`public/brand/partners/ecocash.png`), shown on a white label in the "Pay with the wallet you already use" block (headed "Payment partner"), and in the footer "Our partners" row. Please confirm it is the current logo and may be used this way.
+
+Icons
+- The EcoCash SuperApp icon (supplied artwork, `public/brand/channels/ecocash-superapp.png`) appears as the "EcoCash app" channel icon in the hero, on the "Buy your way" card and in the For Businesses icon row. A "*151#" tile marks USSD, with a SOON badge in the hero. Please confirm the icon and that the code *151# may be shown.
+- The InstaTickets app icon is a mock-up in the same style (`public/brand/channels/instatickets-app.png`); it is replaced by the real app icon.
 
 Home page
-- Hero chips: "EcoCash app" and "USSD COMING SOON".
+- Hero icons: EcoCash app, InstaTickets app, website, WhatsApp, USSD (SOON) and agents.
 - Channel card, "IN THE ECOCASH APP": Find InstaTickets inside the EcoCash app and pay from your wallet.
-- Channel card, "BY USSD" (COMING SOON): Dial a code on any phone. No smartphone or data needed.
+- Channel card, "BY USSD" (COMING SOON): Dial *151# on any phone. No smartphone or data needed.
 - Payment block: "Pay with the wallet you already use. InstaTickets works with EcoCash, so you can pay from your mobile wallet."
 
 For Businesses page

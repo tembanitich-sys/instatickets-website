@@ -134,6 +134,10 @@ A bare domain cannot use a `CNAME`, which is why it uses an `A` record. If a rec
 - **Preview deployments and local builds** show everything, with an UNCONFIRMED tag on unverified outlets, so a partner can review the real pages.
 - Adding a payment partner later (for example InnBucks) means adding it to the partner list and copy in `content/site.ts` and its flag here, and adding its name to the allowed list in `tests/content-rules.test.ts`.
 
+### Channel icons
+
+Ways to buy are shown as icons ([`src/components/ChannelIcon.tsx`](src/components/ChannelIcon.tsx)) in the hero, the "Buy your way" cards and the For Businesses page: the supplied EcoCash SuperApp icon, an InstaTickets app icon **mock-up** (replace `public/brand/channels/instatickets-app.png` with the real icon), a globe for the website (links to the tickets section), the WhatsApp mark, a `*151#` tile for USSD, and a shop icon for agents (links to Find an Agent). Each icon has an accessible name and a tooltip.
+
 ### Find an Agent
 
 `/find-an-agent` searches `content/locations.ts` by town, province and outlet type. Production shows only entries with `confirmed: true`; preview builds show all entries. The current list is **placeholder content** (Econet Shop names from public web pages, not verified, and no TN CyberTech Bank outlets). Before launch, replace it with the confirmed lists from Econet, the bank or the back office and set `confirmed: true`.

@@ -9,12 +9,9 @@ import {
   ListChecks,
   Megaphone,
   Globe,
-  Hash,
   MapPin,
-  MessageCircle,
   Smartphone,
   Store,
-  Wallet,
   Music,
   PartyPopper,
   Plug,
@@ -35,6 +32,7 @@ import { appStoreUrl, bookingUrl, facts, partnerVisible, playStoreUrl, type Part
 import { home, nav } from "@content/site";
 import { brand } from "../Brand";
 import { partnerCopy } from "@content/partners";
+import { ChannelIcon, channelVisible, type ChannelKey } from "../ChannelIcon";
 import { PartnerLogo, PartnerRow } from "../PartnerLogo";
 import { StoreBadges } from "../StoreBadges";
 import { BookButton, ButtonLink, Heading, Perforation, Section } from "../ui";
@@ -247,27 +245,9 @@ export function HowSection() {
   );
 }
 
-const channelIcons: Record<string, LucideIcon> = {
-  ecocashApp: Wallet,
-  app: Smartphone,
-  web: Globe,
-  whatsapp: MessageCircle,
-  ussd: Hash,
-  agents: Store,
-};
-
-type Channel = { key: string; partner?: string };
-
-/** A channel shows unless it is switched off, or it needs a partner that has not approved the site. */
-function visibleChannel(c: Channel): boolean {
-  const status = facts.channels[c.key as keyof typeof facts.channels];
-  if (status === "hidden") return false;
-  return !c.partner || partnerVisible(c.partner as PartnerKey);
-}
-
 export function ChannelsSection() {
   const s = home.channels;
-  const cards = s.cards.filter(visibleChannel);
+  const cards = s.cards.filter((c) => channelVisible(c.key as ChannelKey, "partner" in c ? (c.partner as PartnerKey) : undefined));
   const showPayPartner = partnerVisible("ecocash");
   return (
     <Section id="how-to-buy">
@@ -278,13 +258,10 @@ export function ChannelsSection() {
 
       <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {cards.map((c) => {
-          const Icon = channelIcons[c.key];
           const soon = facts.channels[c.key as keyof typeof facts.channels] === "soon";
           return (
             <article key={c.key} className="relative flex flex-col rounded-2xl border border-line bg-white p-6 shadow-sm">
-              <span className="inline-flex size-12 items-center justify-center rounded-xl bg-navy text-white">
-                <Icon aria-hidden className="size-6" />
-              </span>
+              <ChannelIcon channel={c.key as ChannelKey} size={56} />
               {soon && (
                 <span className="absolute right-4 top-4 rounded-full bg-mist px-3 py-1 text-xs font-extrabold tracking-wider text-navy">
                   {s.soon}
@@ -292,11 +269,6 @@ export function ChannelsSection() {
               )}
               <h3 className="mt-4 text-lg font-extrabold tracking-wide text-navy">{brand(c.title)}</h3>
               <p className="mt-2 leading-relaxed text-muted">{brand(c.body)}</p>
-              {"partner" in c && c.partner === "ecocash" && (
-                <div className="mt-4">
-                  <PartnerLogo partner="ecocash" height={18} />
-                </div>
-              )}
             </article>
           );
         })}
