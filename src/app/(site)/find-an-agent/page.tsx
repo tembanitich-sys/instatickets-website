@@ -39,7 +39,7 @@ export default function FindAnAgentPage() {
             {t.reviewNote}
           </p>
         )}
-        <AgentLocator outlets={list} showUnconfirmed={isReviewBuild} kinds={kinds} />
+        <AgentLocator outlets={list} kinds={kinds} />
         <p className="mt-8 max-w-2xl text-sm text-muted">{t.checkFirst}</p>
         <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
           <WhatsAppButton />

@@ -35,6 +35,7 @@ import Image from "next/image";
 import { appStoreUrl, bookingUrl, facts, partnerVisible, playStoreUrl, type PartnerKey } from "@content/facts";
 import { home, nav } from "@content/site";
 import { brand } from "../Brand";
+import { StoreBadges } from "../StoreBadges";
 import { BookButton, ButtonLink, Heading, Perforation, Section } from "../ui";
 
 const findIcons: Record<string, LucideIcon> = { bus: Bus, events: Ticket, sports: Trophy };
@@ -319,18 +320,7 @@ export function ChannelsSection() {
           {(appStoreUrl || playStoreUrl) && (
             <div className="flex flex-col items-start gap-4 rounded-2xl bg-mist p-6">
               <h3 className="text-lg font-extrabold text-navy">{s.storeHeading}</h3>
-              <div className="flex flex-wrap gap-3">
-                {appStoreUrl && (
-                  <ButtonLink href={appStoreUrl} variant="secondary">
-                    {s.appStore}
-                  </ButtonLink>
-                )}
-                {playStoreUrl && (
-                  <ButtonLink href={playStoreUrl} variant="secondary">
-                    {s.playStore}
-                  </ButtonLink>
-                )}
-              </div>
+              <StoreBadges />
             </div>
           )}
         </div>

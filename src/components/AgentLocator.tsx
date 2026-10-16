@@ -24,11 +24,9 @@ const norm = (v: string) => v.toLowerCase().trim();
 /** Search and filter over a list of outlets given by the page. No network calls. */
 export function AgentLocator({
   outlets,
-  showUnconfirmed,
   kinds,
 }: {
   outlets: Outlet[];
-  showUnconfirmed: boolean;
   /** The outlet types that may be named publicly, with their labels. */
   kinds: { value: OutletKind; label: string }[];
 }) {
@@ -107,11 +105,6 @@ export function AgentLocator({
                   <MapPin aria-hidden className="mt-0.5 size-4 shrink-0" />
                   <span>{[...new Set([o.address, o.town, o.province].filter(Boolean))].join(", ")}</span>
                 </p>
-                {showUnconfirmed && !o.confirmed && (
-                  <span className="mt-2 w-fit rounded bg-yellow-200 px-2 py-0.5 text-xs font-extrabold text-ink">
-                    {t.unconfirmed}
-                  </span>
-                )}
                 <a
                   href={`https://www.google.com/maps/search/?api=1&query=${query}`}
                   target="_blank"

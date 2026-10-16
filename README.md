@@ -47,7 +47,7 @@ Set these in Vercel (**Project > Settings > Environment Variables**). [`.env.exa
 | `ADMIN_SESSION_SECRET` | `/admin` | At least 32 random characters (`openssl rand -hex 32`). Changing it or the password signs everyone out. |
 | `NEXT_PUBLIC_SITE_URL` | metadata, sitemap | Defaults to `https://www.instatickets.co.zw`. |
 | `NEXT_PUBLIC_BOOKING_URL` | BOOK buttons | The booking subdomain supplied by the back office. Until set, BOOK scrolls to "How to buy". |
-| `NEXT_PUBLIC_APP_STORE_URL`, `NEXT_PUBLIC_PLAY_STORE_URL` | app download buttons | Store links. A button shows only when its link is set. Replace the text buttons with the official store badges when you have the artwork. |
+| `NEXT_PUBLIC_APP_STORE_URL`, `NEXT_PUBLIC_PLAY_STORE_URL` | app download buttons | Store links. The official badges (`public/brand/badges/`, supplied artwork, unaltered) show on preview builds with a `#` placeholder link; production shows a badge only when its link is set. |
 
 Until real Cloudflare keys exist, Cloudflare's published **test keys** can be used (they always pass, so they give no spam protection):
 
@@ -136,11 +136,11 @@ A bare domain cannot use a `CNAME`, which is why it uses an `A` record. If a rec
 
 ### Find an Agent
 
-`/find-an-agent` searches `content/locations.ts` by town, province and outlet type. Production shows only entries with `confirmed: true`. The seed list holds Econet Shop names found on public web pages (not verified with Econet); no TN CyberTech Bank outlet list was found. Replace the file with the confirmed lists from Econet, the bank or the back office, and set `confirmed: true`.
+`/find-an-agent` searches `content/locations.ts` by town, province and outlet type. Production shows only entries with `confirmed: true`; preview builds show all entries. The current list is **placeholder content** (Econet Shop names from public web pages, not verified, and no TN CyberTech Bank outlets). Before launch, replace it with the confirmed lists from Econet, the bank or the back office and set `confirmed: true`.
 
 ### Terms and Conditions
 
-`/terms` renders [`content/terms.ts`](content/terms.ts), the draft supplied for legal review. Square-bracketed values are highlighted and a DRAFT notice shows until `termsFinal` is `true` in `content/facts.ts`.
+`/terms` renders [`content/terms.ts`](content/terms.ts), **placeholder text** supplied for legal review (the final Terms replace it before launch). Square-bracketed values are highlighted and a DRAFT notice shows until `termsFinal` is `true` in `content/facts.ts`.
 
 ### Forms
 

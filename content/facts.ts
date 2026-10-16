@@ -42,5 +42,7 @@ export const isReviewBuild = !isProduction;
 
 /** Where booking happens. Provided by the back office; falls back to the page's own channel list. */
 export const bookingUrl = process.env.NEXT_PUBLIC_BOOKING_URL || "/#how-to-buy";
-export const appStoreUrl = process.env.NEXT_PUBLIC_APP_STORE_URL || "";
-export const playStoreUrl = process.env.NEXT_PUBLIC_PLAY_STORE_URL || "";
+// Store links. Review builds show the badges even before the links exist ("#"), so the draft shows
+// the whole page; production shows a badge only when its link is set.
+export const appStoreUrl = process.env.NEXT_PUBLIC_APP_STORE_URL || (isReviewBuild ? "#" : "");
+export const playStoreUrl = process.env.NEXT_PUBLIC_PLAY_STORE_URL || (isReviewBuild ? "#" : "");

@@ -43,8 +43,12 @@ Terms and Conditions (draft, under legal review; EcoCash is named as an example 
 - Find an Agent: the same sentence as above, and the outlet type "TN CyberTech Bank agent".
 - No outlet list has been supplied; the bank is asked for the list it is happy to publish.
 
-## Statements to confirm with legal (from the draft Terms and the FAQ)
+## Placeholder content in this draft
 
-- The FAQ says: "If you pay and do not receive a ticket, InstaTickets returns your money automatically." (Terms section 7).
-- The Terms state a service fee of US$0.30 per ticket, and are written for bus tickets only while the site also sells events and sports.
-- The Terms contain unconfirmed values, shown highlighted: version, effective date, partner bank, reversal and response times, and a page of operator contacts that does not exist yet.
+This preview is a draft of the launch site. The outlet list, the Terms and Conditions text and the store links are placeholders, to be replaced with confirmed data before launch.
+
+## Statements that come from the agreed architecture and the draft Terms
+
+- The FAQ says: "If you pay and do not receive a ticket, InstaTickets returns your money automatically." This reflects the technical architecture agreed with EcoCash (also Terms section 7).
+- The placeholder Terms state a service fee of US$0.30 per ticket and are written for bus tickets only; the final Terms may change both.
+- The placeholder Terms contain unconfirmed values, shown highlighted: version, effective date, partner bank, reversal and response times, and a page of operator contacts that does not exist yet.

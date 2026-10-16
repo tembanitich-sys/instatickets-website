@@ -1,7 +1,8 @@
 import Image from "next/image";
-import { appStoreUrl, facts, partnerVisible, playStoreUrl, type PartnerKey } from "@content/facts";
+import { facts, partnerVisible, type PartnerKey } from "@content/facts";
 import { home } from "@content/site";
 import { brand } from "../Brand";
+import { StoreBadges } from "../StoreBadges";
 import { BookButton, ButtonLink } from "../ui";
 
 /**
@@ -79,20 +80,7 @@ export function Hero() {
                 );
               })}
             </ul>
-            {(appStoreUrl || playStoreUrl) && (
-              <div className="mt-3 flex flex-wrap justify-center gap-2 lg:justify-start">
-                {appStoreUrl && (
-                  <ButtonLink href={appStoreUrl} variant="secondaryOnDark" className="!min-h-10 !py-2 text-xs">
-                    {home.channels.appStore}
-                  </ButtonLink>
-                )}
-                {playStoreUrl && (
-                  <ButtonLink href={playStoreUrl} variant="secondaryOnDark" className="!min-h-10 !py-2 text-xs">
-                    {home.channels.playStore}
-                  </ButtonLink>
-                )}
-              </div>
-            )}
+            <StoreBadges className="mt-3 justify-center lg:justify-start" />
           </div>
         </div>
       </div>

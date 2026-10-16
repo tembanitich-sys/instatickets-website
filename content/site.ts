@@ -205,8 +205,8 @@ export const home = {
     payBody: "InstaTickets works with EcoCash, so you can pay from your mobile wallet.",
     payLabel: "Payment partner",
     storeHeading: "Get the InstaTickets app",
-    appStore: "DOWNLOAD ON THE APP STORE",
-    playStore: "GET IT ON GOOGLE PLAY",
+    appStore: "Download on the App Store",
+    playStore: "Get it on Google Play",
   },
   inPerson: {
     heading: "InstaTickets in person",
@@ -663,6 +663,5 @@ export const findAgent = {
   checkFirst: "Opening hours and availability can change. Please check with the outlet before you travel.",
   becomeAgent: "Want to sell InstaTickets tickets yourself?",
   becomeAgentLink: "BECOME AN AGENT",
-  reviewNote: "PREVIEW: this list includes outlets not yet confirmed. Only confirmed outlets appear on the live site.",
-  unconfirmed: "UNCONFIRMED",
+  reviewNote: "PREVIEW: outlet details here are placeholder content and will be replaced with confirmed data before launch.",
 } as const;
