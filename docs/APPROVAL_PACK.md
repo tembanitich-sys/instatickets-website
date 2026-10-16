@@ -15,6 +15,7 @@ The site launches on **Friday 13 November 2026**. USSD is shown as COMING SOON, 
 Each channel has a guide with a "where to start" control. The steps were **drafted by InstaTickets** from the customer Terms and the agreed architecture; each partner is asked to confirm or correct the steps for its channel before launch.
 
 - **EcoCash app:** path taken from the customer wireframe: EcoCash app > Pay Biller > Online Billers > InstaTickets > Bus Tickets, then search, results, seats, passenger details, review and PIN, ticket by SMS with booking reference and QR code. EcoCash to confirm the menu names (we had also heard "Bill Payments").
+- **Demo booking (/book, preview only):** follows the web wireframe: search, trips, seats, passenger details and next of kin, mobile number, review, accept Terms, EcoCash PIN (demo, nothing sent), ticket. No prices shown.
 - **USSD (COMING SOON):** from the USSD storyboard: dial *151#, Pay Bill, InstaTickets, Buy bus ticket, from, to, date, trip, class, who is travelling, next of kin, PIN. EcoCash to confirm.
 - **WhatsApp:** save +263 772 270 533 as InstaTickets, open the chat, send "Hi", choose to book, answer the questions, tap Accept and pay. InstaTickets to confirm this is the booking number and that "Hi" starts the session.
 - **InstaTickets app and website:** download or open, search, choose a trip and seat, accept the Terms, pay, ticket by SMS. Driven by the back office; to be confirmed against the real flow.
