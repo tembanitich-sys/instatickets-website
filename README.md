@@ -134,6 +134,10 @@ A bare domain cannot use a `CNAME`, which is why it uses an `A` record. If a rec
 - **Preview deployments and local builds** show everything, with an UNCONFIRMED tag on unverified outlets, so a partner can review the real pages.
 - Adding a payment partner later (for example InnBucks) means adding it to the partner list and copy in `content/site.ts` and its flag here, and adding its name to the allowed list in `tests/content-rules.test.ts`.
 
+### How to buy
+
+`/how-to-buy` holds a step-by-step guide per channel, written in `howToBuy` in `content/site.ts`: the EcoCash app (under Bill Payments), the InstaTickets app, the website, WhatsApp (number to save and a chat link), USSD (`*151#` dial link, COMING SOON), Econet Shops and TN CyberTech Bank agents. Each guide shows where to start. Partner guides follow the partner switches; the steps are drafts for the partners to confirm. The hero icons, the nav and the "Buy your way" cards link to the guides.
+
 ### Demo booking page
 
 `/book` simulates the online booking journey (search, sample trips, the ways to pay) so the whole site can be reviewed before the real booking subdomain exists. It uses sample trips only and appears on preview and local builds; in production it redirects to `NEXT_PUBLIC_BOOKING_URL`, or to the "How to buy" section if that is not set. The BOOK buttons and the website icon point to `/book` in review builds. When the back office supplies the booking address, set `NEXT_PUBLIC_BOOKING_URL`; the demo page can then be deleted.

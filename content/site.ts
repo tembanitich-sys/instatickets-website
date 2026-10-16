@@ -30,7 +30,7 @@ export const contact = {
 export const nav = {
   links: [
     { label: "Tickets", href: "/#tickets" },
-    { label: "How to buy", href: "/#how-to-buy" },
+    { label: "How to buy", href: "/how-to-buy" },
     { label: "Find an Agent", href: "/find-an-agent" },
     { label: "For Businesses", href: "/for-businesses" },
     { label: "Become an Agent", href: "/agents" },
@@ -57,7 +57,7 @@ export const footer = {
         { label: "Bus Tickets", href: "/#bus" },
         { label: "Event Tickets", href: "/#events" },
         { label: "Sports Tickets", href: "/#sports" },
-        { label: "How to Buy", href: "/#how-to-buy" },
+        { label: "How to Buy", href: "/how-to-buy" },
         { label: "Find an Agent", href: "/find-an-agent" },
       ],
     },
@@ -98,11 +98,11 @@ export const home = {
     // Icons under the hero logo; `label` is the accessible name and tooltip. `partner` icons only
     // show once that partner has approved the site. The website icon links to the tickets section.
     chips: [
-      { key: "ecocashApp", label: "EcoCash app", href: "/#how-to-buy", partner: "ecocash" },
-      { key: "app", label: "InstaTickets app", href: "/#how-to-buy" },
+      { key: "ecocashApp", label: "EcoCash app", href: "/how-to-buy#ecocashApp", partner: "ecocash" },
+      { key: "app", label: "InstaTickets app", href: "/how-to-buy#app" },
       { key: "web", label: "Website", href: "/#tickets" },
-      { key: "whatsapp", label: "WhatsApp", href: contact.whatsapp.href },
-      { key: "ussd", label: "USSD *151#", href: "/#how-to-buy", partner: "ecocash" },
+      { key: "whatsapp", label: "WhatsApp", href: "/how-to-buy#whatsapp" },
+      { key: "ussd", label: "USSD *151#", href: "/how-to-buy#ussd", partner: "ecocash" },
       { key: "agents", label: "Find an agent", href: "/find-an-agent" },
     ],
   },
@@ -696,4 +696,139 @@ export const bookDemo = {
   back: "Change search",
   times: ["06:00", "09:30", "14:00"],
   operatorNames: ["A", "B", "C"],
+} as const;
+
+/**
+ * "How to buy": a step-by-step guide per channel (page /how-to-buy). The steps are drafted from the
+ * customer Terms and the agreed architecture, and must be confirmed by each partner before launch
+ * (see docs/APPROVAL_PACK.md). `partner` guides show only once that partner has approved the site.
+ * `action` picks the "where to start" control: book, stores, whatsapp, dial or find.
+ */
+export const howToBuy = {
+  headline: "HOW TO BUY, STEP BY STEP",
+  intro: "Pick the way that suits you. Every guide shows where to start and what to do next.",
+  jump: "Jump to",
+  startHere: "START HERE",
+  soon: "COMING SOON",
+  steps: "Steps",
+  whatsappSave: "Save this number as InstaTickets:",
+  whatsappStart: "OPEN WHATSAPP",
+  whatsappText: "Hi",
+  dialLabel: "DIAL *151#",
+  dialCode: "*151#",
+  bookLabel: "START BOOKING",
+  findLabel: "FIND AN AGENT",
+  footer: "Your ticket is sent to you by SMS, and by WhatsApp, email or in the app where available. If you pay and do not receive a ticket, InstaTickets returns your money automatically.",
+  help: "Stuck? Chat with us on WhatsApp and we will help you book.",
+  seeSteps: "SEE THE STEPS",
+  guides: [
+    {
+      id: "ecocashApp",
+      channel: "ecocashApp",
+      partner: "ecocash",
+      title: "In the EcoCash app",
+      path: ["EcoCash app", "Bill Payments", "Bus Tickets", "InstaTickets"],
+      action: "none",
+      steps: [
+        "Open the EcoCash app and sign in.",
+        "Tap Bill Payments.",
+        "Choose Bus Tickets, then InstaTickets.",
+        "Enter where you are travelling from and to, the date and the number of passengers, then choose a trip.",
+        "Check the fare, the InstaTickets service fee, the total and the bus company's refund policy.",
+        "Confirm and pay from your EcoCash wallet.",
+        "Your ticket arrives by SMS, with your booking reference and a QR code. Show it when you board.",
+      ],
+    },
+    {
+      id: "app",
+      channel: "app",
+      title: "In the InstaTickets app",
+      path: [],
+      action: "stores",
+      steps: [
+        "Download the InstaTickets app from the App Store or Google Play.",
+        "Open the app and create your account with your mobile number.",
+        "Search for your trip: where from and to, the date and the number of passengers.",
+        "Choose a trip and your seat.",
+        "Check the total, tick that you accept the Terms and the bus company's refund policy, and pay.",
+        "Find your ticket in My Tickets. It is also sent to you by SMS.",
+      ],
+    },
+    {
+      id: "web",
+      channel: "web",
+      title: "On the website",
+      path: [],
+      action: "book",
+      steps: [
+        "Tap START BOOKING to open the booking page.",
+        "Choose Bus and enter where you are travelling from and to, the date and the number of passengers.",
+        "Choose a trip and your seat.",
+        "Enter each passenger's details exactly as on their ID or travel document.",
+        "Check the total, tick that you accept the Terms and the bus company's refund policy, and pay.",
+        "Your ticket is sent to you by SMS, and by email where you gave one.",
+      ],
+    },
+    {
+      id: "whatsapp",
+      channel: "whatsapp",
+      title: "On WhatsApp",
+      path: [],
+      action: "whatsapp",
+      steps: [
+        "Save our WhatsApp number in your phone as InstaTickets.",
+        "Open WhatsApp and start a chat with InstaTickets.",
+        "Send Hi to begin.",
+        "Choose to book a ticket and answer the questions: where from and to, the date and the number of passengers.",
+        "Check the order summary and tap Accept and pay.",
+        "Pay when asked. Your ticket arrives in the chat and by SMS.",
+      ],
+    },
+    {
+      id: "ussd",
+      channel: "ussd",
+      partner: "ecocash",
+      title: "By USSD",
+      path: ["Dial *151#", "Bill Payments", "Bus Tickets", "InstaTickets"],
+      action: "dial",
+      steps: [
+        "On any phone, dial *151# and press call. You do not need a smartphone or data.",
+        "Choose Bill Payments.",
+        "Choose Bus Tickets, then InstaTickets.",
+        "Follow the prompts to choose your trip, date and number of passengers.",
+        "Confirm to accept the Terms and the bus company's refund policy, then pay with your PIN.",
+        "Your ticket is sent to you by SMS.",
+      ],
+    },
+    {
+      id: "agents-econet",
+      channel: "agents",
+      partner: "econet",
+      title: "At an Econet Shop",
+      path: [],
+      action: "find",
+      steps: [
+        "Find your nearest Econet Shop with Find an Agent.",
+        "Tell the agent where and when you want to travel and how many passengers.",
+        "The agent shows you the trips and tells you the bus company's refund policy before taking payment.",
+        "Pay the agent and keep your receipt.",
+        "Your ticket is sent to you by SMS. Keep it until your journey ends.",
+      ],
+    },
+    {
+      id: "agents-tn",
+      channel: "agents",
+      partner: "tn",
+      title: "At a TN CyberTech Bank agent",
+      path: [],
+      action: "find",
+      steps: [
+        "Find your nearest TN CyberTech Bank agent with Find an Agent.",
+        "Tell the agent where and when you want to travel and how many passengers.",
+        "The agent shows you the trips and tells you the bus company's refund policy before taking payment.",
+        "Pay the agent and keep your receipt.",
+        "Your ticket is sent to you by SMS. Keep it until your journey ends.",
+      ],
+    },
+  ],
 } as const;

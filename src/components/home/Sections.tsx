@@ -29,7 +29,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { appStoreUrl, bookingUrl, facts, partnerVisible, playStoreUrl, type PartnerKey } from "@content/facts";
-import { home, nav } from "@content/site";
+import { home, howToBuy, nav } from "@content/site";
 import { brand } from "../Brand";
 import { partnerCopy } from "@content/partners";
 import { ChannelIcon, channelVisible, type ChannelKey } from "../ChannelIcon";
@@ -268,7 +268,13 @@ export function ChannelsSection() {
                 </span>
               )}
               <h3 className="mt-4 text-lg font-extrabold tracking-wide text-navy">{brand(c.title)}</h3>
-              <p className="mt-2 leading-relaxed text-muted">{brand(c.body)}</p>
+              <p className="mt-2 flex-1 leading-relaxed text-muted">{brand(c.body)}</p>
+              <Link
+                href={`/how-to-buy#${c.key === "agents" ? (partnerVisible("econet") ? "agents-econet" : partnerVisible("tn") ? "agents-tn" : "") : c.key}`}
+                className="mt-4 inline-flex min-h-11 items-center text-sm font-extrabold tracking-wide text-navy underline"
+              >
+                {howToBuy.seeSteps}
+              </Link>
             </article>
           );
         })}
