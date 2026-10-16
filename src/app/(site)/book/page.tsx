@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { bookingUrl, isReviewBuild } from "@content/facts";
 import { home, bookDemo as t } from "@content/site";
-import { BookingDemo } from "@/components/BookingDemo";
+import { ChannelDemos } from "@/components/ChannelDemos";
 import { ChannelIcon, channelVisible, type ChannelKey } from "@/components/ChannelIcon";
 import { PageIntro, Section } from "@/components/ui";
 import type { PartnerKey } from "@content/facts";
@@ -43,7 +43,7 @@ export default function BookPage() {
         <p role="note" className="mb-6 rounded-xl border-2 border-red bg-red-50 px-4 py-3 text-sm font-bold text-red-dark">
           {t.banner}
         </p>
-        <BookingDemo channels={channels} />
+        <ChannelDemos channels={channels} />
       </Section>
     </>
   );

@@ -743,6 +743,92 @@ export const bookDemo = {
 } as const;
 
 /**
+ * Simulated WhatsApp and USSD journeys on the review-only demo page (/book), following the
+ * customer wireframes. Sample trips only, no prices, nothing is sent. Menu numbering is
+ * illustrative: the partners confirm the real menus (see docs/APPROVAL_PACK.md).
+ */
+export const channelDemo = {
+  tabs: [
+    { key: "web", label: "Website" },
+    { key: "whatsapp", label: "WhatsApp" },
+    { key: "ussd", label: "USSD" },
+  ],
+  banner: "DEMO: this simulates the journey with sample trips. Nothing is sent or charged.",
+  reference: "DEMO-0000",
+  whatsapp: {
+    profileName: "InstaTickets",
+    profileNote: "Business account",
+    typing: "Type a message",
+    send: "Send",
+    hi: "Hi",
+    startPrompt: "Tap to say Hi and start.",
+    welcome: "Welcome! What would you like to do?",
+    menuButton: "Choose",
+    menu: [
+      { key: "book", label: "Book a bus ticket" },
+      { key: "tickets", label: "My tickets", soon: true },
+      { key: "help", label: "Talk to us", soon: true },
+    ],
+    soon: "That option arrives with the live service.",
+    formIntro: "Tell us about your trip.",
+    formOpen: "Fill in trip details",
+    formSubmit: "Find trips",
+    from: "From",
+    to: "To",
+    date: "Travel date",
+    passengers: "Passengers",
+    choose: "Choose a town",
+    sameTown: "Choose two different towns.",
+    tripsIntro: "Here are the trips we found. Pick one.",
+    tripLine: (time: string, op: string) => `${time}, ${op}`,
+    pickedTrip: (line: string) => `You picked ${line}.`,
+    namesIntro: "Enter the passenger's name and ID number exactly as on their ID or travel document.",
+    fullName: "Full name",
+    idNumber: "ID or passport number",
+    namesSubmit: "Continue",
+    needAll: "Enter a name and an ID number.",
+    summaryTitle: "Order summary",
+    summary: (from: string, to: string, time: string, pax: number) =>
+      `${from} to ${to}, ${time}, ${pax} ${pax === 1 ? "passenger" : "passengers"}. Fare, service fee and total are shown here in the live service.`,
+    refundNote: "The bus company's refund policy applies. By paying you accept the Terms and that policy.",
+    accept: "Accept and pay",
+    payPrompt: "Check your phone for the EcoCash prompt and enter your PIN.",
+    approve: "Enter PIN (demo)",
+    paid: "Payment received. Your ticket is below.",
+    ticketTitle: "Your ticket",
+    ticketLine: (from: string, to: string, time: string) => `${from} to ${to}, ${time}`,
+    ticketNote: "Show this QR code when you board. It is also sent to you by SMS.",
+    again: "Start again",
+  },
+  ussd: {
+    frameLabel: "Phone",
+    dialLabel: "DIAL *151#",
+    dialCode: "*151#",
+    send: "Send",
+    cancel: "Cancel",
+    reply: "Reply",
+    invalid: "Invalid choice. Try again.",
+    end: "Session ended.",
+    dialHint: "Press the green button to dial, as you would on any phone.",
+    screens: {
+      main: "EcoCash\n1. Pay Bill\n0. More",
+      billers: "Pay Bill\n1. InstaTickets",
+      product: "InstaTickets\n1. Buy bus ticket",
+      from: "From:",
+      to: "To:",
+      date: "Travel date:\n1. Today\n2. Tomorrow",
+      trips: "Trips:",
+      class: "Choose a class:\n1. Standard\n2. Premium",
+      who: "Who is travelling?\n1. Myself\n2. Someone else",
+      name: "Passenger name:",
+      kin: "Next of kin phone number:",
+      pin: "Pay for your ticket. Fare, service fee and total are shown here in the live service. Enter your EcoCash PIN:",
+      done: "Ticket booked. Your ticket and reference are sent by SMS.",
+    },
+  },
+} as const;
+
+/**
  * "How to buy": a step-by-step guide per channel (page /how-to-buy). The steps are drafted from the
  * customer Terms and the agreed architecture, and must be confirmed by each partner before launch
  * (see docs/APPROVAL_PACK.md). `partner` guides show only once that partner has approved the site.
