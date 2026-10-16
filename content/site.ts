@@ -667,3 +667,33 @@ export const findAgent = {
   becomeAgentLink: "BECOME AN AGENT",
   reviewNote: "PREVIEW: outlet details here are placeholder content and will be replaced with confirmed data before launch.",
 } as const;
+
+/** Demo booking page (/book). It simulates the online booking journey with sample trips and is shown only in review builds. */
+export const bookDemo = {
+  headline: "BOOK YOUR TICKET",
+  intro: "Search for a trip, choose a time and pay your way.",
+  banner: "DEMO: this page simulates online booking with sample trips. Live booking is provided by the InstaTickets platform.",
+  tabs: [
+    { key: "bus", label: "Bus", enabled: true },
+    { key: "events", label: "Events", enabled: false },
+    { key: "sports", label: "Sports", enabled: false },
+  ],
+  tabSoon: "Soon",
+  from: "From",
+  to: "To",
+  date: "Travel date",
+  passengers: "Passengers",
+  choose: "Choose a town",
+  search: "SEARCH TRIPS",
+  towns: ["Harare", "Bulawayo", "Mutare", "Gweru", "Masvingo", "Victoria Falls", "Kariba", "Chitungwiza"],
+  sameTown: "Choose two different towns.",
+  resultsHeading: (from: string, to: string) => `${from} to ${to}`,
+  operator: "Sample operator",
+  fare: "Fare shown at checkout",
+  select: "SELECT",
+  selected: "Trip selected",
+  next: "Next you choose your seat and pay. You can pay in the way that suits you:",
+  back: "Change search",
+  times: ["06:00", "09:30", "14:00"],
+  operatorNames: ["A", "B", "C"],
+} as const;

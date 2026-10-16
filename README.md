@@ -46,7 +46,7 @@ Set these in Vercel (**Project > Settings > Environment Variables**). [`.env.exa
 | `ADMIN_PASSWORD` | `/admin` | At least 12 characters; use a long passphrase. |
 | `ADMIN_SESSION_SECRET` | `/admin` | At least 32 random characters (`openssl rand -hex 32`). Changing it or the password signs everyone out. |
 | `NEXT_PUBLIC_SITE_URL` | metadata, sitemap | Defaults to `https://www.instatickets.co.zw`. |
-| `NEXT_PUBLIC_BOOKING_URL` | BOOK buttons | The booking subdomain supplied by the back office. Until set, BOOK scrolls to "How to buy". |
+| `NEXT_PUBLIC_BOOKING_URL` | BOOK buttons, website icon | The booking subdomain supplied by the back office. Until set, review builds use the demo page `/book` and production scrolls to "How to buy". |
 | `NEXT_PUBLIC_APP_STORE_URL`, `NEXT_PUBLIC_PLAY_STORE_URL` | app download buttons | Store links. The official badges (`public/brand/badges/`, supplied artwork, unaltered) show on preview builds with a `#` placeholder link; production shows a badge only when its link is set. |
 
 Until real Cloudflare keys exist, Cloudflare's published **test keys** can be used (they always pass, so they give no spam protection):
@@ -133,6 +133,10 @@ A bare domain cannot use a `CNAME`, which is why it uses an `A` record. If a rec
 - **Production** hides every partner name, logo and channel that needs a partner (the EcoCash app, USSD, the named outlet types) until that partner's flag is `true`. USSD shows a COMING SOON label while its channel is `soon`.
 - **Preview deployments and local builds** show everything, with an UNCONFIRMED tag on unverified outlets, so a partner can review the real pages.
 - Adding a payment partner later (for example InnBucks) means adding it to the partner list and copy in `content/site.ts` and its flag here, and adding its name to the allowed list in `tests/content-rules.test.ts`.
+
+### Demo booking page
+
+`/book` simulates the online booking journey (search, sample trips, the ways to pay) so the whole site can be reviewed before the real booking subdomain exists. It uses sample trips only and appears on preview and local builds; in production it redirects to `NEXT_PUBLIC_BOOKING_URL`, or to the "How to buy" section if that is not set. The BOOK buttons and the website icon point to `/book` in review builds. When the back office supplies the booking address, set `NEXT_PUBLIC_BOOKING_URL`; the demo page can then be deleted.
 
 ### Channel icons
 

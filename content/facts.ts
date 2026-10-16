@@ -40,8 +40,12 @@ export const partnerVisible = (key: PartnerKey): boolean => !isProduction || fac
 /** True when this build is showing content that is not yet approved for the public. */
 export const isReviewBuild = !isProduction;
 
-/** Where booking happens. Provided by the back office; falls back to the page's own channel list. */
-export const bookingUrl = process.env.NEXT_PUBLIC_BOOKING_URL || "/#how-to-buy";
+/**
+ * Where booking happens. The back office supplies the real booking address (NEXT_PUBLIC_BOOKING_URL).
+ * Until then, review builds use the demo booking page at /book so the whole journey can be shown;
+ * production falls back to the page's own "How to buy" section and never shows the demo.
+ */
+export const bookingUrl = process.env.NEXT_PUBLIC_BOOKING_URL || (isReviewBuild ? "/book" : "/#how-to-buy");
 // Store links. Review builds show the badges even before the links exist ("#"), so the draft shows
 // the whole page; production shows a badge only when its link is set.
 export const appStoreUrl = process.env.NEXT_PUBLIC_APP_STORE_URL || (isReviewBuild ? "#" : "");

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { facts, partnerVisible, type PartnerKey } from "@content/facts";
+import { bookingUrl, facts, partnerVisible, type PartnerKey } from "@content/facts";
 import { home } from "@content/site";
 import { brand } from "../Brand";
 import { ChannelIcon, type ChannelKey } from "../ChannelIcon";
@@ -70,11 +70,13 @@ export function Hero() {
             <ul className="mt-3 flex flex-wrap justify-center gap-3 lg:justify-start">
               {chips.map((c) => {
                 const soon = facts.channels[c.key as keyof typeof facts.channels] === "soon";
-                const external = c.href.startsWith("http");
+                // The website icon goes straight to booking (the demo page until the real one exists).
+                const href = c.key === "web" ? bookingUrl : c.href;
+                const external = href.startsWith("http");
                 return (
                   <li key={c.key} className="relative">
                     <a
-                      href={c.href}
+                      href={href}
                       aria-label={soon ? `${c.label}, ${h.soon}` : c.label}
                       title={c.label}
                       target={external ? "_blank" : undefined}

@@ -90,7 +90,7 @@ All in `content/site.ts` (edit, commit, push; no other file needs touching).
 
 **C. Legal pages.** `/terms` now shows the draft Terms supplied for legal review, with a DRAFT notice and highlighted `[brackets]` (version, effective date, partner bank, response times and the operators page). The text is placeholder until the final Terms replace it; set `termsFinal` then. `/cookies` still says COMING SOON. The privacy notice describes the website forms only; the Terms refer to a Privacy Policy covering bookings, which legal must supply. The privacy notice says "See the Cookie Policy", which currently says COMING SOON. Decide whether the Cookie Policy must exist before launch (the site itself sets no cookies; the admin session cookie is only set when staff sign in).
 
-**D. Placeholder content to replace before launch.** The outlet list (`content/locations.ts`), the Terms text (`content/terms.ts`) and the store and booking links (`NEXT_PUBLIC_*`) are placeholders in the draft.
+**D. Placeholder content to replace before launch.** The outlet list (`content/locations.ts`), the Terms text (`content/terms.ts`) the store and booking links (`NEXT_PUBLIC_*`) and the demo booking page `/book` are placeholders in the draft.
 
 **E. Partners and channels.** The EcoCash, Econet and TN CyberTech Bank wording, the EcoCash logo and the channel list need each partner's written approval; see `docs/APPROVAL_PACK.md`. Until approved they stay hidden in production.
 
