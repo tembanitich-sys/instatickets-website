@@ -3,8 +3,10 @@ import Link from "next/link";
 import { isReviewBuild, partnerVisible } from "@content/facts";
 import { outlets } from "@content/locations";
 import { findAgent as t } from "@content/site";
+import { partnerCopy } from "@content/partners";
 import { AgentLocator } from "@/components/AgentLocator";
 import { brand } from "@/components/Brand";
+import { PartnerRow } from "@/components/PartnerLogo";
 import { PageIntro, Section, WhatsAppButton } from "@/components/ui";
 
 export const metadata: Metadata = {
@@ -31,6 +33,12 @@ export default function FindAnAgentPage() {
           {brand(t.headline)}
         </h1>
         <p className="mt-4 max-w-2xl text-lg text-white/90">{brand(named ? t.introNamed : t.intro)}</p>
+        {named && (
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <span className="text-sm font-bold tracking-wide text-white/90">{partnerCopy.availableAt}</span>
+            <PartnerRow keys={["econet", "tn"]} />
+          </div>
+        )}
       </PageIntro>
 
       <Section>

@@ -1,7 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { contact, footer } from "@content/site";
+import { partnerCopy } from "@content/partners";
+import { partnerVisible } from "@content/facts";
 import { brand } from "./Brand";
+import { PartnerRow } from "./PartnerLogo";
 
 export function Footer() {
   return (
@@ -47,6 +50,15 @@ export function Footer() {
             </nav>
           ))}
         </div>
+
+        {(partnerVisible("ecocash") || partnerVisible("econet") || partnerVisible("tn")) && (
+          <div className="mt-10">
+            <h2 className="text-sm font-extrabold tracking-widest text-gold">{partnerCopy.heading.toUpperCase()}</h2>
+            <div className="mt-3">
+              <PartnerRow keys={["ecocash", "econet", "tn"]} height={26} />
+            </div>
+          </div>
+        )}
 
         <div className="mt-12 border-t border-white/20 pt-8">
           {/* Bullion logos sit on white only (brief Section 5). */}

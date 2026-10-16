@@ -31,10 +31,11 @@ import {
   Users,
   type LucideIcon,
 } from "lucide-react";
-import Image from "next/image";
 import { appStoreUrl, bookingUrl, facts, partnerVisible, playStoreUrl, type PartnerKey } from "@content/facts";
 import { home, nav } from "@content/site";
 import { brand } from "../Brand";
+import { partnerCopy } from "@content/partners";
+import { PartnerLogo, PartnerRow } from "../PartnerLogo";
 import { StoreBadges } from "../StoreBadges";
 import { BookButton, ButtonLink, Heading, Perforation, Section } from "../ui";
 
@@ -267,7 +268,7 @@ function visibleChannel(c: Channel): boolean {
 export function ChannelsSection() {
   const s = home.channels;
   const cards = s.cards.filter(visibleChannel);
-  const showEcoCash = partnerVisible("ecocash");
+  const showPayPartner = partnerVisible("ecocash");
   return (
     <Section id="how-to-buy">
       <div className="mx-auto max-w-3xl text-center">
@@ -291,6 +292,11 @@ export function ChannelsSection() {
               )}
               <h3 className="mt-4 text-lg font-extrabold tracking-wide text-navy">{brand(c.title)}</h3>
               <p className="mt-2 leading-relaxed text-muted">{brand(c.body)}</p>
+              {"partner" in c && c.partner === "ecocash" && (
+                <div className="mt-4">
+                  <PartnerLogo partner="ecocash" height={18} />
+                </div>
+              )}
             </article>
           );
         })}
@@ -298,19 +304,12 @@ export function ChannelsSection() {
 
       <p className="mt-6 text-center text-sm text-muted">{brand(s.ticketNote)}</p>
 
-      {(showEcoCash || appStoreUrl || playStoreUrl) && (
-        <div className={`mt-10 grid gap-6 ${showEcoCash && (appStoreUrl || playStoreUrl) ? "md:grid-cols-2" : ""}`}>
-          {showEcoCash && (
+      {(showPayPartner || appStoreUrl || playStoreUrl) && (
+        <div className={`mt-10 grid gap-6 ${showPayPartner && (appStoreUrl || playStoreUrl) ? "md:grid-cols-2" : ""}`}>
+          {showPayPartner && (
             <div className="flex flex-col items-start gap-4 rounded-2xl bg-mist p-6">
               <p className="text-xs font-extrabold uppercase tracking-[0.25em] text-red">{s.payLabel}</p>
-              <Image
-                src="/brand/partners/ecocash.png"
-                alt="EcoCash"
-                width={2000}
-                height={389}
-                sizes="180px"
-                className="h-9 w-auto"
-              />
+              <PartnerLogo partner="ecocash" height={34} />
               <div>
                 <h3 className="text-lg font-extrabold text-navy">{s.payHeading}</h3>
                 <p className="mt-1 leading-relaxed text-muted">{brand(s.payBody)}</p>
@@ -344,6 +343,12 @@ export function InPersonSection() {
             {brand(s.findHeading)}
           </h3>
           <p className="mt-2 leading-relaxed text-muted">{brand(named ? s.findBody : s.findBodyGeneric)}</p>
+          {named && (
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              <span className="text-sm font-bold text-navy">{partnerCopy.availableAt}</span>
+              <PartnerRow keys={["econet", "tn"]} height={22} />
+            </div>
+          )}
           <div className="mt-6">
             <ButtonLink href="/find-an-agent" variant="primary">
               {s.findButton}

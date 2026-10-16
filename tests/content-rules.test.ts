@@ -41,8 +41,9 @@ describe("brief section 11: content rules", () => {
     // Partner names appear in copy that components gate with partnerVisible(); the source files
     // themselves must not hard-code them outside the copy, the facts file and the locations list.
     const outside = publicSource.filter(({ text }) => /EcoCash|Econet|TN CyberTech/.test(text)).map((e) => e.file);
-    // Only the section that renders the partner logo (inside a partnerVisible() check) may hard-code a name.
-    expect(outside).toEqual(["src/components/home/Sections.tsx"]);
+    // Names come from content/partners.ts and are rendered through PartnerLogo, which checks the
+    // partner switch; nothing in the components may hard-code one.
+    expect(outside).toEqual([]);
   });
 
   it("makes no claim of market leadership or of owning ticket inventory", () => {

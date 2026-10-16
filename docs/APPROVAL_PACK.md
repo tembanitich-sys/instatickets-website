@@ -12,7 +12,7 @@ The site launches on **Friday 13 November 2026**. USSD is shown as COMING SOON, 
 
 ## EcoCash
 
-Logo: the EcoCash wordmark supplied by InstaTickets (`public/brand/partners/ecocash.png`), shown on a light background in the "Pay with the wallet you already use" block, headed "Payment partner". Please confirm it is the current logo and may be used this way.
+Logo: the EcoCash wordmark supplied by InstaTickets (`public/brand/partners/ecocash.png`), shown on a white label in the "Pay with the wallet you already use" block (headed "Payment partner"), on the two EcoCash channel cards, and in the footer "Our partners" row. Please confirm it is the current logo and may be used this way.
 
 Home page
 - Hero chips: "EcoCash app" and "USSD COMING SOON".
@@ -36,11 +36,13 @@ Terms and Conditions (draft, under legal review; EcoCash is named as an example 
 ## Econet (shops)
 
 - Find an Agent: "Search by town or city to find an agent, an Econet Shop or a TN CyberTech Bank agent." and the outlet type "Econet Shop".
+- Shown as "Econet Shops" in an "Available at" row (home page and Find an Agent) and in the footer "Our partners" row. The Econet logo has not been supplied: the name shows as text until `public/brand/partners/econet.png` is added.
 - Each listed shop is named "Econet Shop, <location>". The seed list comes from public web pages and is unverified; please supply the confirmed list.
 
 ## TN CyberTech Bank (agents)
 
 - Find an Agent: the same sentence as above, and the outlet type "TN CyberTech Bank agent".
+- Logo: cropped from the TN CyberTech Bank artwork supplied by InstaTickets (`public/brand/partners/tn.png`), kept on its own black background, in the same "Available at" and "Our partners" rows. Please confirm it is the current logo.
 - No outlet list has been supplied; the bank is asked for the list it is happy to publish.
 
 ## Placeholder content in this draft
