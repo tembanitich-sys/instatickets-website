@@ -47,6 +47,7 @@ Set these in Vercel (**Project > Settings > Environment Variables**). [`.env.exa
 | `ADMIN_SESSION_SECRET` | `/admin` | At least 32 random characters (`openssl rand -hex 32`). Changing it or the password signs everyone out. |
 | `NEXT_PUBLIC_SITE_URL` | metadata, sitemap | Defaults to `https://www.instatickets.co.zw`. |
 | `NEXT_PUBLIC_BOOKING_URL` | BOOK buttons, website icon | The booking subdomain supplied by the back office. Until set, review builds use the demo page `/book` and production scrolls to "How to buy". |
+| `NEXT_PUBLIC_ECOCASH_APP_STORE_URL`, `NEXT_PUBLIC_ECOCASH_PLAY_STORE_URL` | "In the EcoCash app" card badges | The EcoCash app's own store listings, supplied by EcoCash. Same `#` placeholder behaviour as above; the card only shows once EcoCash has approved the site. |
 | `NEXT_PUBLIC_APP_STORE_URL`, `NEXT_PUBLIC_PLAY_STORE_URL` | app download buttons | Store links. The official badges (`public/brand/badges/`, supplied artwork, unaltered) show on preview builds with a `#` placeholder link; production shows a badge only when its link is set. |
 
 Until real Cloudflare keys exist, Cloudflare's published **test keys** can be used (they always pass, so they give no spam protection):

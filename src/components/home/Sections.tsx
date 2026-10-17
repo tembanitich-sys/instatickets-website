@@ -28,8 +28,8 @@ import {
   Users,
   type LucideIcon,
 } from "lucide-react";
-import { appStoreUrl, bookingUrl, facts, partnerVisible, playStoreUrl, type PartnerKey } from "@content/facts";
-import { home, howToBuy, nav } from "@content/site";
+import { appStoreUrl, bookingUrl, ecocashAppStoreUrl, ecocashPlayStoreUrl, facts, partnerVisible, playStoreUrl, type PartnerKey } from "@content/facts";
+import { contact, home, howToBuy, nav } from "@content/site";
 import { brand } from "../Brand";
 import { partnerCopy } from "@content/partners";
 import { ChannelIcon, channelVisible, type ChannelKey } from "../ChannelIcon";
@@ -268,7 +268,26 @@ export function ChannelsSection() {
                 </span>
               )}
               <h3 className="mt-4 text-lg font-extrabold tracking-wide text-navy">{brand(c.title)}</h3>
-              <p className="mt-2 flex-1 leading-relaxed text-muted">{brand(c.body)}</p>
+              <p className="mt-2 leading-relaxed text-muted">{brand(c.body)}</p>
+              {c.key === "whatsapp" && (
+                <a href={contact.whatsapp.href} className="mt-1 text-lg font-extrabold text-navy hover:underline">
+                  {contact.whatsapp.display}
+                </a>
+              )}
+              {c.key === "ecocashApp" && (
+                <StoreBadges className="mt-4" appStoreUrl={ecocashAppStoreUrl} playStoreUrl={ecocashPlayStoreUrl} />
+              )}
+              {c.key === "app" && <StoreBadges className="mt-4" />}
+              <div className="flex-1" />
+              {"cta" in c && (
+                <ButtonLink
+                  href={c.cta === "book" ? bookingUrl : c.cta === "find" ? "/find-an-agent" : `${contact.whatsapp.href}?text=${encodeURIComponent(howToBuy.whatsappText)}`}
+                  variant="primary"
+                  className="mt-4 self-start"
+                >
+                  {c.ctaLabel}
+                </ButtonLink>
+              )}
               <Link
                 href={`/how-to-buy#${c.key === "agents" ? (partnerVisible("econet") ? "agents-econet" : partnerVisible("tn") ? "agents-tn" : "") : c.key}`}
                 className="mt-4 inline-flex min-h-11 items-center text-sm font-extrabold tracking-wide text-navy underline"

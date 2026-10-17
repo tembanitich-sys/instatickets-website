@@ -1,12 +1,20 @@
 import Image from "next/image";
-import { appStoreUrl, playStoreUrl } from "@content/facts";
+import { appStoreUrl as defaultApp, playStoreUrl as defaultPlay } from "@content/facts";
 import { home } from "@content/site";
 
 /**
  * The official App Store and Google Play badges (supplied artwork, used unaltered), each shown only
  * when its link is set. The artwork is 404 x 120; both badges display at the same 40 px height.
  */
-export function StoreBadges({ className = "" }: { className?: string }) {
+export function StoreBadges({
+  className = "",
+  appStoreUrl = defaultApp,
+  playStoreUrl = defaultPlay,
+}: {
+  className?: string;
+  appStoreUrl?: string;
+  playStoreUrl?: string;
+}) {
   const s = home.channels;
   if (!appStoreUrl && !playStoreUrl) return null;
   return (

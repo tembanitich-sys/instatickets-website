@@ -50,3 +50,6 @@ export const bookingUrl = process.env.NEXT_PUBLIC_BOOKING_URL || (isReviewBuild 
 // the whole page; production shows a badge only when its link is set.
 export const appStoreUrl = process.env.NEXT_PUBLIC_APP_STORE_URL || (isReviewBuild ? "#" : "");
 export const playStoreUrl = process.env.NEXT_PUBLIC_PLAY_STORE_URL || (isReviewBuild ? "#" : "");
+// The EcoCash app's own store listings, for the "In the EcoCash app" card (EcoCash supplies them).
+export const ecocashAppStoreUrl = process.env.NEXT_PUBLIC_ECOCASH_APP_STORE_URL || (isReviewBuild ? "#" : "");
+export const ecocashPlayStoreUrl = process.env.NEXT_PUBLIC_ECOCASH_PLAY_STORE_URL || (isReviewBuild ? "#" : "");
