@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { bookDemo, channelDemo } from "@content/site";
-import { allTowns, companyList, useLastCompany, tripsFor, type DemoCompany } from "@/lib/demoTrips";
+import { allTowns, companyList, companyTowns, useLastCompany, tripsFor, type DemoCompany } from "@/lib/demoTrips";
 
 const t = channelDemo.ussd;
 const tw = channelDemo.whatsapp;
@@ -23,10 +23,10 @@ export function UssdDemo() {
   const lastSlug = useLastCompany();
 
   const companies = companyList(lastSlug);
-  const towns = company ? [...company.towns].sort((a, b) => a.localeCompare(b)) : allTowns();
+  const towns = company ? companyTowns(company) : allTowns();
   const trips = from && toTown ? tripsFor(from, toTown, company ?? undefined) : [];
   const tripLines = trips.map(
-    (r) => `${r.time}${company ? "" : ` ${r.company.name}`} ${bookDemo.currency}${r.fare}${r.full ? ` (${bookDemo.full})` : ""}`,
+    (r) => `${r.dep}${company ? "" : ` ${r.company.short}`} ${bookDemo.currency}${r.fare}${r.full ? ` (${bookDemo.full})` : ""}`,
   );
 
   const text: Record<Id, string> = {

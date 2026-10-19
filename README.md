@@ -208,4 +208,4 @@ Files generated from the supplied ones (allowed by the brief): `src/app/icon.png
 
 ## Bus company storefronts demo (CR-001)
 
-Sample companies and trips live in `demoCompanies` in `content/site.ts` (invented names, sample fares $10 to $120); the matching, sorting and last-used logic is in `src/lib/demoTrips.ts` with tests in `tests/demo-trips.test.ts`. `/book?company=<slug>` opens a storefront; the QR code is a placeholder.
+Companies and trips live in `demoCompanies` in `content/site.ts` (15 real bus companies with logos in `public/brand/operators/`, from the supplied Operator Demo; routes, times and fares are illustrative until confirmed, and the page is review-only); the matching, sorting and last-used logic is in `src/lib/demoTrips.ts` with tests in `tests/demo-trips.test.ts`. `/book?company=<slug>` opens a storefront; the QR code is a placeholder.

@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { bookDemo, channelDemo } from "@content/site";
 import { brand } from "./Brand";
-import { allTowns, companyList, matchCompanies, readLastCompany, saveLastCompany, tripsFor, type DemoCompany, type DemoTrip } from "@/lib/demoTrips";
+import { allTowns, companyList, companyTowns, matchCompanies, readLastCompany, saveLastCompany, tripsFor, type DemoCompany, type DemoTrip } from "@/lib/demoTrips";
+import { CompanyLogo } from "./CompanyLogo";
 import { Select, TextInput } from "./forms/fields";
 
 const t = channelDemo.whatsapp;
@@ -42,7 +43,7 @@ export function WhatsAppDemo() {
     setLog((l) => [...l, ...(me ? [{ who: "me" as const, text: me }] : []), ...bot.map((text) => ({ who: "bot" as const, text }))]);
     setStep(next);
   };
-  const townList = company ? [...company.towns].sort((a, b) => a.localeCompare(b)) : allTowns();
+  const townList = company ? companyTowns(company) : allTowns();
   const towns = [{ value: "", label: t.choose }, ...townList.map((x) => ({ value: x, label: x }))];
   const results = from && to ? tripsFor(from, to, company ?? undefined) : [];
   const n = Number(pax);
@@ -126,7 +127,10 @@ export function WhatsAppDemo() {
           <ul className="grid gap-2">
             {options.map((c) => (
               <li key={c.slug}>
-                <button type="button" onClick={() => chooseCompany(c)} className={action}>{c.name}</button>
+                <button type="button" onClick={() => chooseCompany(c)} className={`${action} flex items-center justify-center gap-3`}>
+                  <CompanyLogo company={c} height={28} fixedWidth={56} />
+                  {c.name}
+                </button>
               </li>
             ))}
             <li>
@@ -160,9 +164,9 @@ export function WhatsAppDemo() {
           <ul className="grid gap-2">
             {results.length === 0 && <li className={bubble("bot")}>{t.noRouteTrips}</li>}
             {results.map((r) => {
-              const line = t.tripLine(r.time, r.company.name, `${bookDemo.currency}${r.fare}`);
+              const line = t.tripLine(r.dep, r.company.name, `${bookDemo.currency}${r.fare}`);
               return (
-                <li key={`${r.company.slug}-${r.time}`}>
+                <li key={`${r.company.slug}-${r.dep}`}>
                   <button
                     type="button"
                     disabled={r.full}
@@ -183,7 +187,7 @@ export function WhatsAppDemo() {
             onSubmit={(e) => {
               e.preventDefault();
               if (!name.trim() || !idNo.trim()) return setError(t.needAll);
-              say(`${name}, ${idNo}`, [`${t.summaryTitle}: ${t.summary(from, to, trip?.time ?? "", n)}`, t.refundNote], "summary");
+              say(`${name}, ${idNo}`, [`${t.summaryTitle}: ${t.summary(from, to, trip?.dep ?? "", n)}`, t.refundNote], "summary");
             }}
           >
             <div><label htmlFor="wa-name" className={label}>{t.fullName}</label><TextInput id="wa-name" value={name} onChange={(e) => setName(e.target.value)} /></div>
@@ -199,7 +203,7 @@ export function WhatsAppDemo() {
         {step === "ticket" && (
           <div className="rounded-xl bg-white p-3 shadow-sm">
             <p className="text-sm font-extrabold text-navy">{t.ticketTitle}</p>
-            <p className="mt-1 text-sm">{t.ticketLine(from, to, trip?.time ?? "")}</p>
+            <p className="mt-1 text-sm">{t.ticketLine(from, to, trip?.dep ?? "")}</p>
             <p className="mt-1 text-sm text-muted">{name}, {channelDemo.reference}</p>
             <div aria-hidden className="mt-3 grid size-24 grid-cols-6 gap-px bg-white">
               {Array.from({ length: 36 }, (_, i) => (

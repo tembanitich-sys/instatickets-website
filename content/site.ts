@@ -710,73 +710,1071 @@ export const findAgent = {
 } as const;
 
 /**
- * Sample bus companies for the demo pages (/book, WhatsApp and USSD simulations). They are invented:
- * no real operators, logos or routes. Each serves only its own `towns`. `fare` is a sample fare in
- * dollars (10 to 120), `crossBorder` the sample fare when the trip ends in Cape Town.
+ * Bus companies for the demo pages (/book, WhatsApp and USSD simulations), taken from the supplied
+ * InstaTickets Operator Demo. Names, logos (public/brand/operators), colours and taglines are the
+ * companies' own and show on review builds only. Routes, departure times and fares are ILLUSTRATIVE
+ * until each company confirms them; the company must also approve before anything goes live.
+ * A route runs both ways. `fare` is the adult fare in dollars.
  */
 export const demoCompanies = [
   {
-    slug: "sample-intercity-coaches",
-    name: "Sample Intercity Coaches",
-    color: "#0b5fa5",
-    towns: ["Harare", "Bulawayo", "Mutare", "Gweru", "Masvingo", "Cape Town"],
-    departures: [
-      { time: "06:00", fare: 25, crossBorder: 110, full: false },
-      { time: "09:30", fare: 28, crossBorder: 120, full: true },
-      { time: "14:00", fare: 22, crossBorder: 105, full: false },
-    ],
+    slug: "allytrans",
+    name: "Allytrans Luxury",
+    short: "Allytrans",
+    color: "#e5531a",
+    dark: "#b23c0e",
+    tagline: "Arrive in Style",
+    coach: "Luxury coach",
+    logo: "/brand/operators/allytrans.webp",
+    logoAr: 1.38,
+    logoFill: false,
+    logoBg: "",
+    notice: "",
+    routes: [
+      {
+        a: "Harare",
+        b: "Bulawayo",
+        aStops: [
+          "Roadport Terminus",
+          "Mbare Musika"
+        ],
+        bStops: [
+          "City Centre (Renkini)",
+          "Bulawayo City Hall"
+        ],
+        cross: false,
+        fare: 22,
+        departures: [
+          {
+            dep: "06:00",
+            arr: "11:45",
+            full: false
+          },
+          {
+            dep: "14:00",
+            arr: "19:45",
+            full: false
+          }
+        ]
+      },
+      {
+        a: "Harare",
+        b: "Johannesburg",
+        aStops: [
+          "Roadport Terminus"
+        ],
+        bStops: [
+          "Park Station",
+          "Pretoria (Bosman)"
+        ],
+        cross: true,
+        fare: 72,
+        departures: [
+          {
+            dep: "16:00",
+            arr: "08:00 +1",
+            full: true
+          }
+        ]
+      }
+    ]
   },
   {
-    slug: "sample-highveld-express",
-    name: "Sample Highveld Express",
-    color: "#7a3e9d",
-    towns: ["Harare", "Bulawayo", "Gweru", "Victoria Falls", "Kariba"],
-    departures: [
-      { time: "07:00", fare: 18, crossBorder: 0, full: false },
-      { time: "12:00", fare: 20, crossBorder: 0, full: false },
-      { time: "18:30", fare: 16, crossBorder: 0, full: false },
-    ],
+    slug: "cag",
+    name: "CAG Travellers Coaches",
+    short: "CAG",
+    color: "#167106",
+    dark: "#0e5004",
+    tagline: "Your satisfaction is our honour",
+    coach: "Luxury coach",
+    logo: "/brand/operators/cag.webp",
+    logoAr: 1.0,
+    logoFill: true,
+    logoBg: "",
+    notice: "Festive season bookings now open",
+    routes: [
+      {
+        a: "Harare",
+        b: "Bulawayo",
+        aStops: [
+          "Roadport Terminus",
+          "Mbare Musika"
+        ],
+        bStops: [
+          "City Centre (Renkini)",
+          "Bulawayo City Hall"
+        ],
+        cross: false,
+        fare: 20,
+        departures: [
+          {
+            dep: "06:30",
+            arr: "12:15",
+            full: false
+          },
+          {
+            dep: "10:00",
+            arr: "15:45",
+            full: false
+          },
+          {
+            dep: "14:30",
+            arr: "20:15",
+            full: true
+          }
+        ]
+      },
+      {
+        a: "Harare",
+        b: "Mutare",
+        aStops: [
+          "Roadport Terminus",
+          "Mbare Musika"
+        ],
+        bStops: [
+          "Mutare Main Rank",
+          "Sakubva"
+        ],
+        cross: false,
+        fare: 12,
+        departures: [
+          {
+            dep: "07:00",
+            arr: "10:30",
+            full: false
+          },
+          {
+            dep: "13:00",
+            arr: "16:30",
+            full: false
+          }
+        ]
+      },
+      {
+        a: "Harare",
+        b: "Masvingo",
+        aStops: [
+          "Roadport Terminus",
+          "Mbare Musika"
+        ],
+        bStops: [
+          "Masvingo Rank"
+        ],
+        cross: false,
+        fare: 13,
+        departures: [
+          {
+            dep: "08:00",
+            arr: "12:30",
+            full: false
+          }
+        ]
+      },
+      {
+        a: "Harare",
+        b: "Johannesburg",
+        aStops: [
+          "Roadport Terminus"
+        ],
+        bStops: [
+          "Park Station",
+          "Pretoria (Bosman)"
+        ],
+        cross: true,
+        fare: 65,
+        departures: [
+          {
+            dep: "17:00",
+            arr: "09:00 +1",
+            full: false
+          }
+        ]
+      }
+    ]
   },
   {
-    slug: "sample-lakeside-lines",
-    name: "Sample Lakeside Lines",
-    color: "#00796b",
-    towns: ["Harare", "Kariba", "Chitungwiza", "Mutare"],
-    departures: [
-      { time: "05:30", fare: 12, crossBorder: 0, full: false },
-      { time: "10:00", fare: 14, crossBorder: 0, full: false },
-      { time: "15:00", fare: 10, crossBorder: 0, full: true },
-    ],
+    slug: "intercity",
+    name: "Intercity Xpress & Eagleliner",
+    short: "Intercity Xpress",
+    color: "#6c3d97",
+    dark: "#4b2a6a",
+    tagline: "Cross-border coaches",
+    coach: "Executive coach",
+    logo: "/brand/operators/intercity.webp",
+    logoAr: 1.23,
+    logoFill: false,
+    logoBg: "",
+    notice: "",
+    routes: [
+      {
+        a: "Harare",
+        b: "Johannesburg",
+        aStops: [
+          "Roadport Terminus"
+        ],
+        bStops: [
+          "Park Station",
+          "Pretoria (Bosman)"
+        ],
+        cross: true,
+        fare: 72,
+        departures: [
+          {
+            dep: "13:00",
+            arr: "05:00 +1",
+            full: false
+          },
+          {
+            dep: "18:00",
+            arr: "10:00 +1",
+            full: false
+          }
+        ]
+      },
+      {
+        a: "Bulawayo",
+        b: "Johannesburg",
+        aStops: [
+          "City Centre (Renkini)"
+        ],
+        bStops: [
+          "Park Station"
+        ],
+        cross: true,
+        fare: 55,
+        departures: [
+          {
+            dep: "19:00",
+            arr: "07:00 +1",
+            full: false
+          }
+        ]
+      }
+    ]
   },
   {
-    slug: "sample-northern-africa-travel",
-    name: "Sample Northern Africa Travel",
-    color: "#c25b00",
-    towns: ["Harare", "Bulawayo", "Victoria Falls", "Cape Town"],
-    departures: [
-      { time: "08:00", fare: 30, crossBorder: 115, full: false },
-      { time: "16:00", fare: 32, crossBorder: 120, full: false },
-      { time: "21:00", fare: 27, crossBorder: 100, full: true },
-    ],
+    slug: "eagleliner",
+    name: "Eagle Liner",
+    short: "Eagle Liner",
+    color: "#e07e2c",
+    dark: "#b05c14",
+    tagline: "More than just a bus company",
+    coach: "Luxury coach",
+    logo: "/brand/operators/eagleliner.webp",
+    logoAr: 3.53,
+    logoFill: false,
+    logoBg: "",
+    notice: "",
+    routes: [
+      {
+        a: "Harare",
+        b: "Bulawayo",
+        aStops: [
+          "Roadport Terminus",
+          "Mbare Musika"
+        ],
+        bStops: [
+          "City Centre (Renkini)",
+          "Bulawayo City Hall"
+        ],
+        cross: false,
+        fare: 20,
+        departures: [
+          {
+            dep: "07:30",
+            arr: "13:15",
+            full: false
+          },
+          {
+            dep: "15:00",
+            arr: "20:45",
+            full: false
+          }
+        ]
+      },
+      {
+        a: "Harare",
+        b: "Beitbridge",
+        aStops: [
+          "Roadport Terminus"
+        ],
+        bStops: [
+          "Beitbridge Rank"
+        ],
+        cross: false,
+        fare: 25,
+        departures: [
+          {
+            dep: "06:30",
+            arr: "14:00",
+            full: false
+          }
+        ]
+      },
+      {
+        a: "Harare",
+        b: "Johannesburg",
+        aStops: [
+          "Roadport Terminus"
+        ],
+        bStops: [
+          "Park Station",
+          "Pretoria (Bosman)"
+        ],
+        cross: true,
+        fare: 65,
+        departures: [
+          {
+            dep: "17:30",
+            arr: "09:30 +1",
+            full: false
+          }
+        ]
+      }
+    ]
   },
   {
-    slug: "sample-zambezi-coaches",
-    name: "Sample Zambezi Coaches",
-    color: "#a3123a",
-    towns: ["Bulawayo", "Victoria Falls", "Masvingo", "Mutare"],
-    departures: [
-      { time: "06:30", fare: 15, crossBorder: 0, full: false },
-      { time: "11:30", fare: 17, crossBorder: 0, full: false },
-      { time: "17:00", fare: 13, crossBorder: 0, full: false },
-    ],
+    slug: "galaxy",
+    name: "Galaxy Coaches",
+    short: "Galaxy",
+    color: "#3c9a14",
+    dark: "#2a700d",
+    tagline: "Intercity coaches",
+    coach: "Standard coach",
+    logo: "/brand/operators/galaxy.webp",
+    logoAr: 1.0,
+    logoFill: true,
+    logoBg: "#ffde59",
+    notice: "",
+    routes: [
+      {
+        a: "Harare",
+        b: "Bulawayo",
+        aStops: [
+          "Roadport Terminus",
+          "Mbare Musika"
+        ],
+        bStops: [
+          "City Centre (Renkini)",
+          "Bulawayo City Hall"
+        ],
+        cross: false,
+        fare: 20,
+        departures: [
+          {
+            dep: "08:30",
+            arr: "14:15",
+            full: false
+          }
+        ]
+      },
+      {
+        a: "Harare",
+        b: "Masvingo",
+        aStops: [
+          "Roadport Terminus",
+          "Mbare Musika"
+        ],
+        bStops: [
+          "Masvingo Rank"
+        ],
+        cross: false,
+        fare: 13,
+        departures: [
+          {
+            dep: "09:00",
+            arr: "13:30",
+            full: false
+          }
+        ]
+      },
+      {
+        a: "Harare",
+        b: "Johannesburg",
+        aStops: [
+          "Roadport Terminus"
+        ],
+        bStops: [
+          "Park Station",
+          "Pretoria (Bosman)"
+        ],
+        cross: true,
+        fare: 65,
+        departures: [
+          {
+            dep: "18:30",
+            arr: "10:30 +1",
+            full: false
+          }
+        ]
+      }
+    ]
   },
+  {
+    slug: "rimbi",
+    name: "Rimbi Travel & Tours",
+    short: "Rimbi",
+    color: "#2a2a86",
+    dark: "#1b1a5b",
+    tagline: "Travel & tours",
+    coach: "Luxury coach",
+    logo: "/brand/operators/rimbi.webp",
+    logoAr: 3.24,
+    logoFill: false,
+    logoBg: "",
+    notice: "",
+    routes: [
+      {
+        a: "Harare",
+        b: "Johannesburg",
+        aStops: [
+          "Roadport Terminus"
+        ],
+        bStops: [
+          "Park Station",
+          "Pretoria (Bosman)"
+        ],
+        cross: true,
+        fare: 68,
+        departures: [
+          {
+            dep: "15:30",
+            arr: "07:30 +1",
+            full: false
+          }
+        ]
+      },
+      {
+        a: "Harare",
+        b: "Gaborone",
+        aStops: [
+          "Roadport Terminus"
+        ],
+        bStops: [
+          "Gaborone Bus Rank"
+        ],
+        cross: true,
+        fare: 63,
+        departures: [
+          {
+            dep: "17:00",
+            arr: "07:30 +1",
+            full: false
+          }
+        ]
+      },
+      {
+        a: "Harare",
+        b: "Lusaka",
+        aStops: [
+          "Roadport Terminus"
+        ],
+        bStops: [
+          "Lusaka Inter-City Terminus"
+        ],
+        cross: true,
+        fare: 37,
+        departures: [
+          {
+            dep: "07:00",
+            arr: "16:00",
+            full: false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    slug: "imperial",
+    name: "Imperial Lane",
+    short: "Imperial Lane",
+    color: "#2e1a5e",
+    dark: "#1e1040",
+    tagline: "Onward with elegance",
+    coach: "Executive coach",
+    logo: "/brand/operators/imperial.webp",
+    logoAr: 1.82,
+    logoFill: false,
+    logoBg: "",
+    notice: "",
+    routes: [
+      {
+        a: "Harare",
+        b: "Bulawayo",
+        aStops: [
+          "Roadport Terminus",
+          "Mbare Musika"
+        ],
+        bStops: [
+          "City Centre (Renkini)",
+          "Bulawayo City Hall"
+        ],
+        cross: false,
+        fare: 23,
+        departures: [
+          {
+            dep: "06:45",
+            arr: "12:30",
+            full: false
+          },
+          {
+            dep: "13:30",
+            arr: "19:15",
+            full: false
+          }
+        ]
+      },
+      {
+        a: "Bulawayo",
+        b: "Victoria Falls",
+        aStops: [
+          "City Centre (Renkini)"
+        ],
+        bStops: [
+          "Victoria Falls Rank"
+        ],
+        cross: false,
+        fare: 17,
+        departures: [
+          {
+            dep: "08:00",
+            arr: "14:00",
+            full: false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    slug: "interafrica",
+    name: "InterAfrica",
+    short: "InterAfrica",
+    color: "#3f3270",
+    dark: "#2a2150",
+    tagline: "Intercity coaches",
+    coach: "Standard coach",
+    logo: "/brand/operators/interafrica.webp",
+    logoAr: 1.24,
+    logoFill: false,
+    logoBg: "",
+    notice: "",
+    routes: [
+      {
+        a: "Harare",
+        b: "Bulawayo",
+        aStops: [
+          "Roadport Terminus",
+          "Mbare Musika"
+        ],
+        bStops: [
+          "City Centre (Renkini)",
+          "Bulawayo City Hall"
+        ],
+        cross: false,
+        fare: 20,
+        departures: [
+          {
+            dep: "07:00",
+            arr: "12:45",
+            full: false
+          },
+          {
+            dep: "13:00",
+            arr: "18:45",
+            full: false
+          }
+        ]
+      },
+      {
+        a: "Harare",
+        b: "Mutare",
+        aStops: [
+          "Roadport Terminus",
+          "Mbare Musika"
+        ],
+        bStops: [
+          "Mutare Main Rank",
+          "Sakubva"
+        ],
+        cross: false,
+        fare: 12,
+        departures: [
+          {
+            dep: "09:30",
+            arr: "13:00",
+            full: false
+          }
+        ]
+      },
+      {
+        a: "Harare",
+        b: "Beitbridge",
+        aStops: [
+          "Roadport Terminus"
+        ],
+        bStops: [
+          "Beitbridge Rank"
+        ],
+        cross: false,
+        fare: 25,
+        departures: [
+          {
+            dep: "06:00",
+            arr: "13:30",
+            full: false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    slug: "johray",
+    name: "Johray Motors",
+    short: "Johray",
+    color: "#c1121f",
+    dark: "#8a0c16",
+    tagline: "Cross-border coaches",
+    coach: "Luxury coach",
+    logo: "/brand/operators/johray.webp",
+    logoAr: 3.93,
+    logoFill: true,
+    logoBg: "#22242a",
+    notice: "",
+    routes: [
+      {
+        a: "Harare",
+        b: "Johannesburg",
+        aStops: [
+          "Roadport Terminus"
+        ],
+        bStops: [
+          "Park Station",
+          "Pretoria (Bosman)"
+        ],
+        cross: true,
+        fare: 65,
+        departures: [
+          {
+            dep: "14:00",
+            arr: "06:00 +1",
+            full: false
+          }
+        ]
+      },
+      {
+        a: "Bulawayo",
+        b: "Johannesburg",
+        aStops: [
+          "City Centre (Renkini)"
+        ],
+        bStops: [
+          "Park Station"
+        ],
+        cross: true,
+        fare: 50,
+        departures: [
+          {
+            dep: "16:30",
+            arr: "04:30 +1",
+            full: false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    slug: "mb",
+    name: "MB Transport",
+    short: "MB Transport",
+    color: "#e1251b",
+    dark: "#a01a13",
+    tagline: "Zimbabwe to South Africa",
+    coach: "Standard coach",
+    logo: "/brand/operators/mb.webp",
+    logoAr: 1.09,
+    logoFill: false,
+    logoBg: "",
+    notice: "",
+    routes: [
+      {
+        a: "Harare",
+        b: "Johannesburg",
+        aStops: [
+          "Roadport Terminus"
+        ],
+        bStops: [
+          "Park Station",
+          "Pretoria (Bosman)"
+        ],
+        cross: true,
+        fare: 62,
+        departures: [
+          {
+            dep: "12:00",
+            arr: "04:00 +1",
+            full: false
+          },
+          {
+            dep: "19:30",
+            arr: "11:30 +1",
+            full: false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    slug: "stallion",
+    name: "Stallion Cruise",
+    short: "Stallion",
+    color: "#b5122e",
+    dark: "#800c20",
+    tagline: "Intercity coaches",
+    coach: "Standard coach",
+    logo: "/brand/operators/stallion.webp",
+    logoAr: 3.78,
+    logoFill: false,
+    logoBg: "",
+    notice: "",
+    routes: [
+      {
+        a: "Harare",
+        b: "Bulawayo",
+        aStops: [
+          "Roadport Terminus",
+          "Mbare Musika"
+        ],
+        bStops: [
+          "City Centre (Renkini)",
+          "Bulawayo City Hall"
+        ],
+        cross: false,
+        fare: 20,
+        departures: [
+          {
+            dep: "10:30",
+            arr: "16:15",
+            full: false
+          }
+        ]
+      },
+      {
+        a: "Harare",
+        b: "Chiredzi",
+        aStops: [
+          "Mbare Musika"
+        ],
+        bStops: [
+          "Chiredzi Rank"
+        ],
+        cross: false,
+        fare: 18,
+        departures: [
+          {
+            dep: "07:00",
+            arr: "13:00",
+            full: false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    slug: "swiss",
+    name: "Swiss Express",
+    short: "Swiss Express",
+    color: "#1f2a48",
+    dark: "#121a30",
+    tagline: "Intercity coaches",
+    coach: "Luxury coach",
+    logo: "/brand/operators/swiss.webp",
+    logoAr: 1.85,
+    logoFill: false,
+    logoBg: "",
+    notice: "",
+    routes: [
+      {
+        a: "Harare",
+        b: "Bulawayo",
+        aStops: [
+          "Roadport Terminus",
+          "Mbare Musika"
+        ],
+        bStops: [
+          "City Centre (Renkini)",
+          "Bulawayo City Hall"
+        ],
+        cross: false,
+        fare: 20,
+        departures: [
+          {
+            dep: "05:30",
+            arr: "11:15",
+            full: false
+          },
+          {
+            dep: "11:00",
+            arr: "16:45",
+            full: true
+          },
+          {
+            dep: "16:00",
+            arr: "21:45",
+            full: false
+          }
+        ]
+      },
+      {
+        a: "Bulawayo",
+        b: "Victoria Falls",
+        aStops: [
+          "City Centre (Renkini)"
+        ],
+        bStops: [
+          "Victoria Falls Rank"
+        ],
+        cross: false,
+        fare: 15,
+        departures: [
+          {
+            dep: "09:00",
+            arr: "15:00",
+            full: false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    slug: "tamuka",
+    name: "Tamuka Coaches",
+    short: "Tamuka",
+    color: "#0b24e8",
+    dark: "#0819a6",
+    tagline: "We simplify travelling",
+    coach: "Standard coach",
+    logo: "/brand/operators/tamuka.webp",
+    logoAr: 1.98,
+    logoFill: false,
+    logoBg: "",
+    notice: "",
+    routes: [
+      {
+        a: "Harare",
+        b: "Masvingo",
+        aStops: [
+          "Roadport Terminus",
+          "Mbare Musika"
+        ],
+        bStops: [
+          "Masvingo Rank"
+        ],
+        cross: false,
+        fare: 13,
+        departures: [
+          {
+            dep: "06:00",
+            arr: "10:30",
+            full: false
+          },
+          {
+            dep: "12:00",
+            arr: "16:30",
+            full: false
+          }
+        ]
+      },
+      {
+        a: "Harare",
+        b: "Beitbridge",
+        aStops: [
+          "Roadport Terminus"
+        ],
+        bStops: [
+          "Beitbridge Rank"
+        ],
+        cross: false,
+        fare: 25,
+        departures: [
+          {
+            dep: "08:30",
+            arr: "16:00",
+            full: false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    slug: "tenda",
+    name: "Tenda Transport",
+    short: "Tenda",
+    color: "#0b2f6b",
+    dark: "#071f48",
+    tagline: "The pride of Manicaland",
+    coach: "Standard coach",
+    logo: "/brand/operators/tenda.webp",
+    logoAr: 1.0,
+    logoFill: true,
+    logoBg: "#001333",
+    notice: "",
+    routes: [
+      {
+        a: "Harare",
+        b: "Mutare",
+        aStops: [
+          "Roadport Terminus",
+          "Mbare Musika"
+        ],
+        bStops: [
+          "Mutare Main Rank",
+          "Sakubva"
+        ],
+        cross: false,
+        fare: 12,
+        departures: [
+          {
+            dep: "06:00",
+            arr: "09:30",
+            full: false
+          },
+          {
+            dep: "10:30",
+            arr: "14:00",
+            full: true
+          },
+          {
+            dep: "15:00",
+            arr: "18:30",
+            full: false
+          }
+        ]
+      },
+      {
+        a: "Mutare",
+        b: "Chipinge",
+        aStops: [
+          "Mutare Main Rank"
+        ],
+        bStops: [
+          "Chipinge Rank"
+        ],
+        cross: false,
+        fare: 7,
+        departures: [
+          {
+            dep: "07:30",
+            arr: "10:00",
+            full: false
+          }
+        ]
+      },
+      {
+        a: "Mutare",
+        b: "Bulawayo",
+        aStops: [
+          "Mutare Main Rank"
+        ],
+        bStops: [
+          "City Centre (Renkini)"
+        ],
+        cross: false,
+        fare: 25,
+        departures: [
+          {
+            dep: "08:00",
+            arr: "17:00",
+            full: false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    slug: "triptrans",
+    name: "Trip Trans",
+    short: "Trip Trans",
+    color: "#1d5ba8",
+    dark: "#143f78",
+    tagline: "Every trip is an adventurous trip",
+    coach: "Standard coach",
+    logo: "/brand/operators/triptrans.webp",
+    logoAr: 3.11,
+    logoFill: false,
+    logoBg: "",
+    notice: "",
+    routes: [
+      {
+        a: "Harare",
+        b: "Bulawayo",
+        aStops: [
+          "Roadport Terminus",
+          "Mbare Musika"
+        ],
+        bStops: [
+          "City Centre (Renkini)",
+          "Bulawayo City Hall"
+        ],
+        cross: false,
+        fare: 20,
+        departures: [
+          {
+            dep: "09:00",
+            arr: "14:45",
+            full: false
+          }
+        ]
+      },
+      {
+        a: "Harare",
+        b: "Mutare",
+        aStops: [
+          "Roadport Terminus",
+          "Mbare Musika"
+        ],
+        bStops: [
+          "Mutare Main Rank",
+          "Sakubva"
+        ],
+        cross: false,
+        fare: 12,
+        departures: [
+          {
+            dep: "12:30",
+            arr: "16:00",
+            full: false
+          }
+        ]
+      },
+      {
+        a: "Harare",
+        b: "Johannesburg",
+        aStops: [
+          "Roadport Terminus"
+        ],
+        bStops: [
+          "Park Station",
+          "Pretoria (Bosman)"
+        ],
+        cross: true,
+        fare: 65,
+        departures: [
+          {
+            dep: "20:00",
+            arr: "12:00 +1",
+            full: false
+          }
+        ]
+      }
+    ]
+  }
 ] as const;
 
 /** Demo booking page (/book). It simulates the online booking journey with sample trips and is shown only in review builds. */
 export const bookDemo = {
   headline: "BOOK YOUR TICKET",
   intro: "Search for a trip, choose a time and pay your way.",
-  banner: "DEMO: this page simulates online booking with sample trips. Live booking is provided by the InstaTickets platform.",
+  banner: "DEMO: this page simulates online booking with illustrative routes, times and fares. Live booking is provided by the InstaTickets platform.",
   tabs: [
     { key: "bus", label: "Bus", enabled: true },
     { key: "events", label: "Events", enabled: false },
@@ -792,9 +1790,10 @@ export const bookDemo = {
   sameTown: "Choose two different towns.",
   resultsHeading: (from: string, to: string) => `${from} to ${to}`,
   currency: "$",
-  fareLabel: "Sample fare",
-  fareNote: "Sample fares for this demo. Real fares come from each bus company.",
+  fareLabel: "Adult fare",
+  fareNote: "Illustrative routes, times and fares for this demo, until each bus company confirms them.",
   full: "Full",
+  arrives: "arrives",
   sortLabel: "Sort by",
   sortTime: "Departure time",
   sortFare: "Fare",

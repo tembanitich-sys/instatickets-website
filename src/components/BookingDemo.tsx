@@ -4,6 +4,7 @@ import { useState } from "react";
 import { bookDemo as t } from "@content/site";
 import {
   allTowns,
+  companyTowns,
   companyList,
   findCompany,
   matchCompanies,
@@ -13,6 +14,7 @@ import {
   type DemoCompany,
   type DemoTrip,
 } from "@/lib/demoTrips";
+import { CompanyLogo } from "./CompanyLogo";
 import { QrPlaceholder } from "./QrPlaceholder";
 import { brand } from "./Brand";
 import { Select, TextInput } from "./forms/fields";
@@ -54,7 +56,7 @@ export function BookingDemo({ channels, initialCompany }: { channels: React.Reac
   const n = Number(pax);
   const lastSlug = useLastCompany();
 
-  const townList = company ? [...company.towns].sort((a, b) => a.localeCompare(b)) : allTowns();
+  const townList = company ? companyTowns(company) : allTowns();
   const towns = [{ value: "", label: t.choose }, ...townList.map((x) => ({ value: x, label: x }))];
   const results = from && to ? tripsFor(from, to, company ?? undefined, sort) : [];
 
@@ -220,11 +222,21 @@ export function BookingDemo({ channels, initialCompany }: { channels: React.Reac
 
       {step === 1 && company && (
         <div className="mt-6 overflow-hidden rounded-2xl border border-line bg-white shadow-sm">
-          <div className="px-5 py-4 text-white" style={{ backgroundColor: company.color }}>
-            {fromLink && <p className="text-xs font-bold opacity-90">{t.storefront.opened(company.name)}</p>}
-            <h2 className="text-2xl font-extrabold">{company.name}</h2>
-            <p className="mt-1 text-sm opacity-90">{t.storefront.serves}: {company.towns.join(", ")}</p>
+          <div
+            className="storefront-band flex flex-wrap items-center gap-4 px-5 py-5 text-white"
+            style={{ "--op": company.color, "--op-d": company.dark } as React.CSSProperties}
+          >
+            <CompanyLogo company={company} height={64} className="shadow-md ring-2 ring-white/40" />
+            <div className="min-w-0 flex-1">
+              {fromLink && <p className="text-xs font-bold opacity-90">{t.storefront.opened(company.name)}</p>}
+              <h2 className="text-2xl font-extrabold">{company.name}</h2>
+              <p className="text-sm opacity-90">{company.tagline}</p>
+              <p className="mt-1 text-xs opacity-90">{t.storefront.serves}: {companyTowns(company).join(", ")}</p>
+            </div>
           </div>
+          {company.notice && (
+            <p className="bg-amber-50 px-5 py-2 text-sm font-bold text-amber-900">{company.notice}</p>
+          )}
           <div className="flex flex-wrap items-center gap-4 px-5 py-4">
             <QrPlaceholder caption={t.storefront.qr} />
             <div className="min-w-0">
@@ -268,6 +280,16 @@ export function BookingDemo({ channels, initialCompany }: { channels: React.Reac
         </form>
       )}
 
+      {company && step >= 2 && step <= 5 && (
+        <div
+          className="storefront-band mt-6 flex items-center gap-3 rounded-2xl px-4 py-3 text-white"
+          style={{ "--op": company.color, "--op-d": company.dark } as React.CSSProperties}
+        >
+          <CompanyLogo company={company} height={40} className="ring-2 ring-white/40" />
+          <p className="font-extrabold">{company.name}</p>
+        </div>
+      )}
+
       {step === 2 && (
         <section aria-live="polite" className="mt-8">
           <h2 className="text-2xl font-extrabold text-navy">{t.resultsHeading(from, to)}</h2>
@@ -291,17 +313,23 @@ export function BookingDemo({ channels, initialCompany }: { channels: React.Reac
           ) : (
             <ul className="mt-4 grid gap-4">
               {results.map((r) => (
-                <li key={`${r.company.slug}-${r.time}`} className="flex flex-col gap-3 rounded-2xl border border-line bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <p className="text-2xl font-extrabold tabular-nums text-navy">{r.time}</p>
-                    <p className="text-sm text-muted">
-                      {!company && <span className="font-semibold">{r.company.name}</span>}
-                      {!company && date ? ", " : ""}
-                      {date}
-                    </p>
+                <li key={`${r.company.slug}-${r.dep}-${r.from}`} className="flex flex-col gap-3 rounded-2xl border border-line bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex items-center gap-4">
+                    {!company && <CompanyLogo company={r.company} height={44} />}
+                    <div>
+                      <p className="text-2xl font-extrabold tabular-nums text-navy">
+                        {r.dep} <span className="text-base font-bold text-muted">{t.arrives} {r.arr}</span>
+                      </p>
+                      <p className="text-sm text-muted">
+                        {!company && <span className="font-semibold">{r.company.name}, </span>}
+                        {r.company.coach}
+                        {date ? `, ${date}` : ""}
+                      </p>
+                      <p className="text-xs text-muted">{r.fromStop} to {r.toStop}</p>
+                    </div>
                   </div>
                   <p className="text-sm font-semibold text-muted">
-                    {t.fareLabel} {t.currency}{r.fare}
+                    {t.fareLabel} <span className="text-lg font-extrabold text-navy">{t.currency}{r.fare}</span>
                   </p>
                   <button
                     type="button"
@@ -415,7 +443,7 @@ export function BookingDemo({ channels, initialCompany }: { channels: React.Reac
           <h2 className="text-2xl font-extrabold text-navy">{t.reviewHeading}</h2>
           <dl className="mt-4 grid gap-3 sm:grid-cols-[12rem_1fr]">
             <dt className="font-bold text-navy">{t.summaryTrip}</dt>
-            <dd>{from} to {to}, {trip.time}{date ? `, ${date}` : ""}, {trip.company.name}</dd>
+            <dd>{from} to {to}, {trip.dep}{date ? `, ${date}` : ""}, {trip.company.name}</dd>
             <dt className="font-bold text-navy">{t.summarySeats}</dt>
             <dd>{seats.join(", ")}</dd>
             <dt className="font-bold text-navy">{t.summaryPassengers}</dt>
@@ -445,7 +473,7 @@ export function BookingDemo({ channels, initialCompany }: { channels: React.Reac
         <section aria-live="polite" className="mt-8 rounded-2xl bg-mist p-6">
           <h2 className="text-2xl font-extrabold text-navy">{t.doneHeading}</h2>
           <p className="mt-2 text-muted">
-            {from} to {to}, {trip.time}, {t.summarySeats.toLowerCase()} {seats.join(", ")}. {t.reference}: {t.referenceSample}
+            {from} to {to}, {trip.dep}, {t.summarySeats.toLowerCase()} {seats.join(", ")}. {t.reference}: {t.referenceSample}
           </p>
           <p className="mt-3 text-muted">{t.doneBody}</p>
           <p className="mt-3 font-semibold text-navy">{brand(t.refundPromise)}</p>
@@ -465,7 +493,7 @@ function CompanyButton({ c, onPick, last }: { c: DemoCompany; onPick: (c: DemoCo
       onClick={() => onPick(c)}
       className="flex min-h-11 w-full items-center gap-3 rounded-xl border border-line bg-white px-4 py-2 text-left font-bold text-navy hover:border-navy"
     >
-      <span aria-hidden className="size-4 shrink-0 rounded-full" style={{ backgroundColor: c.color }} />
+      <CompanyLogo company={c} height={36} fixedWidth={72} />
       <span className="flex-1">{c.name}</span>
       {last && <span className="rounded-full bg-mist px-2 py-0.5 text-xs">{t.companyPick.lastUsed}</span>}
       <span className="text-xs tracking-wide text-red-dark">{t.companyPick.open}</span>

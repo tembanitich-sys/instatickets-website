@@ -156,3 +156,8 @@ body {
   margin-block: -0.5em -0.45em;
   margin-inline: 0.05em;
 }
+
+/* Bus company storefront header (demo): the company's own colours, set per company via --op and --op-d. */
+.storefront-band {
+  background: linear-gradient(160deg, var(--op), var(--op-d));
+}

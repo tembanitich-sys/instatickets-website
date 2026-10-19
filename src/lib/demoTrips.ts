@@ -1,9 +1,20 @@
 import { useSyncExternalStore } from "react";
 import { demoCompanies } from "@content/site";
 
-/** Sample data helpers for the demo pages only. No network, no real operators. */
+/** Demo data helpers for the demo pages only. No network. Routes and fares are illustrative. */
 export type DemoCompany = (typeof demoCompanies)[number];
-export type DemoTrip = { company: DemoCompany; time: string; fare: number; full: boolean };
+export type DemoTrip = {
+  company: DemoCompany;
+  from: string;
+  to: string;
+  fromStop: string;
+  toStop: string;
+  dep: string;
+  arr: string;
+  fare: number;
+  full: boolean;
+  cross: boolean;
+};
 
 export const LAST_COMPANY_KEY = "instatickets-demo-last-company";
 
@@ -13,18 +24,29 @@ export const companiesAlphabetical = (): DemoCompany[] =>
 export const findCompany = (slug: string | null | undefined): DemoCompany | undefined =>
   demoCompanies.find((c) => c.slug === slug);
 
+/** Towns one company serves (either end of any of its routes), alphabetical. */
+export const companyTowns = (c: DemoCompany): string[] =>
+  [...new Set(c.routes.flatMap((r) => [r.a, r.b]))].sort((a, b) => a.localeCompare(b));
+
 /** Every town any participating company serves, alphabetical. */
 export const allTowns = (): string[] =>
-  [...new Set(demoCompanies.flatMap((c) => c.towns as readonly string[]))].sort((a, b) => a.localeCompare(b));
+  [...new Set(demoCompanies.flatMap((c) => c.routes.flatMap((r) => [r.a, r.b])))].sort((a, b) => a.localeCompare(b));
 
-/** Matches from the start of any word: "inter" and "africa" match, "ca" does not. */
+/** Words of a name, also splitting joined words such as InterAfrica into Inter and Africa. */
+const words = (name: string) =>
+  name
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter(Boolean);
+
+/** Matches from the start of any word: "inter" and "africa" find InterAfrica, "ca" does not. */
 export function matchCompanies(query: string): DemoCompany[] {
   const q = query.trim().toLowerCase();
   if (!q) return [];
-  return companiesAlphabetical().filter((c) => {
-    const name = c.name.toLowerCase();
-    return name.startsWith(q) || name.includes(` ${q}`);
-  });
+  return companiesAlphabetical().filter(
+    (c) => c.name.toLowerCase().startsWith(q) || words(c.name).some((w) => w.startsWith(q)),
+  );
 }
 
 /** The full list, alphabetical, with the customer's last-used company first. */
@@ -34,19 +56,31 @@ export function companyList(lastSlug: string | null): DemoCompany[] {
   return last ? [last, ...all.filter((c) => c !== last)] : all;
 }
 
-const serves = (c: DemoCompany, from: string, to: string) =>
-  (c.towns as readonly string[]).includes(from) && (c.towns as readonly string[]).includes(to);
-
-/** Trips for one route. With a company: only that company's. Without: every company's, by departure time. */
+/** Trips for one route (either direction). With a company: only that company's. Without: every company's. */
 export function tripsFor(from: string, to: string, company?: DemoCompany, sort: "time" | "fare" = "time"): DemoTrip[] {
-  const border = from === "Cape Town" || to === "Cape Town";
-  const trips = (company ? [company] : [...demoCompanies])
-    .filter((c) => serves(c, from, to))
-    .flatMap((c) =>
-      c.departures.map((d) => ({ company: c, time: d.time, fare: border && d.crossBorder ? d.crossBorder : d.fare, full: d.full })),
-    );
+  const trips = (company ? [company] : [...demoCompanies]).flatMap((c) =>
+    c.routes
+      .filter((r) => (r.a === from && r.b === to) || (r.a === to && r.b === from))
+      .flatMap((r) => {
+        const forward = r.a === from;
+        return r.departures.map((d) => ({
+          company: c,
+          from,
+          to,
+          fromStop: (forward ? r.aStops : r.bStops)[0],
+          toStop: (forward ? r.bStops : r.aStops)[0],
+          dep: d.dep,
+          arr: d.arr,
+          fare: r.fare,
+          full: d.full,
+          cross: r.cross,
+        }));
+      }),
+  );
   return trips.sort((a, b) =>
-    sort === "fare" ? a.fare - b.fare || a.time.localeCompare(b.time) : a.time.localeCompare(b.time) || a.company.name.localeCompare(b.company.name),
+    sort === "fare"
+      ? a.fare - b.fare || a.dep.localeCompare(b.dep)
+      : a.dep.localeCompare(b.dep) || a.company.name.localeCompare(b.company.name),
   );
 }
 
