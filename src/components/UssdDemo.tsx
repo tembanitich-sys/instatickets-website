@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { bookDemo, channelDemo } from "@content/site";
+import { allTowns, companyList, useLastCompany, tripsFor, type DemoCompany } from "@/lib/demoTrips";
 
 const t = channelDemo.ussd;
+const tw = channelDemo.whatsapp;
 const S = t.screens;
-type Id = "idle" | "main" | "billers" | "product" | "from" | "to" | "date" | "trips" | "class" | "who" | "name" | "kin" | "pin" | "done";
+type Id = "idle" | "main" | "billers" | "product" | "entry" | "companies" | "from" | "to" | "date" | "trips" | "class" | "who" | "name" | "kin" | "pin" | "done";
 
 const list = (head: string, items: readonly string[]) => `${head}\n${items.map((x, i) => `${i + 1}. ${x}`).join("\n")}`;
 
@@ -15,19 +17,29 @@ export function UssdDemo() {
   const [input, setInput] = useState("");
   const [note, setNote] = useState("");
   const [from, setFrom] = useState("");
+  const [toTown, setToTown] = useState("");
+  const [company, setCompany] = useState<DemoCompany | null>(null);
 
-  const towns = bookDemo.towns;
-  const times = bookDemo.times.map((x, i) => `${x} ${bookDemo.operator} ${bookDemo.operatorNames[i]}`);
+  const lastSlug = useLastCompany();
+
+  const companies = companyList(lastSlug);
+  const towns = company ? [...company.towns].sort((a, b) => a.localeCompare(b)) : allTowns();
+  const trips = from && toTown ? tripsFor(from, toTown, company ?? undefined) : [];
+  const tripLines = trips.map(
+    (r) => `${r.time}${company ? "" : ` ${r.company.name}`} ${bookDemo.currency}${r.fare}${r.full ? ` (${bookDemo.full})` : ""}`,
+  );
 
   const text: Record<Id, string> = {
     idle: "",
     main: S.main,
     billers: S.billers,
     product: S.product,
+    entry: S.entry,
+    companies: list(S.companies, companies.map((c) => c.name)),
     from: list(S.from, towns),
     to: list(S.to, towns.filter((x) => x !== from)),
     date: S.date,
-    trips: list(S.trips, times),
+    trips: tripLines.length ? list(S.trips, tripLines) : tw.noRouteTrips,
     class: S.class,
     who: S.who,
     name: S.name,
@@ -41,6 +53,8 @@ export function UssdDemo() {
     setInput("");
     setNote("");
     setFrom("");
+    setToTown("");
+    setCompany(null);
   }
 
   function send(e: React.FormEvent) {
@@ -56,11 +70,16 @@ export function UssdDemo() {
     switch (id) {
       case "main": return v === "1" ? to2("billers") : bad();
       case "billers": return v === "1" ? to2("product") : bad();
-      case "product": return v === "1" ? to2("from") : bad();
+      case "product": return v === "1" ? to2("entry") : bad();
+      case "entry":
+        if (v === "1") { setCompany(null); return to2("companies"); }
+        if (v === "2") { setCompany(null); return to2("from"); }
+        return bad();
+      case "companies": if (!pick(companies.length)) return bad(); setCompany(companies[Number(v) - 1]); return to2("from");
       case "from": if (!pick(towns.length)) return bad(); setFrom(towns[Number(v) - 1]); return to2("to");
-      case "to": return pick(towns.length - 1) ? to2("date") : bad();
+      case "to": { const opts = towns.filter((x) => x !== from); if (!pick(opts.length)) return bad(); setToTown(opts[Number(v) - 1]); return to2("date"); }
       case "date": return pick(2) ? to2("trips") : bad();
-      case "trips": return pick(times.length) ? to2("class") : bad();
+      case "trips": return pick(trips.length) && !trips[Number(v) - 1].full ? to2("class") : bad();
       case "class": return pick(2) ? to2("who") : bad();
       case "who": return pick(2) ? to2("name") : bad();
       case "name": return v ? to2("kin") : bad();

@@ -128,9 +128,9 @@ export const home = {
   },
   bus: {
     heading: "Bus tickets",
-    body: "Find participating bus services and access ticket inventory through InstaTickets.",
+    body: "Book with the bus company you already travel with, or compare trips on your route. Choose your bus company by name, or book by route and see trips from participating bus companies, listed by departure time.",
     button: "EXPLORE BUS TICKETS",
-    operators: "Operators: bring your routes to InstaTickets.",
+    operators: "Operators: get your own storefront on InstaTickets.",
     operatorsLink: "REGISTER YOUR BUSINESS",
   },
   events: {
@@ -162,7 +162,7 @@ export const home = {
     customersHeading: "For customers",
     customers: [
       { title: "DISCOVER", body: "Find tickets from participating providers." },
-      { title: "SELECT", body: "Choose your journey, event or fixture." },
+      { title: "SELECT", body: "Choose your bus company or your route, then your journey, event or fixture." },
       { title: "BOOK", body: "Complete your purchase through supported channels." },
       { title: "ACCESS", body: "Receive and manage your ticket." },
     ],
@@ -323,6 +323,24 @@ export const forBusinesses = {
       "Existing Ticketing Platforms",
       "Technology Partners",
     ],
+  },
+  storefront: {
+    heading: "YOUR OWN STOREFRONT ON INSTATICKETS",
+    items: [
+      {
+        title: "YOUR STOREFRONT",
+        body: "Passengers who choose you book in your own storefront, with your name, routes and fares. No other bus company is shown there.",
+      },
+      {
+        title: "YOUR FRONT DOOR",
+        body: "A link and QR code for your posters, tickets, offices and WhatsApp that open straight into your storefront.",
+      },
+      {
+        title: "FAIR LISTING",
+        body: "Where bus companies are listed together, the order is alphabetical or by departure time. No one can pay to rank higher.",
+      },
+    ],
+    button: "REGISTER YOUR BUSINESS",
   },
   existing: {
     heading: "Already have a ticketing system?",
@@ -514,6 +532,14 @@ export const help = {
         "Book on this website, in the InstaTickets app or on WhatsApp, in the EcoCash app, or pay a registered InstaTickets Agent in person.",
     },
     {
+      q: "Can I book with a specific bus company?",
+      a: "Yes. Choose Select bus company, type its name or pick it from the list, and book in that company's storefront.",
+    },
+    {
+      q: "Can I compare bus companies on my route?",
+      a: "Yes. Choose Book trip by route to see trips from participating bus companies, listed by departure time.",
+    },
+    {
       q: "Do I need a smartphone?",
       a: "No. Registered InstaTickets Agents can sell you a ticket in person.",
       aPartner:
@@ -683,6 +709,69 @@ export const findAgent = {
   reviewNote: "PREVIEW: outlet details here are placeholder content and will be replaced with confirmed data before launch.",
 } as const;
 
+/**
+ * Sample bus companies for the demo pages (/book, WhatsApp and USSD simulations). They are invented:
+ * no real operators, logos or routes. Each serves only its own `towns`. `fare` is a sample fare in
+ * dollars (10 to 120), `crossBorder` the sample fare when the trip ends in Cape Town.
+ */
+export const demoCompanies = [
+  {
+    slug: "sample-intercity-coaches",
+    name: "Sample Intercity Coaches",
+    color: "#0b5fa5",
+    towns: ["Harare", "Bulawayo", "Mutare", "Gweru", "Masvingo", "Cape Town"],
+    departures: [
+      { time: "06:00", fare: 25, crossBorder: 110, full: false },
+      { time: "09:30", fare: 28, crossBorder: 120, full: true },
+      { time: "14:00", fare: 22, crossBorder: 105, full: false },
+    ],
+  },
+  {
+    slug: "sample-highveld-express",
+    name: "Sample Highveld Express",
+    color: "#7a3e9d",
+    towns: ["Harare", "Bulawayo", "Gweru", "Victoria Falls", "Kariba"],
+    departures: [
+      { time: "07:00", fare: 18, crossBorder: 0, full: false },
+      { time: "12:00", fare: 20, crossBorder: 0, full: false },
+      { time: "18:30", fare: 16, crossBorder: 0, full: false },
+    ],
+  },
+  {
+    slug: "sample-lakeside-lines",
+    name: "Sample Lakeside Lines",
+    color: "#00796b",
+    towns: ["Harare", "Kariba", "Chitungwiza", "Mutare"],
+    departures: [
+      { time: "05:30", fare: 12, crossBorder: 0, full: false },
+      { time: "10:00", fare: 14, crossBorder: 0, full: false },
+      { time: "15:00", fare: 10, crossBorder: 0, full: true },
+    ],
+  },
+  {
+    slug: "sample-northern-africa-travel",
+    name: "Sample Northern Africa Travel",
+    color: "#c25b00",
+    towns: ["Harare", "Bulawayo", "Victoria Falls", "Cape Town"],
+    departures: [
+      { time: "08:00", fare: 30, crossBorder: 115, full: false },
+      { time: "16:00", fare: 32, crossBorder: 120, full: false },
+      { time: "21:00", fare: 27, crossBorder: 100, full: true },
+    ],
+  },
+  {
+    slug: "sample-zambezi-coaches",
+    name: "Sample Zambezi Coaches",
+    color: "#a3123a",
+    towns: ["Bulawayo", "Victoria Falls", "Masvingo", "Mutare"],
+    departures: [
+      { time: "06:30", fare: 15, crossBorder: 0, full: false },
+      { time: "11:30", fare: 17, crossBorder: 0, full: false },
+      { time: "17:00", fare: 13, crossBorder: 0, full: false },
+    ],
+  },
+] as const;
+
 /** Demo booking page (/book). It simulates the online booking journey with sample trips and is shown only in review builds. */
 export const bookDemo = {
   headline: "BOOK YOUR TICKET",
@@ -700,14 +789,45 @@ export const bookDemo = {
   passengers: "Passengers",
   choose: "Choose a town",
   search: "SEARCH TRIPS",
-  towns: ["Harare", "Bulawayo", "Mutare", "Gweru", "Masvingo", "Victoria Falls", "Kariba", "Chitungwiza"],
   sameTown: "Choose two different towns.",
   resultsHeading: (from: string, to: string) => `${from} to ${to}`,
-  operator: "Sample operator",
-  fare: "Fare shown at checkout",
+  currency: "$",
+  fareLabel: "Sample fare",
+  fareNote: "Sample fares for this demo. Real fares come from each bus company.",
+  full: "Full",
+  sortLabel: "Sort by",
+  sortTime: "Departure time",
+  sortFare: "Fare",
+  start: {
+    heading: "How would you like to book?",
+    company: { title: "SELECT BUS COMPANY", body: "Book with the bus company you already travel with." },
+    route: { title: "BOOK TRIP BY ROUTE", body: "Compare trips on your route from participating bus companies." },
+  },
+  companyPick: {
+    label: "Type a bus company name",
+    placeholder: "Bus company name",
+    noMatch: "No bus company matches. Try another name or view the list.",
+    matches: "Matching bus companies",
+    viewList: "VIEW BUS COMPANIES",
+    hideList: "HIDE LIST",
+    listHeading: "Participating bus companies",
+    lastUsed: "Last used",
+    open: "OPEN",
+  },
+  storefront: {
+    opened: (name: string) => `Opened from ${name}'s link`,
+    serves: "Serves",
+    link: "Storefront link",
+    qr: "QR code (placeholder)",
+    start: "BACK TO START",
+    noTrips: "This bus company has no trips for that route and date. Try other towns.",
+    sameTown: "Choose two different towns that this bus company serves.",
+  },
+  routeNote: "Trips from participating bus companies, listed by departure time. Bus companies cannot pay to rank higher.",
+  noRouteTrips: "No participating bus company runs that route. Try other towns.",
   select: "SELECT",
   back: "Change search",
-  stepLabels: ["Search", "Trip", "Seats", "Passengers", "Pay", "Ticket"],
+  stepLabels: ["Start", "Search", "Trip", "Seats", "Passengers", "Pay", "Ticket"],
   seatsHeading: "Choose your seats",
   seatsHint: (n: number) => `Choose ${n} ${n === 1 ? "seat" : "seats"}.`,
   seatFree: "Free",
@@ -734,7 +854,7 @@ export const bookDemo = {
   summaryTrip: "Trip",
   summarySeats: "Seats",
   summaryPassengers: "Passengers",
-  summaryFare: "Fare, service fee and total",
+  summaryFare: "Sample fare total",
   summaryFareValue: "Shown here at checkout in the live service",
   refundNote: "The bus company's refund policy applies. Read it before you pay.",
   accept: "I accept the Terms and the bus company's refund policy.",
@@ -753,8 +873,6 @@ export const bookDemo = {
   refundPromise: "If you pay and do not receive a ticket, InstaTickets returns your money automatically.",
   reference: "Booking reference",
   referenceSample: "DEMO-0000",
-  times: ["06:00", "09:30", "14:00"],
-  operatorNames: ["A", "B", "C"],
 } as const;
 
 /**
@@ -779,6 +897,16 @@ export const channelDemo = {
     startPrompt: "Tap to say Hi and start.",
     welcome: "Welcome! What would you like to do?",
     menuButton: "Choose",
+    companyPrompt: "Reply with the bus company's name, send LIST to see all bus companies, or choose Book by route.",
+    byRoute: "Book by route",
+    listWord: "LIST",
+    listIntro: "Participating bus companies:",
+    matchIntro: "Matching bus companies. Tap one:",
+    noMatch: "No bus company matches that name. Try again, send LIST, or choose Book by route.",
+    pickedCompany: (name: string) => `You are booking with ${name}.`,
+    storefrontOnly: (name: string) => `${name}: tell us about your trip.`,
+    noRouteTrips: "No trips for those towns. Try other towns.",
+    lastUsed: "Last used",
     menu: [
       { key: "book", label: "Book a bus ticket" },
       { key: "tickets", label: "My tickets", soon: true },
@@ -795,7 +923,7 @@ export const channelDemo = {
     choose: "Choose a town",
     sameTown: "Choose two different towns.",
     tripsIntro: "Here are the trips we found. Pick one.",
-    tripLine: (time: string, op: string) => `${time}, ${op}`,
+    tripLine: (time: string, op: string, fare: string) => `${time}, ${op}, ${fare}`,
     pickedTrip: (line: string) => `You picked ${line}.`,
     namesIntro: "Enter the passenger's name and ID number exactly as on their ID or travel document.",
     fullName: "Full name",
@@ -829,6 +957,8 @@ export const channelDemo = {
       main: "EcoCash\n1. Pay Bill\n0. More",
       billers: "Pay Bill\n1. InstaTickets",
       product: "InstaTickets\n1. Buy bus ticket",
+      entry: "Buy bus ticket\n1. Select bus company\n2. Book by route",
+      companies: "Select bus company:",
       from: "From:",
       to: "To:",
       date: "Travel date:\n1. Today\n2. Tomorrow",
@@ -878,6 +1008,7 @@ export const howToBuy = {
         "Open the EcoCash app and sign in.",
         "Tap Pay Biller, then Online Billers.",
         "Choose InstaTickets, then Bus Tickets.",
+        "Choose Select bus company and pick your company, or choose Book trip by route.",
         "Search: where you are travelling from and to, the date and the number of passengers.",
         "Choose a trip from the results, then pick your seats.",
         "Enter each passenger's details exactly as on their ID or travel document.",
@@ -894,6 +1025,7 @@ export const howToBuy = {
       steps: [
         "Download the InstaTickets app from the App Store or Google Play.",
         "Open the app and sign in with your mobile number and the one-time code we send you, or continue as a guest.",
+        "Choose Select bus company and pick your company, or choose Book trip by route.",
         "Search for your trip: where from and to, the date and the number of passengers.",
         "Choose a trip and your seat.",
         "Check the total, tick that you accept the Terms and the bus company's refund policy, and pay.",
@@ -908,7 +1040,8 @@ export const howToBuy = {
       action: "book",
       steps: [
         "Tap START BOOKING to open the booking page. Sign in with your mobile number and one-time code, or continue as a guest.",
-        "Choose Bus and enter where you are travelling from and to, the date and the number of passengers.",
+        "Choose Bus, then Select bus company (type the name or view the list) or Book trip by route.",
+        "Search: where you are travelling from and to, the date and the number of passengers.",
         "Choose a trip and your seat.",
         "Enter each passenger's details exactly as on their ID or travel document.",
         "Check the total, tick that you accept the Terms and the bus company's refund policy, and pay.",
@@ -926,6 +1059,7 @@ export const howToBuy = {
         "Open WhatsApp and start a chat with InstaTickets.",
         "Send Hi to begin.",
         "Pick Book a bus ticket from the list.",
+        "Reply with the bus company's name, send LIST to see all bus companies, or choose Book by route.",
         "Fill in the booking form: where from and to, the date and the number of passengers, then choose a trip and seats.",
         "Check the order summary and tap Accept and pay.",
         "Pay when asked. Your ticket arrives in the chat and by SMS.",
@@ -942,6 +1076,7 @@ export const howToBuy = {
         "On any phone, dial *151# and press call. You do not need a smartphone or data.",
         "Choose Pay Bill, then InstaTickets.",
         "Choose Buy bus ticket.",
+        "Choose 1 Select bus company (pick from a numbered list) or 2 Book by route.",
         "Enter where you are travelling from and to, then the date.",
         "Choose a trip and a class, and say who is travelling.",
         "Add a next of kin, check the total, then enter your PIN to pay.",
@@ -957,7 +1092,7 @@ export const howToBuy = {
       action: "find",
       steps: [
         "Find your nearest Econet Shop with Find an Agent.",
-        "Tell the agent where and when you want to travel and how many passengers.",
+        "Tell the agent which bus company you want to travel with, or where and when you want to travel, and how many passengers.",
         "The agent shows you the trips and tells you the bus company's refund policy before taking payment.",
         "Pay the agent and keep your receipt.",
         "Your ticket is sent to your phone by SMS. Keep it until your journey ends.",
@@ -972,7 +1107,7 @@ export const howToBuy = {
       action: "find",
       steps: [
         "Find your nearest TN CyberTech Bank agent with Find an Agent.",
-        "Tell the agent where and when you want to travel and how many passengers.",
+        "Tell the agent which bus company you want to travel with, or where and when you want to travel, and how many passengers.",
         "The agent shows you the trips and tells you the bus company's refund policy before taking payment.",
         "Pay the agent and keep your receipt.",
         "Your ticket is sent to your phone by SMS. Keep it until your journey ends.",

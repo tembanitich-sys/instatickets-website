@@ -10,7 +10,7 @@ import { WhatsAppDemo } from "./WhatsAppDemo";
 type Key = "web" | "whatsapp" | "ussd";
 
 /** Review-only demo: pick a channel (shown as an icon) and click through its journey. */
-export function ChannelDemos({ channels }: { channels: React.ReactNode }) {
+export function ChannelDemos({ channels, initialCompany }: { channels: React.ReactNode; initialCompany?: string }) {
   const [key, setKey] = useState<Key>("web");
   return (
     <div>
@@ -31,7 +31,7 @@ export function ChannelDemos({ channels }: { channels: React.ReactNode }) {
         ))}
       </div>
       <div className="mt-8">
-        {key === "web" && <BookingDemo channels={channels} />}
+        {key === "web" && <BookingDemo channels={channels} initialCompany={initialCompany} />}
         {key === "whatsapp" && <WhatsAppDemo />}
         {key === "ussd" && <UssdDemo />}
       </div>

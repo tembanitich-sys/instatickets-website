@@ -3,11 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import { bookDemo, channelDemo } from "@content/site";
 import { brand } from "./Brand";
+import { allTowns, companyList, matchCompanies, readLastCompany, saveLastCompany, tripsFor, type DemoCompany, type DemoTrip } from "@/lib/demoTrips";
 import { Select, TextInput } from "./forms/fields";
 
 const t = channelDemo.whatsapp;
 type Msg = { who: "bot" | "me"; text: string };
-type Step = "start" | "menu" | "form" | "trips" | "names" | "summary" | "pay" | "ticket";
+type Step = "start" | "menu" | "company" | "form" | "trips" | "names" | "summary" | "pay" | "ticket";
 
 const bubble = (who: Msg["who"]) =>
   `max-w-[17rem] rounded-xl px-3 py-2 text-sm shadow-sm ${who === "me" ? "ml-auto bg-[#d9fdd3]" : "mr-auto bg-white"}`;
@@ -23,7 +24,10 @@ export function WhatsAppDemo() {
   const [to, setTo] = useState("");
   const [date, setDate] = useState("");
   const [pax, setPax] = useState("1");
-  const [trip, setTrip] = useState("");
+  const [trip, setTrip] = useState<DemoTrip | null>(null);
+  const [company, setCompany] = useState<DemoCompany | null>(null);
+  const [options, setOptions] = useState<DemoCompany[]>([]);
+  const [typed, setTyped] = useState("");
   const [name, setName] = useState("");
   const [idNo, setIdNo] = useState("");
   const [error, setError] = useState("");
@@ -38,15 +42,50 @@ export function WhatsAppDemo() {
     setLog((l) => [...l, ...(me ? [{ who: "me" as const, text: me }] : []), ...bot.map((text) => ({ who: "bot" as const, text }))]);
     setStep(next);
   };
-  const towns = [{ value: "", label: t.choose }, ...bookDemo.towns.map((x) => ({ value: x, label: x }))];
+  const townList = company ? [...company.towns].sort((a, b) => a.localeCompare(b)) : allTowns();
+  const towns = [{ value: "", label: t.choose }, ...townList.map((x) => ({ value: x, label: x }))];
+  const results = from && to ? tripsFor(from, to, company ?? undefined) : [];
   const n = Number(pax);
 
   function restart() {
     setLog([]);
     setStep("start");
-    setTrip("");
+    setTrip(null);
+    setCompany(null);
+    setOptions([]);
+    setFrom("");
+    setTo("");
     setName("");
     setIdNo("");
+  }
+
+  function chooseCompany(c: DemoCompany) {
+    saveLastCompany(c.slug);
+    setCompany(c);
+    setFrom("");
+    setTo("");
+    setOptions([]);
+    say(c.name, [t.pickedCompany(c.name), t.storefrontOnly(c.name)], "form");
+  }
+
+  function chooseRoute() {
+    setCompany(null);
+    setOptions([]);
+    say(t.byRoute, [t.formIntro], "form");
+  }
+
+  function sendTyped(e: React.FormEvent) {
+    e.preventDefault();
+    const v = typed.trim();
+    if (!v) return;
+    setTyped("");
+    if (v.toUpperCase() === t.listWord) {
+      setOptions(companyList(readLastCompany()));
+      return say(v, [t.listIntro], "company");
+    }
+    const found = matchCompanies(v);
+    setOptions(found);
+    say(v, [found.length ? t.matchIntro : t.noMatch], "company");
   }
 
   return (
@@ -72,7 +111,7 @@ export function WhatsAppDemo() {
               <li key={m.key}>
                 <button
                   type="button"
-                  onClick={() => (m.key === "book" ? say(m.label, [t.formIntro], "form") : say(m.label, [t.soon], "menu"))}
+                  onClick={() => (m.key === "book" ? say(m.label, [t.companyPrompt], "company") : say(m.label, [t.soon], "menu"))}
                   className={action}
                 >
                   {m.label}
@@ -80,6 +119,19 @@ export function WhatsAppDemo() {
                 </button>
               </li>
             ))}
+          </ul>
+        )}
+
+        {step === "company" && (
+          <ul className="grid gap-2">
+            {options.map((c) => (
+              <li key={c.slug}>
+                <button type="button" onClick={() => chooseCompany(c)} className={action}>{c.name}</button>
+              </li>
+            ))}
+            <li>
+              <button type="button" onClick={chooseRoute} className={action}>{t.byRoute}</button>
+            </li>
           </ul>
         )}
 
@@ -106,11 +158,19 @@ export function WhatsAppDemo() {
 
         {step === "trips" && (
           <ul className="grid gap-2">
-            {bookDemo.times.map((time, i) => {
-              const line = t.tripLine(time, `${bookDemo.operator} ${bookDemo.operatorNames[i]}`);
+            {results.length === 0 && <li className={bubble("bot")}>{t.noRouteTrips}</li>}
+            {results.map((r) => {
+              const line = t.tripLine(r.time, r.company.name, `${bookDemo.currency}${r.fare}`);
               return (
-                <li key={time}>
-                  <button type="button" onClick={() => { setTrip(time); say(line, [t.pickedTrip(line), t.namesIntro], "names"); }} className={action}>{line}</button>
+                <li key={`${r.company.slug}-${r.time}`}>
+                  <button
+                    type="button"
+                    disabled={r.full}
+                    onClick={() => { setTrip(r); say(line, [t.pickedTrip(line), t.namesIntro], "names"); }}
+                    className={`${action} disabled:text-muted`}
+                  >
+                    {line}{r.full ? ` (${bookDemo.full})` : ""}
+                  </button>
                 </li>
               );
             })}
@@ -123,7 +183,7 @@ export function WhatsAppDemo() {
             onSubmit={(e) => {
               e.preventDefault();
               if (!name.trim() || !idNo.trim()) return setError(t.needAll);
-              say(`${name}, ${idNo}`, [`${t.summaryTitle}: ${t.summary(from, to, trip, n)}`, t.refundNote], "summary");
+              say(`${name}, ${idNo}`, [`${t.summaryTitle}: ${t.summary(from, to, trip?.time ?? "", n)}`, t.refundNote], "summary");
             }}
           >
             <div><label htmlFor="wa-name" className={label}>{t.fullName}</label><TextInput id="wa-name" value={name} onChange={(e) => setName(e.target.value)} /></div>
@@ -139,7 +199,7 @@ export function WhatsAppDemo() {
         {step === "ticket" && (
           <div className="rounded-xl bg-white p-3 shadow-sm">
             <p className="text-sm font-extrabold text-navy">{t.ticketTitle}</p>
-            <p className="mt-1 text-sm">{t.ticketLine(from, to, trip)}</p>
+            <p className="mt-1 text-sm">{t.ticketLine(from, to, trip?.time ?? "")}</p>
             <p className="mt-1 text-sm text-muted">{name}, {channelDemo.reference}</p>
             <div aria-hidden className="mt-3 grid size-24 grid-cols-6 gap-px bg-white">
               {Array.from({ length: 36 }, (_, i) => (
@@ -152,7 +212,22 @@ export function WhatsAppDemo() {
           </div>
         )}
       </div>
-      <p className="bg-[#f0f2f5] px-4 py-3 text-xs text-muted">{t.typing}</p>
+      {step === "company" ? (
+        <form onSubmit={sendTyped} className="flex gap-2 bg-[#f0f2f5] p-2">
+          <label htmlFor="wa-type" className="sr-only">{t.typing}</label>
+          <input
+            id="wa-type"
+            value={typed}
+            onChange={(e) => setTyped(e.target.value)}
+            placeholder={t.typing}
+            autoComplete="off"
+            className="min-h-11 min-w-0 flex-1 rounded-full border border-line bg-white px-4 text-sm"
+          />
+          <button type="submit" className="min-h-11 rounded-full bg-[#128c7e] px-4 text-sm font-bold text-white">{t.send}</button>
+        </form>
+      ) : (
+        <p className="bg-[#f0f2f5] px-4 py-3 text-xs text-muted">{t.typing}</p>
+      )}
     </div>
   );
 }

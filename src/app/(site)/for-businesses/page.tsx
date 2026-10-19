@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { QrCode, Scale, Store } from "lucide-react";
 import { partnerVisible, type PartnerKey } from "@content/facts";
 import { forBusinesses as t, home } from "@content/site";
 import { brand } from "@/components/Brand";
@@ -25,6 +26,29 @@ export default function ForBusinessesPage() {
           ))}
         </ul>
       </PageIntro>
+
+      <Section>
+        <div className="mx-auto max-w-3xl text-center">
+          <Heading>{brand(t.storefront.heading)}</Heading>
+        </div>
+        <ul className="mt-8 grid gap-6 md:grid-cols-3">
+          {t.storefront.items.map((item, i) => {
+            const Icon = [Store, QrCode, Scale][i];
+            return (
+              <li key={item.title} className="rounded-2xl border border-line bg-white p-6 shadow-sm">
+                <Icon aria-hidden className="size-8 text-red" />
+                <h3 className="mt-4 text-lg font-extrabold tracking-wide text-navy">{item.title}</h3>
+                <p className="mt-2 leading-relaxed text-muted">{brand(item.body)}</p>
+              </li>
+            );
+          })}
+        </ul>
+        <div className="mt-8 text-center">
+          <ButtonLink href="#register" variant="primary">
+            {t.storefront.button}
+          </ButtonLink>
+        </div>
+      </Section>
 
       <Section tone="mist">
         <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr] lg:items-center">

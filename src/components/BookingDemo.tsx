@@ -2,10 +2,22 @@
 
 import { useState } from "react";
 import { bookDemo as t } from "@content/site";
+import {
+  allTowns,
+  companyList,
+  findCompany,
+  matchCompanies,
+  useLastCompany,
+  saveLastCompany,
+  tripsFor,
+  type DemoCompany,
+  type DemoTrip,
+} from "@/lib/demoTrips";
+import { QrPlaceholder } from "./QrPlaceholder";
 import { brand } from "./Brand";
 import { Select, TextInput } from "./forms/fields";
 
-type Step = 0 | 1 | 2 | 3 | 4 | 5;
+type Step = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 type Pax = { name: string; id: string };
 
 const btnPrimary =
@@ -18,13 +30,19 @@ const label = "mb-1.5 block text-sm font-bold text-navy";
  * A simulated booking flow with sample trips, following the customer wireframe: search, trip,
  * seats, passenger details, review and pay, ticket. No network calls and no real data.
  */
-export function BookingDemo({ channels }: { channels: React.ReactNode }) {
-  const [step, setStep] = useState<Step>(0);
+export function BookingDemo({ channels, initialCompany }: { channels: React.ReactNode; initialCompany?: string }) {
+  const opened = findCompany(initialCompany);
+  const [step, setStep] = useState<Step>(opened ? 1 : 0);
+  const [company, setCompany] = useState<DemoCompany | null>(opened ?? null);
+  const [fromLink, setFromLink] = useState(Boolean(opened));
+  const [query, setQuery] = useState("");
+  const [showList, setShowList] = useState(false);
+  const [sort, setSort] = useState<"time" | "fare">("time");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [date, setDate] = useState("");
   const [pax, setPax] = useState("1");
-  const [trip, setTrip] = useState<{ time: string; operator: string } | null>(null);
+  const [trip, setTrip] = useState<DemoTrip | null>(null);
   const [seats, setSeats] = useState<number[]>([]);
   const [people, setPeople] = useState<Pax[]>([]);
   const [kin, setKin] = useState("");
@@ -34,7 +52,28 @@ export function BookingDemo({ channels }: { channels: React.ReactNode }) {
   const [error, setError] = useState("");
 
   const n = Number(pax);
-  const towns = [{ value: "", label: t.choose }, ...t.towns.map((x) => ({ value: x, label: x }))];
+  const lastSlug = useLastCompany();
+
+  const townList = company ? [...company.towns].sort((a, b) => a.localeCompare(b)) : allTowns();
+  const towns = [{ value: "", label: t.choose }, ...townList.map((x) => ({ value: x, label: x }))];
+  const results = from && to ? tripsFor(from, to, company ?? undefined, sort) : [];
+
+  function chooseCompany(c: DemoCompany) {
+    saveLastCompany(c.slug);
+    setCompany(c);
+    setFromLink(false);
+    setFrom("");
+    setTo("");
+    go(1);
+  }
+
+  function chooseRoute() {
+    setCompany(null);
+    setFromLink(false);
+    setFrom("");
+    setTo("");
+    go(1);
+  }
   const go = (to: Step) => {
     setError("");
     setStep(to);
@@ -42,10 +81,10 @@ export function BookingDemo({ channels }: { channels: React.ReactNode }) {
 
   function search(e: React.FormEvent) {
     e.preventDefault();
-    if (!from || !to || from === to) return setError(t.sameTown);
+    if (!from || !to || from === to) return setError(company ? t.storefront.sameTown : t.sameTown);
     setTrip(null);
     setSeats([]);
-    go(1);
+    go(2);
   }
 
   function toggleSeat(seat: number) {
@@ -56,14 +95,14 @@ export function BookingDemo({ channels }: { channels: React.ReactNode }) {
   function seatsNext() {
     if (seats.length !== n) return setError(t.seatsNeeded);
     setPeople(Array.from({ length: n }, (_, i) => people[i] ?? { name: "", id: "" }));
-    go(3);
+    go(4);
   }
 
   function peopleNext(e: React.FormEvent) {
     e.preventDefault();
     if (people.some((p) => !p.name.trim() || !p.id.trim())) return setError(t.needAll);
     if (mobile.replace(/\D/g, "").length < 9) return setError(t.needMobile);
-    go(4);
+    go(5);
   }
 
   function pay(e: React.FormEvent) {
@@ -71,7 +110,7 @@ export function BookingDemo({ channels }: { channels: React.ReactNode }) {
     if (!accepted) return setError(t.needAccept);
     if (!/^\d{4}$/.test(pin)) return setError(t.needPin);
     setPin("");
-    go(5);
+    go(6);
   }
 
   function restart() {
@@ -80,6 +119,9 @@ export function BookingDemo({ channels }: { channels: React.ReactNode }) {
     setPeople([]);
     setAccepted(false);
     setPin("");
+    setCompany(null);
+    setFrom("");
+    setTo("");
     go(0);
   }
 
@@ -115,6 +157,88 @@ export function BookingDemo({ channels }: { channels: React.ReactNode }) {
       </ol>
 
       {step === 0 && (
+        <section className="mt-6">
+          <h2 className="text-2xl font-extrabold text-navy">{t.start.heading}</h2>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <div className="rounded-2xl border-2 border-navy bg-white p-5 shadow-sm">
+              <h3 className="text-lg font-extrabold tracking-wide text-navy">{t.start.company.title}</h3>
+              <p className="mt-1 text-muted">{t.start.company.body}</p>
+              <label htmlFor="bk-company" className={`${label} mt-4`}>{t.companyPick.label}</label>
+              <TextInput
+                id="bk-company"
+                autoComplete="off"
+                placeholder={t.companyPick.placeholder}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+              {query.trim() && (
+                <div aria-live="polite" className="mt-3">
+                  {matchCompanies(query).length === 0 ? (
+                    <p className="text-sm font-semibold text-muted">{t.companyPick.noMatch}</p>
+                  ) : (
+                    <ul aria-label={t.companyPick.matches} className="grid gap-2">
+                      {matchCompanies(query).map((c) => (
+                        <li key={c.slug}>
+                          <CompanyButton c={c} onPick={chooseCompany} last={false} />
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              )}
+              <button
+                type="button"
+                aria-expanded={showList}
+                onClick={() => setShowList((v) => !v)}
+                className={`${btnGhost} mt-4`}
+              >
+                {showList ? t.companyPick.hideList : t.companyPick.viewList}
+              </button>
+              {showList && (
+                <div className="mt-3">
+                  <p className="text-sm font-bold text-navy">{t.companyPick.listHeading}</p>
+                  <ul className="mt-2 grid gap-2">
+                    {companyList(lastSlug).map((c) => (
+                      <li key={c.slug}>
+                        <CompanyButton c={c} onPick={chooseCompany} last={c.slug === lastSlug} />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+            <div className="flex flex-col rounded-2xl border border-line bg-white p-5 shadow-sm">
+              <h3 className="text-lg font-extrabold tracking-wide text-navy">{t.start.route.title}</h3>
+              <p className="mt-1 flex-1 text-muted">{t.start.route.body}</p>
+              <button type="button" onClick={chooseRoute} className={`${btnPrimary} mt-4 self-start`}>
+                {t.start.route.title}
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {step === 1 && company && (
+        <div className="mt-6 overflow-hidden rounded-2xl border border-line bg-white shadow-sm">
+          <div className="px-5 py-4 text-white" style={{ backgroundColor: company.color }}>
+            {fromLink && <p className="text-xs font-bold opacity-90">{t.storefront.opened(company.name)}</p>}
+            <h2 className="text-2xl font-extrabold">{company.name}</h2>
+            <p className="mt-1 text-sm opacity-90">{t.storefront.serves}: {company.towns.join(", ")}</p>
+          </div>
+          <div className="flex flex-wrap items-center gap-4 px-5 py-4">
+            <QrPlaceholder caption={t.storefront.qr} />
+            <div className="min-w-0">
+              <p className="text-xs font-bold text-muted">{t.storefront.link}</p>
+              <p className="break-all text-sm font-semibold text-navy">/book?company={company.slug}</p>
+            </div>
+            <button type="button" onClick={() => go(0)} className="ml-auto inline-flex min-h-11 items-center font-bold text-navy underline">
+              {t.storefront.start}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {step === 1 && (
         <form onSubmit={search} className="mt-6 grid gap-4 rounded-2xl border border-line bg-white p-5 shadow-sm sm:grid-cols-2 lg:grid-cols-5 lg:items-end">
           <div>
             <label htmlFor="bk-from" className={label}>{t.from}</label>
@@ -144,40 +268,64 @@ export function BookingDemo({ channels }: { channels: React.ReactNode }) {
         </form>
       )}
 
-      {step === 1 && (
+      {step === 2 && (
         <section aria-live="polite" className="mt-8">
           <h2 className="text-2xl font-extrabold text-navy">{t.resultsHeading(from, to)}</h2>
-          <ul className="mt-4 grid gap-4">
-            {t.times.map((time, i) => (
-              <li key={time} className="flex flex-col gap-3 rounded-2xl border border-line bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <p className="text-2xl font-extrabold tabular-nums text-navy">{time}</p>
-                  <p className="text-sm text-muted">
-                    {t.operator} {t.operatorNames[i]}
-                    {date ? `, ${date}` : ""}
-                  </p>
-                </div>
-                <p className="text-sm font-semibold text-muted">{t.fare}</p>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setTrip({ time, operator: t.operatorNames[i] });
-                    go(2);
-                  }}
-                  className={btnGhost}
-                >
-                  {t.select}
-                </button>
-              </li>
+          {!company && <p className="mt-1 text-sm text-muted">{t.routeNote}</p>}
+          <div role="group" aria-label={t.sortLabel} className="mt-4 flex flex-wrap items-center gap-2">
+            <span className="text-sm font-bold text-navy">{t.sortLabel}</span>
+            {(["time", "fare"] as const).map((k) => (
+              <button
+                key={k}
+                type="button"
+                aria-pressed={sort === k}
+                onClick={() => setSort(k)}
+                className={`min-h-11 rounded-full px-4 py-2 text-sm font-bold ${sort === k ? "bg-navy text-white" : "border-2 border-navy text-navy"}`}
+              >
+                {k === "time" ? t.sortTime : t.sortFare}
+              </button>
             ))}
-          </ul>
-          <button type="button" onClick={() => go(0)} className="mt-6 inline-flex min-h-11 items-center font-bold text-navy underline">
+          </div>
+          {results.length === 0 ? (
+            <p className="mt-4 font-semibold text-muted">{company ? t.storefront.noTrips : t.noRouteTrips}</p>
+          ) : (
+            <ul className="mt-4 grid gap-4">
+              {results.map((r) => (
+                <li key={`${r.company.slug}-${r.time}`} className="flex flex-col gap-3 rounded-2xl border border-line bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <p className="text-2xl font-extrabold tabular-nums text-navy">{r.time}</p>
+                    <p className="text-sm text-muted">
+                      {!company && <span className="font-semibold">{r.company.name}</span>}
+                      {!company && date ? ", " : ""}
+                      {date}
+                    </p>
+                  </div>
+                  <p className="text-sm font-semibold text-muted">
+                    {t.fareLabel} {t.currency}{r.fare}
+                  </p>
+                  <button
+                    type="button"
+                    disabled={r.full}
+                    onClick={() => {
+                      setTrip(r);
+                      go(3);
+                    }}
+                    className={`${btnGhost} disabled:cursor-not-allowed disabled:border-line disabled:text-muted disabled:hover:bg-transparent`}
+                  >
+                    {r.full ? t.full : t.select}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+          <p className="mt-4 text-xs text-muted">{t.fareNote}</p>
+          <button type="button" onClick={() => go(1)} className="mt-4 inline-flex min-h-11 items-center font-bold text-navy underline">
             {t.back}
           </button>
         </section>
       )}
 
-      {step === 2 && (
+      {step === 3 && (
         <section aria-live="polite" className="mt-8 rounded-2xl border border-line bg-white p-5 shadow-sm">
           <h2 className="text-2xl font-extrabold text-navy">{t.seatsHeading}</h2>
           <p className="mt-1 text-muted">{t.seatsHint(n)}</p>
@@ -209,13 +357,13 @@ export function BookingDemo({ channels }: { channels: React.ReactNode }) {
           </ul>
           {err}
           <div className="mt-6 flex flex-wrap gap-3">
-            <button type="button" onClick={() => go(1)} className={btnGhost}>{t.back2}</button>
+            <button type="button" onClick={() => go(2)} className={btnGhost}>{t.back2}</button>
             <button type="button" onClick={seatsNext} className={btnPrimary}>{t.next}</button>
           </div>
         </section>
       )}
 
-      {step === 3 && (
+      {step === 4 && (
         <form onSubmit={peopleNext} className="mt-8 rounded-2xl border border-line bg-white p-5 shadow-sm">
           <h2 className="text-2xl font-extrabold text-navy">{t.passengersHeading}</h2>
           <p className="mt-1 text-muted">{t.passengersHint}</p>
@@ -256,24 +404,24 @@ export function BookingDemo({ channels }: { channels: React.ReactNode }) {
           </div>
           {err}
           <div className="mt-6 flex flex-wrap gap-3">
-            <button type="button" onClick={() => go(2)} className={btnGhost}>{t.back2}</button>
+            <button type="button" onClick={() => go(3)} className={btnGhost}>{t.back2}</button>
             <button type="submit" className={btnPrimary}>{t.next}</button>
           </div>
         </form>
       )}
 
-      {step === 4 && trip && (
+      {step === 5 && trip && (
         <form onSubmit={pay} className="mt-8 rounded-2xl border border-line bg-white p-5 shadow-sm">
           <h2 className="text-2xl font-extrabold text-navy">{t.reviewHeading}</h2>
           <dl className="mt-4 grid gap-3 sm:grid-cols-[12rem_1fr]">
             <dt className="font-bold text-navy">{t.summaryTrip}</dt>
-            <dd>{from} to {to}, {trip.time}{date ? `, ${date}` : ""}, {t.operator} {trip.operator}</dd>
+            <dd>{from} to {to}, {trip.time}{date ? `, ${date}` : ""}, {trip.company.name}</dd>
             <dt className="font-bold text-navy">{t.summarySeats}</dt>
             <dd>{seats.join(", ")}</dd>
             <dt className="font-bold text-navy">{t.summaryPassengers}</dt>
             <dd>{people.map((p) => p.name).join(", ")}</dd>
             <dt className="font-bold text-navy">{t.summaryFare}</dt>
-            <dd>{t.summaryFareValue}</dd>
+            <dd>{t.currency}{trip.fare * seats.length} ({seats.length} x {t.currency}{trip.fare})</dd>
           </dl>
           <p className="mt-4 text-sm text-muted">{t.refundNote}</p>
           <label className="mt-4 flex items-start gap-3 text-sm font-semibold text-navy">
@@ -287,13 +435,13 @@ export function BookingDemo({ channels }: { channels: React.ReactNode }) {
           </div>
           {err}
           <div className="mt-6 flex flex-wrap gap-3">
-            <button type="button" onClick={() => go(3)} className={btnGhost}>{t.back2}</button>
+            <button type="button" onClick={() => go(4)} className={btnGhost}>{t.back2}</button>
             <button type="submit" className={btnPrimary}>{t.pay}</button>
           </div>
         </form>
       )}
 
-      {step === 5 && trip && (
+      {step === 6 && trip && (
         <section aria-live="polite" className="mt-8 rounded-2xl bg-mist p-6">
           <h2 className="text-2xl font-extrabold text-navy">{t.doneHeading}</h2>
           <p className="mt-2 text-muted">
@@ -307,5 +455,20 @@ export function BookingDemo({ channels }: { channels: React.ReactNode }) {
         </section>
       )}
     </div>
+  );
+}
+
+function CompanyButton({ c, onPick, last }: { c: DemoCompany; onPick: (c: DemoCompany) => void; last: boolean }) {
+  return (
+    <button
+      type="button"
+      onClick={() => onPick(c)}
+      className="flex min-h-11 w-full items-center gap-3 rounded-xl border border-line bg-white px-4 py-2 text-left font-bold text-navy hover:border-navy"
+    >
+      <span aria-hidden className="size-4 shrink-0 rounded-full" style={{ backgroundColor: c.color }} />
+      <span className="flex-1">{c.name}</span>
+      {last && <span className="rounded-full bg-mist px-2 py-0.5 text-xs">{t.companyPick.lastUsed}</span>}
+      <span className="text-xs tracking-wide text-red-dark">{t.companyPick.open}</span>
+    </button>
   );
 }

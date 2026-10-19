@@ -17,8 +17,11 @@ export const metadata: Metadata = {
  * Demo of the online booking journey, for review builds only. Production never shows it: it
  * sends visitors to the real booking address, or to "How to buy" until that exists.
  */
-export default function BookPage() {
+export default async function BookPage({ searchParams }: PageProps<"/book">) {
   if (!isReviewBuild) redirect(bookingUrl.startsWith("/book") ? "/#how-to-buy" : bookingUrl);
+
+  const { company } = await searchParams;
+  const initialCompany = typeof company === "string" ? company : undefined;
 
   const channels = (
     <ul className="flex flex-wrap gap-3">
@@ -43,7 +46,7 @@ export default function BookPage() {
         <p role="note" className="mb-6 rounded-xl border-2 border-red bg-red-50 px-4 py-3 text-sm font-bold text-red-dark">
           {t.banner}
         </p>
-        <ChannelDemos channels={channels} />
+        <ChannelDemos channels={channels} initialCompany={initialCompany} />
       </Section>
     </>
   );
