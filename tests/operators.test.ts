@@ -150,8 +150,12 @@ describe("operators subdomain routing", () => {
     expect(routeForHost(host, "/operators")).toEqual({ kind: "redirect-local", pathname: "/" });
   });
   it("sends every other subdomain page to the main site", () => {
-    expect(routeForHost(host, "/privacy")).toEqual({ kind: "redirect-main", pathname: "/privacy" });
+    expect(routeForHost(host, "/how-to-buy")).toEqual({ kind: "redirect-main", pathname: "/how-to-buy" });
     expect(routeForHost(host, "/admin")).toEqual({ kind: "redirect-main", pathname: "/admin" });
+  });
+  it("serves the legal pages on the subdomain so the form's links always work", () => {
+    expect(routeForHost(host, "/privacy")).toEqual({ kind: "next" });
+    expect(routeForHost(host, "/terms")).toEqual({ kind: "next" });
   });
   it("leaves the main site alone", () => {
     expect(routeForHost("www.instatickets.co.zw", "/")).toEqual({ kind: "next" });

@@ -5,6 +5,8 @@
  */
 export const OPERATORS_SUBDOMAIN = "operators.";
 export const OPERATORS_PATH = "/operators";
+/** Pages the registration form links to, served on the subdomain too so the links work before www is live. */
+const SHARED_PATHS = new Set(["/privacy", "/terms", "/cookies"]);
 
 export type HostRoute =
   | { kind: "next" }
@@ -21,5 +23,6 @@ export function routeForHost(host: string | null, pathname: string): HostRoute {
   if (!isOperatorsHost(host)) return { kind: "next" };
   if (pathname === "/") return { kind: "rewrite", pathname: OPERATORS_PATH };
   if (pathname === OPERATORS_PATH || pathname === `${OPERATORS_PATH}/`) return { kind: "redirect-local", pathname: "/" };
+  if (SHARED_PATHS.has(pathname)) return { kind: "next" };
   return { kind: "redirect-main", pathname };
 }
