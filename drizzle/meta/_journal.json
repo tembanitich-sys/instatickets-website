@@ -29,6 +29,13 @@
       "when": 1790819866125,
       "tag": "0003_agent_applications",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792756930999,
+      "tag": "0004_operator_registrations",
+      "breakpoints": true
     }
   ]
 }

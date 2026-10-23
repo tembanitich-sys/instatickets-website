@@ -193,6 +193,50 @@ const agentSchema = z.object({
     utmCampaign: utm,
 });
 
+const ROUTE_TYPES = ["local", "cross_border", "both"] as const;
+const TICKETING = ["yes", "no", "not_sure"] as const;
+export const CURRENCIES = ["USD", "ZWG", "ZAR"] as const;
+const HEARD_FROM = ["roadport", "cboa", "instatickets_team", "referral", "social_media", "other"] as const;
+
+const operatorSchema = z.object({
+    companyName: line(200, m.companyName),
+    tradingName: optionalLine(200),
+    contactPerson: line(150, m.contactPerson),
+    contactRole: optionalLine(100),
+    ...phone,
+    email: email(m.emailRequired),
+    fleetSize: z
+      .string()
+      .trim()
+      .regex(/^\d{1,4}$/, m.fleetSize)
+      .transform(Number)
+      .refine((n) => n >= 1 && n <= 5000, m.fleetSize),
+    routeType: z.enum(ROUTE_TYPES, { error: m.routeType }),
+    mainRoutes: z
+      .string()
+      .trim()
+      .min(1, m.mainRoutes)
+      .max(1000, m.tooLong)
+      .refine((v) => !MULTILINE_CONTROL_CHARS.test(v), m.mainRoutes),
+    hasTicketingSystem: z.enum(TICKETING, { error: m.hasTicketingSystem }),
+    ticketingSystemName: optionalLine(200),
+    currencies: z.array(z.enum(CURRENCIES, { error: m.invalidChoice })).min(1, m.currencies),
+    heardFrom: z
+      .enum([...HEARD_FROM, ""], { error: m.invalidChoice })
+      .transform((v) => v || null),
+    details: z
+      .string()
+      .trim()
+      .max(2000, m.tooLong)
+      .refine((v) => !MULTILINE_CONTROL_CHARS.test(v), m.tooLong)
+      .transform((v) => v || null),
+    marketingConsent: z.boolean(),
+    privacyAccepted: privacy,
+    utmSource: utm,
+    utmMedium: utm,
+    utmCampaign: utm,
+});
+
 // --- FormData helpers -------------------------------------------------------
 
 const str = (fd: FormData, key: string) => {
@@ -368,7 +412,44 @@ export function parseAgent(fd: FormData) {
   );
 }
 
+export function parseOperator(fd: FormData) {
+  const singles = [
+    "companyName",
+    "tradingName",
+    "contactPerson",
+    "contactRole",
+    "phoneCountry",
+    "phoneNational",
+    "email",
+    "fleetSize",
+    "routeType",
+    "mainRoutes",
+    "hasTicketingSystem",
+    "ticketingSystemName",
+    "heardFrom",
+    "details",
+  ];
+  const values = echo(fd, singles, ["currencies"], ["marketingConsent", "privacyAccepted"]);
+  return run(
+    operatorSchema,
+    {
+      ...Object.fromEntries(singles.map((k) => [k, str(fd, k)])),
+      phoneCountry: str(fd, "phoneCountry"),
+      phoneNational: str(fd, "phoneNational"),
+      currencies: all(fd, "currencies"),
+      marketingConsent: checked(fd, "marketingConsent"),
+      privacyAccepted: checked(fd, "privacyAccepted"),
+      utmSource: fd.get("utm_source"),
+      utmMedium: fd.get("utm_medium"),
+      utmCampaign: fd.get("utm_campaign"),
+    },
+    values,
+    true,
+  );
+}
+
 export type CustomerInput = Extract<ReturnType<typeof parseCustomer>, { ok: true }>["data"];
 export type BusinessInput = Extract<ReturnType<typeof parseBusiness>, { ok: true }>["data"];
 export type AgentInput = Extract<ReturnType<typeof parseAgent>, { ok: true }>["data"];
 export type ContactInput = Extract<ReturnType<typeof parseContact>, { ok: true }>["data"];
+export type OperatorInput = Extract<ReturnType<typeof parseOperator>, { ok: true }>["data"];

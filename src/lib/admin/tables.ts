@@ -7,6 +7,7 @@ import {
   businessRegistrations as b,
   contactEnquiries as e,
   customerPreregistrations as c,
+  operatorRegistrations as o,
   siteSettings,
 } from "../db/schema";
 
@@ -24,7 +25,7 @@ export type Column = {
 };
 
 export type TableDef = {
-  slug: "customers" | "businesses" | "agents" | "enquiries" | "settings" | "audit";
+  slug: "customers" | "businesses" | "operators" | "agents" | "enquiries" | "settings" | "audit";
   title: string;
   table: PgTable;
   /** Newest first. */
@@ -89,6 +90,49 @@ export const TABLES: Record<TableDef["slug"], TableDef> = {
       col("hasTicketingSystem", "Has ticketing system", "has_ticketing_system"),
       col("ticketingSystemName", "Ticketing system", "ticketing_system_name"),
       col("website", "Website", "website"),
+      col("details", "Details", "details", true),
+      col("marketingConsent", "Marketing consent", "marketing_consent"),
+      col("marketingConsentAt", "Consent given", "marketing_consent_at"),
+      col("privacyNoticeVersion", "Notice version", "privacy_notice_version"),
+      col("utmSource", "utm source", "utm_source"),
+      col("utmMedium", "utm medium", "utm_medium"),
+      col("utmCampaign", "utm campaign", "utm_campaign"),
+      col("id", "ID", "id"),
+    ],
+  },
+  operators: {
+    slug: "operators",
+    title: "Bus operator registrations",
+    table: o,
+    order: o.createdAt,
+    search: [
+      o.companyName,
+      o.tradingName,
+      o.contactPerson,
+      o.phoneE164,
+      o.email,
+      o.mainRoutes,
+      o.ticketingSystemName,
+      o.currencies,
+      o.details,
+    ],
+    phoneSearch: [o.phoneE164],
+    columns: [
+      col("createdAt", "Received", "created_at"),
+      col("referenceNo", "Ref no", "reference_no"),
+      col("companyName", "Company", "company_name"),
+      col("tradingName", "Trading name", "trading_name"),
+      col("contactPerson", "Contact person", "contact_person"),
+      col("contactRole", "Role", "contact_role"),
+      col("phoneE164", "Mobile", "phone_e164"),
+      col("email", "Email", "email"),
+      col("fleetSize", "Fleet size", "fleet_size"),
+      col("routeType", "Route type", "route_type"),
+      col("mainRoutes", "Main routes", "main_routes", true),
+      col("hasTicketingSystem", "Has ticketing system", "has_ticketing_system"),
+      col("ticketingSystemName", "Ticketing system", "ticketing_system_name"),
+      col("currencies", "Currencies", "currencies"),
+      col("heardFrom", "Heard from", "heard_from"),
       col("details", "Details", "details", true),
       col("marketingConsent", "Marketing consent", "marketing_consent"),
       col("marketingConsentAt", "Consent given", "marketing_consent_at"),

@@ -6,6 +6,7 @@ import {
   submitAgent,
   submitBusiness,
   submitContact,
+  submitOperator,
   type FormState,
 } from "@/lib/forms/submit";
 
@@ -19,4 +20,8 @@ export async function agentAction(_prev: FormState, formData: FormData): Promise
 
 export async function contactAction(_prev: FormState, formData: FormData): Promise<FormState> {
   return submitContact(defaultDeps(), formData, { ip: await clientIp() });
+}
+
+export async function operatorAction(_prev: FormState, formData: FormData): Promise<FormState> {
+  return submitOperator(defaultDeps(), formData, { ip: await clientIp() });
 }

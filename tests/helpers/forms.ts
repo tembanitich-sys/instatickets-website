@@ -10,6 +10,7 @@ export type TestDeps = Omit<Deps, "db"> &
   Pick<Deps, "notify"> & {
     sent: EmailMessage[];
     errors: unknown[][];
+    sheetRows: [string, string][][];
     db: Db;
   };
 
@@ -17,11 +18,15 @@ export type TestDeps = Omit<Deps, "db"> &
 export async function makeDeps(overrides: Partial<Deps> = {}): Promise<TestDeps> {
   const sent: EmailMessage[] = [];
   const errors: unknown[][] = [];
+  const sheetRows: [string, string][][] = [];
   const db = await createTestDb();
   const deps: Deps = {
     db,
     notify: async (m) => {
       sent.push(m);
+    },
+    appendOperatorRow: async (row) => {
+      sheetRows.push(row);
     },
     verifyTurnstile: async (token) => token === "valid-token",
     rateLimiter: createMemoryLimiter({ limit: 5, windowMs: 600_000 }),
@@ -30,7 +35,7 @@ export async function makeDeps(overrides: Partial<Deps> = {}): Promise<TestDeps>
     now: () => new Date(),
     ...overrides,
   };
-  return Object.assign(deps, { sent, errors }) as TestDeps;
+  return Object.assign(deps, { sent, errors, sheetRows }) as TestDeps;
 }
 
 export function form(fields: Record<string, string | string[] | true | undefined>): FormData {
@@ -90,6 +95,26 @@ export const validContact = {
   phoneNational: "",
   enquiryType: "general",
   message: "Hello there",
+  privacyAccepted: true as const,
+  [TURNSTILE_FIELD]: "valid-token",
+};
+
+export const validOperator = {
+  companyName: "Tamuka Coaches (Pvt) Ltd",
+  tradingName: "Tamuka Coaches",
+  contactPerson: "Tamuka Moyo",
+  contactRole: "Operations Manager",
+  phoneCountry: "ZW",
+  phoneNational: "0771234567",
+  email: "Ops@Tamuka.example",
+  fleetSize: "18",
+  routeType: "both",
+  mainRoutes: "Harare to Bulawayo, Harare to Johannesburg",
+  hasTicketingSystem: "no",
+  ticketingSystemName: "",
+  currencies: ["USD", "ZWG", "ZAR"],
+  heardFrom: "roadport",
+  details: "",
   privacyAccepted: true as const,
   [TURNSTILE_FIELD]: "valid-token",
 };

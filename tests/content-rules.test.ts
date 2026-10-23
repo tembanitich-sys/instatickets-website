@@ -86,9 +86,13 @@ describe("brief section 11: content rules", () => {
     const emails = new Set(
       everything.filter(({ file }) => !file.endsWith("lib/email.ts")).flatMap(({ text }) => text.match(/[\w.+-]+@[\w-]+\.[\w.-]+/g) ?? []).filter((e) => !e.startsWith("@")),
     );
-    // Only the company mailboxes from the brief may appear on the public site.
+    // Only the company mailboxes from the brief (plus accounts@, the operator onboarding
+    // mailbox the operator auto-reply signs off with) may appear on the public site.
     for (const email of emails) {
-      expect(["info@instatickets.co.zw", "registrations@instatickets.co.zw"], `unexpected email ${email}`).toContain(email);
+      expect(
+        ["info@instatickets.co.zw", "registrations@instatickets.co.zw", "accounts@instatickets.co.zw"],
+        `unexpected email ${email}`,
+      ).toContain(email);
     }
   });
 

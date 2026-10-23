@@ -1,6 +1,7 @@
 import { getDb } from "../db/client";
 import { sendEmail } from "../email";
 import { getRateLimiter } from "../ratelimit";
+import { defaultSheetAppender } from "../sheets";
 import { defaultTurnstileVerifier } from "../turnstile";
 import type { Deps } from "./submit";
 
@@ -14,6 +15,7 @@ export function defaultDeps(): Deps {
   return {
     db: getDb(),
     notify: sendEmail,
+    appendOperatorRow: defaultSheetAppender(),
     verifyTurnstile: defaultTurnstileVerifier(),
     rateLimiter: getRateLimiter(),
     ipSalt: ipSalt(),

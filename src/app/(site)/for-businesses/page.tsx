@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { QrCode, Scale, Store } from "lucide-react";
 import { partnerVisible, type PartnerKey } from "@content/facts";
@@ -96,6 +97,13 @@ export default function ForBusinessesPage() {
           <div>
             <Heading>{t.form.heading}</Heading>
             <p className="mt-4 text-lg leading-relaxed text-muted">{brand(t.form.intro)}</p>
+            <p className="mt-4 text-lg leading-relaxed text-ink">
+              {t.form.operatorNote}{" "}
+              <Link href="/operators" className="font-bold text-navy underline">
+                {t.form.operatorLink}
+              </Link>
+              .
+            </p>
           </div>
           <div className="rounded-3xl border border-line bg-white p-6 shadow-xl sm:p-8">
             <BusinessForm />

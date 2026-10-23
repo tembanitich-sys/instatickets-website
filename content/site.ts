@@ -3,7 +3,7 @@
  * only; components read from it and contain no marketing text of their own.
  */
 
-export const PRIVACY_NOTICE_VERSION = "2026-11-live";
+export const PRIVACY_NOTICE_VERSION = "2026-11-live-operators";
 
 export const contact = {
   email: "info@instatickets.co.zw",
@@ -292,6 +292,12 @@ export const formMessages = {
   sellingLocation: "Choose where you would sell.",
   hasDevice: "Tell us whether you have a smartphone or tablet.",
   contactPerson: "Enter a contact person.",
+  companyName: "Enter your registered company name.",
+  fleetSize: "Enter the number of buses, for example 12.",
+  routeType: "Choose which routes you run.",
+  mainRoutes: "Tell us your main routes.",
+  hasTicketingSystem: "Tell us whether you use a ticketing system.",
+  currencies: "Choose at least one currency.",
   businessType: "Choose a business type.",
   enquiryType: "Choose an enquiry type.",
   message: "Enter your message.",
@@ -359,6 +365,8 @@ export const forBusinesses = {
     heading: "Have tickets to sell?",
     intro:
       "Register your business to explore becoming an InstaTickets partner. This is an expression of interest, not a full application.",
+    operatorNote: "Run a bus company?",
+    operatorLink: "Use the bus operator registration",
     fields: {
       organisationName: "Organisation Name",
       contactPerson: "Contact Person",
@@ -516,6 +524,137 @@ export const agents = {
   },
 } as const;
 
+export const operators = {
+  /** The portal's own address. The page also answers at /operators on the main site. */
+  url: "https://operators.instatickets.co.zw",
+  /** Who receives new registrations, and the auto-reply sender: see OPERATOR_MAIL in src/lib/email.ts. */
+  meta: {
+    title: "Bus Operator Registration",
+    description:
+      "Register your bus company on InstaTickets and sell your tickets across mobile wallets, the InstaTickets app, web, WhatsApp and a network of agents.",
+  },
+  hero: {
+    eyebrow: "FOR BUS OPERATORS",
+    headline: "PUT YOUR BUSES ON INSTATICKETS",
+    body: "Make your seats available on the widest ticket distribution network in Zimbabwe. Your inventory, your fares, your brand: we bring the customers.",
+    button: "REGISTER YOUR COMPANY",
+  },
+  why: {
+    heading: "Why operators join InstaTickets",
+    cards: [
+      {
+        key: "reach",
+        title: "MORE WAYS TO SELL",
+        body: "Mobile wallets, the InstaTickets app, the website, WhatsApp and agents: one connection puts your trips on all of them.",
+      },
+      {
+        key: "storefront",
+        title: "YOUR OWN STOREFRONT",
+        body: "Customers can choose your company by name and book inside your own branded storefront.",
+      },
+      {
+        key: "agents",
+        title: "PHYSICAL REACH",
+        body: "Registered InstaTickets Agents sell your tickets in person, so customers without a smartphone can still travel with you.",
+      },
+      {
+        key: "system",
+        title: "NO SYSTEM? COVERED.",
+        body: "Already have a ticketing system? We integrate with it. Don't have one? We can set you up with a complete ticketing system.",
+      },
+    ],
+  },
+  how: {
+    heading: "How it works",
+    steps: [
+      { title: "REGISTER", body: "Fill in the short form below. You receive a reference number by email straight away." },
+      { title: "WE CALL YOU", body: "Our onboarding team contacts you to talk through your routes, fares and ticketing system." },
+      { title: "AGREE AND CONNECT", body: "We share the operator terms, then connect your ticketing system or set you up on ours." },
+      { title: "GO LIVE", body: "Your trips go on sale across the InstaTickets network." },
+    ],
+  },
+  note: "Commercial terms are agreed with each operator directly and shared after registration. Registration does not by itself create an agreement with InstaTickets.",
+  form: {
+    heading: "Register your bus company",
+    intro: "It takes about three minutes. We only ask for documents later, once we have spoken.",
+    fields: {
+      companyName: "Registered company name",
+      tradingName: "Trading name (if different)",
+      contactPerson: "Contact person",
+      contactRole: "Role or position",
+      mobile: "Mobile number",
+      email: "Email address",
+      fleetSize: "Number of buses in your fleet",
+      routeType: "Which routes do you run?",
+      mainRoutes: "Main routes",
+      mainRoutesHint: "For example: Harare to Bulawayo, Harare to Johannesburg",
+      hasTicketingSystem: "Do you use a digital ticketing or booking system today?",
+      ticketingSystemName: "Name of your ticketing system",
+      currencies: "Which currencies do you accept for fares?",
+      heardFrom: "How did you hear about InstaTickets?",
+      details: "Anything else we should know",
+      choose: "Choose…",
+    },
+    routeTypes: [
+      { value: "local", label: "Local" },
+      { value: "cross_border", label: "Cross-border" },
+      { value: "both", label: "Both" },
+    ],
+    ticketingOptions: [
+      { value: "yes", label: "Yes" },
+      { value: "no", label: "No" },
+      { value: "not_sure", label: "Not sure" },
+    ],
+    currencyOptions: [
+      { value: "USD", label: "US Dollar (USD)" },
+      { value: "ZWG", label: "Zimbabwe Gold (ZiG)" },
+      { value: "ZAR", label: "South African Rand (ZAR)" },
+    ],
+    heardFromOptions: [
+      { value: "roadport", label: "RoadPort" },
+      { value: "cboa", label: "CBOA" },
+      { value: "instatickets_team", label: "The InstaTickets team contacted me" },
+      { value: "referral", label: "Another operator or a referral" },
+      { value: "social_media", label: "Social media" },
+      { value: "other", label: "Other" },
+    ],
+    marketing: "I would like to receive InstaTickets updates by SMS, WhatsApp or email.",
+    privacyPrefix: "I have read the InstaTickets",
+    privacyLink: "Privacy Notice",
+    privacySuffix: ".",
+    button: "REGISTER MY COMPANY",
+    successHeading: "THANK YOU. YOUR REGISTRATION HAS BEEN RECEIVED.",
+    successReference: (ref: string) => `Your reference number is ${ref}.`,
+    successBody:
+      "We have emailed it to you as well. Our onboarding team will contact you to arrange the next steps.",
+  },
+  autoReply: {
+    subject: (ref: string) => `Your InstaTickets operator registration (${ref})`,
+    body: (p: { contactPerson: string; companyName: string; ref: string }) =>
+      [
+        `Dear ${p.contactPerson},`,
+        "",
+        `Thank you for registering ${p.companyName} as a bus operator on InstaTickets. Your reference number is ${p.ref}.`,
+        "",
+        "Our onboarding team will contact you within one business day to arrange a short meeting about your routes, your ticketing system and the next steps to go live.",
+        "",
+        "To speed things up, please have the following ready:",
+        "- Company registration documents",
+        "- Operating permits for your routes",
+        "- Your company logo",
+        "",
+        `Questions? Reply to this email or WhatsApp us on ${contact.whatsapp.display}.`,
+        "",
+        "Kind regards,",
+        "InstaTickets Operator Onboarding",
+        "accounts@instatickets.co.zw",
+        "",
+        "InstaTickets, a Bullion Technologies product",
+        "Bullion Technologies (Pvt) Ltd, 153 Sam Nujoma Street Extension, Belgravia, Harare, Zimbabwe",
+      ].join("\n"),
+  },
+} as const;
+
 export const help = {
   heading: "Help",
   whatsappButton: "CHAT ON WHATSAPP",
@@ -627,7 +766,7 @@ export const comingSoonPages = {
  */
 export const privacy = {
   title: "INSTATICKETS PRIVACY NOTICE",
-  effectiveDate: "1 October 2026",
+  effectiveDate: "23 October 2026",
   intro:
     "This notice explains how InstaTickets handles the personal information you give us through this website.",
   sections: [
@@ -642,6 +781,7 @@ export const privacy = {
       paragraphs: [
         "Business registration: organisation name, contact person, mobile number, email address, business type, the tickets you want to offer, details of any existing ticketing system, and anything you tell us about your tickets.",
         "Agent applications: your name, mobile number, email address (if you give it), applicant type, business name, location, where you would sell, whether you have a device for sales, and anything you tell us about your business.",
+        "Bus operator registration: company and trading name, contact person and role, mobile number, email address, fleet size, routes, the currencies you accept, details of any existing ticketing system, how you heard about us, and anything else you tell us.",
         "Contact form: your name, email, phone number, enquiry type and message.",
         "Website use: basic, anonymous usage statistics. See the Cookie Policy.",
       ],
@@ -652,6 +792,7 @@ export const privacy = {
         "To send updates, offers and promotions, only if you ticked the marketing box.",
         "To contact businesses about partnership, onboarding, verification and integration.",
         "To assess and respond to InstaTickets Agent applications.",
+        "To contact bus operators about onboarding, terms and connecting their ticketing systems.",
         "To answer enquiries sent through the contact form.",
         "To keep the website secure and understand how it is used.",
       ],
@@ -668,6 +809,7 @@ export const privacy = {
       paragraphs: [
         "Business registration details: 12 months from your last contact with us, unless you become a partner, in which case your partner agreement applies.",
         "Agent applications: 12 months from your last contact with us, unless you become an agent, in which case your agent agreement applies.",
+        "Bus operator registrations: 12 months from your last contact with us, unless you become an InstaTickets operator, in which case your operator agreement applies.",
         "Contact form enquiries: 12 months after the enquiry is closed.",
       ],
     },

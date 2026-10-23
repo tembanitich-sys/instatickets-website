@@ -1,8 +1,14 @@
 import { sql } from "drizzle-orm";
 import { PRIVACY_NOTICE_VERSION } from "@content/site";
 import type { Db } from "../db/client";
-import { agentApplications, businessRegistrations, contactEnquiries, customerPreregistrations } from "../db/schema";
-import type { AgentInput, BusinessInput, ContactInput, CustomerInput } from "./schemas";
+import {
+  agentApplications,
+  businessRegistrations,
+  contactEnquiries,
+  customerPreregistrations,
+  operatorRegistrations,
+} from "../db/schema";
+import type { AgentInput, BusinessInput, ContactInput, CustomerInput, OperatorInput } from "./schemas";
 
 /** Consent is recorded with its moment; withdrawing it clears both. */
 const consent = (given: boolean, now: Date) => ({
@@ -131,4 +137,38 @@ export async function saveContact(db: Db, input: ContactInput, now: Date) {
     })
     .returning({ id: contactEnquiries.id });
   return row;
+}
+
+/** The reference shown to the operator: OP-0001, OP-0002 and so on. */
+export const operatorRef = (referenceNo: number) => `OP-${String(referenceNo).padStart(4, "0")}`;
+
+/** Every registration is a new row; the database hands out the next reference number. */
+export async function saveOperator(db: Db, input: OperatorInput, now: Date) {
+  const o = operatorRegistrations;
+  const [row] = await db
+    .insert(o)
+    .values({
+      companyName: input.companyName,
+      tradingName: input.tradingName,
+      contactPerson: input.contactPerson,
+      contactRole: input.contactRole,
+      phoneE164: input.phoneE164!,
+      email: input.email,
+      fleetSize: input.fleetSize,
+      routeType: input.routeType,
+      mainRoutes: input.mainRoutes,
+      hasTicketingSystem: input.hasTicketingSystem,
+      ticketingSystemName: input.ticketingSystemName,
+      currencies: input.currencies,
+      heardFrom: input.heardFrom,
+      details: input.details,
+      ...consent(input.marketingConsent, now),
+      privacyNoticeVersion: PRIVACY_NOTICE_VERSION,
+      utmSource: input.utmSource,
+      utmMedium: input.utmMedium,
+      utmCampaign: input.utmCampaign,
+      createdAt: now,
+    })
+    .returning({ id: o.id, referenceNo: o.referenceNo, createdAt: o.createdAt });
+  return { ...row, ref: operatorRef(row.referenceNo) };
 }

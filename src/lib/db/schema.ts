@@ -1,4 +1,4 @@
-import { boolean, index, jsonb, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { boolean, index, integer, jsonb, pgTable, serial, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 const createdAt = () => timestamp("created_at", { withTimezone: true }).notNull().defaultNow();
 
@@ -107,6 +107,45 @@ export const agentApplications = pgTable(
     createdAt: createdAt(),
   },
   (t) => [index("agent_applications_created_at_idx").on(t.createdAt)],
+);
+
+/**
+ * Bus operator registrations from operators.instatickets.co.zw. Every submission is a new row.
+ * `reference_no` is a running number shown to the operator as OP-0001, OP-0002 and so on.
+ * No bank details or documents are collected here; those come later, at contracting.
+ */
+export const operatorRegistrations = pgTable(
+  "operator_registrations",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    referenceNo: serial("reference_no").notNull().unique(),
+    companyName: text("company_name").notNull(),
+    tradingName: text("trading_name"),
+    contactPerson: text("contact_person").notNull(),
+    contactRole: text("contact_role"),
+    phoneE164: text("phone_e164").notNull(),
+    email: text("email").notNull(),
+    fleetSize: integer("fleet_size").notNull(),
+    /** local, cross_border or both */
+    routeType: text("route_type").notNull(),
+    mainRoutes: text("main_routes").notNull(),
+    /** yes, no or not_sure */
+    hasTicketingSystem: text("has_ticketing_system").notNull(),
+    ticketingSystemName: text("ticketing_system_name"),
+    /** Any of USD, ZWG, ZAR. */
+    currencies: text("currencies").array().notNull().default([]),
+    /** roadport, cboa, instatickets_team, referral, social_media, other; null if not answered. */
+    heardFrom: text("heard_from"),
+    details: text("details"),
+    marketingConsent: boolean("marketing_consent").notNull().default(false),
+    marketingConsentAt: timestamp("marketing_consent_at", { withTimezone: true }),
+    privacyNoticeVersion: text("privacy_notice_version").notNull(),
+    utmSource: text("utm_source"),
+    utmMedium: text("utm_medium"),
+    utmCampaign: text("utm_campaign"),
+    createdAt: createdAt(),
+  },
+  (t) => [index("operator_registrations_created_at_idx").on(t.createdAt)],
 );
 
 /**
