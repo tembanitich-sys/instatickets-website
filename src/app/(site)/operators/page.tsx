@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { MapPin, Network, Store, Wrench } from "lucide-react";
 import { operators as t } from "@content/site";
 import { brand } from "@/components/Brand";
@@ -25,10 +26,17 @@ export default function OperatorsPage() {
           {brand(t.hero.headline)}
         </h1>
         <p className="mt-4 max-w-2xl text-lg text-white/90">{brand(t.hero.body)}</p>
-        <div className="mt-8">
+        <p className="mt-4 max-w-2xl font-semibold text-white">{brand(t.hero.invitation)}</p>
+        <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
           <ButtonLink href="#register" variant="primary">
             {t.hero.button}
           </ButtonLink>
+          <p className="text-white/90">
+            {t.hero.signInPrompt}{" "}
+            <Link href="/partner/sign-in" className="font-bold text-white underline">
+              {t.hero.signInLink}
+            </Link>
+          </p>
         </div>
       </PageIntro>
 

@@ -3,7 +3,7 @@
  * only; components read from it and contain no marketing text of their own.
  */
 
-export const PRIVACY_NOTICE_VERSION = "2026-11-live-operators";
+export const PRIVACY_NOTICE_VERSION = "2026-11-live-partners";
 
 export const contact = {
   email: "info@instatickets.co.zw",
@@ -366,7 +366,7 @@ export const forBusinesses = {
     intro:
       "Register your business to explore becoming an InstaTickets partner. This is an expression of interest, not a full application.",
     operatorNote: "Run a bus company?",
-    operatorLink: "Use the bus operator registration",
+    operatorLink: "Register your interest as a bus operator",
     fields: {
       organisationName: "Organisation Name",
       contactPerson: "Contact Person",
@@ -529,15 +529,18 @@ export const operators = {
   url: "https://operators.instatickets.co.zw",
   /** Who receives new registrations, and the auto-reply sender: see OPERATOR_MAIL in src/lib/email.ts. */
   meta: {
-    title: "Bus Operator Registration",
+    title: "Bus Operators: Register Your Interest",
     description:
-      "Register your bus company on InstaTickets and sell your tickets across mobile wallets, the InstaTickets app, web, WhatsApp and a network of agents.",
+      "Register your bus company's interest in selling on InstaTickets, across mobile wallets, the InstaTickets app, web, WhatsApp and a network of agents. Onboarding is by invitation.",
   },
   hero: {
     eyebrow: "FOR BUS OPERATORS",
     headline: "PUT YOUR BUSES ON INSTATICKETS",
     body: "Make your seats available on the widest ticket distribution network in Zimbabwe. Your inventory, your fares, your brand: we bring the customers.",
-    button: "REGISTER YOUR COMPANY",
+    button: "REGISTER YOUR INTEREST",
+    invitation: "Onboarding is by invitation, subject to our eligibility criteria.",
+    signInPrompt: "Already invited?",
+    signInLink: "Sign in to the Partner Portal",
   },
   why: {
     heading: "Why operators join InstaTickets",
@@ -567,16 +570,16 @@ export const operators = {
   how: {
     heading: "How it works",
     steps: [
-      { title: "REGISTER", body: "Fill in the short form below. You receive a reference number by email straight away." },
-      { title: "WE CALL YOU", body: "Our onboarding team contacts you to talk through your routes, fares and ticketing system." },
-      { title: "AGREE AND CONNECT", body: "We share the operator terms, then connect your ticketing system or set you up on ours." },
-      { title: "GO LIVE", body: "Your trips go on sale across the InstaTickets network." },
+      { title: "REGISTER INTEREST", body: "Fill in the short form below. You receive a reference number by email straight away." },
+      { title: "ELIGIBILITY", body: "We assess your company against our eligibility criteria and may contact you to discuss it." },
+      { title: "INVITATION", body: "Eligible operators are invited to the InstaTickets Partner Portal to complete onboarding and sign the agreement." },
+      { title: "INTEGRATE AND GO LIVE", body: "Your ticketing system connects to InstaTickets and your trips go on sale across the network." },
     ],
   },
-  note: "Commercial terms are agreed with each operator directly and shared after registration. Registration does not by itself create an agreement with InstaTickets.",
+  note: "Eligible operators have a digital ticketing system, are tax compliant, hold valid permits for the routes they list and have an established operating record. Registering interest does not create an agreement with InstaTickets or guarantee admission.",
   form: {
-    heading: "Register your bus company",
-    intro: "It takes about three minutes. We only ask for documents later, once we have spoken.",
+    heading: "Register your interest",
+    intro: "It takes about three minutes. No documents are needed at this stage.",
     fields: {
       companyName: "Registered company name",
       tradingName: "Trading name (if different)",
@@ -609,6 +612,7 @@ export const operators = {
       { value: "USD", label: "US Dollar (USD)" },
       { value: "ZWG", label: "Zimbabwe Gold (ZiG)" },
       { value: "ZAR", label: "South African Rand (ZAR)" },
+      { value: "BWP", label: "Botswana Pula (BWP)" },
     ],
     heardFromOptions: [
       { value: "roadport", label: "RoadPort" },
@@ -622,26 +626,23 @@ export const operators = {
     privacyPrefix: "I have read the InstaTickets",
     privacyLink: "Privacy Notice",
     privacySuffix: ".",
-    button: "REGISTER MY COMPANY",
-    successHeading: "THANK YOU. YOUR REGISTRATION HAS BEEN RECEIVED.",
+    button: "REGISTER INTEREST",
+    successHeading: "THANK YOU. WE HAVE RECEIVED YOUR INTEREST.",
     successReference: (ref: string) => `Your reference number is ${ref}.`,
     successBody:
-      "We have emailed it to you as well. Our onboarding team will contact you to arrange the next steps.",
+      "We have emailed it to you as well. If your company meets our eligibility criteria, we will contact you about the next steps.",
   },
   autoReply: {
-    subject: (ref: string) => `Your InstaTickets operator registration (${ref})`,
+    subject: (ref: string) => `We have received your interest in InstaTickets (${ref})`,
     body: (p: { contactPerson: string; companyName: string; ref: string }) =>
       [
         `Dear ${p.contactPerson},`,
         "",
-        `Thank you for registering ${p.companyName} as a bus operator on InstaTickets. Your reference number is ${p.ref}.`,
+        `Thank you for registering the interest of ${p.companyName} in selling tickets on InstaTickets. Your reference number is ${p.ref}.`,
         "",
-        "Our onboarding team will contact you within one business day to arrange a short meeting about your routes, your ticketing system and the next steps to go live.",
+        "Onboarding is by invitation, subject to our eligibility criteria. Eligible operators have a digital ticketing system, are tax compliant, hold valid permits for the routes they list and have an established operating record.",
         "",
-        "To speed things up, please have the following ready:",
-        "- Company registration documents",
-        "- Operating permits for your routes",
-        "- Your company logo",
+        "If your company is eligible, we will contact you with an invitation to the InstaTickets Partner Portal, where you complete onboarding and sign the agreement.",
         "",
         `Questions? Reply to this email or WhatsApp us on ${contact.whatsapp.display}.`,
         "",
@@ -766,7 +767,7 @@ export const comingSoonPages = {
  */
 export const privacy = {
   title: "INSTATICKETS PRIVACY NOTICE",
-  effectiveDate: "23 October 2026",
+  effectiveDate: "24 October 2026",
   intro:
     "This notice explains how InstaTickets handles the personal information you give us through this website.",
   sections: [
@@ -781,7 +782,8 @@ export const privacy = {
       paragraphs: [
         "Business registration: organisation name, contact person, mobile number, email address, business type, the tickets you want to offer, details of any existing ticketing system, and anything you tell us about your tickets.",
         "Agent applications: your name, mobile number, email address (if you give it), applicant type, business name, location, where you would sell, whether you have a device for sales, and anything you tell us about your business.",
-        "Bus operator registration: company and trading name, contact person and role, mobile number, email address, fleet size, routes, the currencies you accept, details of any existing ticketing system, how you heard about us, and anything else you tell us.",
+        "Bus operator expression of interest: company and trading name, contact person and role, mobile number, email address, fleet size, routes, the currencies you accept, details of any existing ticketing system, how you heard about us, and anything else you tell us.",
+        "Partner Portal (invited bus operators and event organisers only): company registration details, contacts (including finance, operations, technical and event-day contacts), routes or events, settlement bank account details for each currency, authorised signatories, tax clearance and insurance details, and the documents you upload, including identity documents of directors and signatories, bank confirmation letters and signed agreements.",
         "Contact form: your name, email, phone number, enquiry type and message.",
         "Website use: basic, anonymous usage statistics. See the Cookie Policy.",
       ],
@@ -793,6 +795,7 @@ export const privacy = {
         "To contact businesses about partnership, onboarding, verification and integration.",
         "To assess and respond to InstaTickets Agent applications.",
         "To contact bus operators about onboarding, terms and connecting their ticketing systems.",
+        "To assess invited partners against our eligibility criteria, enter into and manage agreements with them, and pay their settlements.",
         "To answer enquiries sent through the contact form.",
         "To keep the website secure and understand how it is used.",
       ],
@@ -809,7 +812,8 @@ export const privacy = {
       paragraphs: [
         "Business registration details: 12 months from your last contact with us, unless you become a partner, in which case your partner agreement applies.",
         "Agent applications: 12 months from your last contact with us, unless you become an agent, in which case your agent agreement applies.",
-        "Bus operator registrations: 12 months from your last contact with us, unless you become an InstaTickets operator, in which case your operator agreement applies.",
+        "Bus operator expressions of interest: 12 months from your last contact with us, unless you become an InstaTickets operator, in which case your operator agreement applies.",
+        "Partner Portal records and documents: for the life of the partner agreement and afterwards for as long as the law requires us to keep them; if no agreement is concluded, 12 months from your last contact with us.",
         "Contact form enquiries: 12 months after the enquiry is closed.",
       ],
     },

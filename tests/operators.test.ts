@@ -7,10 +7,10 @@ import { createMemoryLimiter } from "@/lib/ratelimit";
 import { createSheetAppender } from "@/lib/sheets";
 import { ctx, form, makeDeps, validOperator } from "./helpers/forms";
 
-describe("bus operator registrations", () => {
-  it("stores the registration and returns the OP reference", async () => {
+describe("bus operator expressions of interest", () => {
+  it("stores the expression of interest and returns the EOI reference", async () => {
     const deps = await makeDeps();
-    expect(await submitOperator(deps, form(validOperator), ctx)).toEqual({ status: "success", reference: "OP-0001" });
+    expect(await submitOperator(deps, form(validOperator), ctx)).toEqual({ status: "success", reference: "EOI-0001" });
     const [row] = await deps.db.select().from(operatorRegistrations);
     expect(row).toMatchObject({
       referenceNo: 1,
@@ -23,7 +23,7 @@ describe("bus operator registrations", () => {
       routeType: "both",
       hasTicketingSystem: "no",
       ticketingSystemName: null,
-      currencies: ["USD", "ZWG", "ZAR"],
+      currencies: ["USD", "ZWG", "ZAR", "BWP"],
       heardFrom: "roadport",
       details: null,
       marketingConsent: false,
@@ -34,7 +34,7 @@ describe("bus operator registrations", () => {
   it("numbers registrations in order", async () => {
     const deps = await makeDeps();
     await submitOperator(deps, form(validOperator), ctx);
-    expect(await submitOperator(deps, form(validOperator), ctx)).toEqual({ status: "success", reference: "OP-0002" });
+    expect(await submitOperator(deps, form(validOperator), ctx)).toEqual({ status: "success", reference: "EOI-0002" });
     expect(await deps.db.select().from(operatorRegistrations)).toHaveLength(2);
   });
 
@@ -44,15 +44,16 @@ describe("bus operator registrations", () => {
     expect(deps.sent).toHaveLength(2);
     const [team, reply] = deps.sent;
     expect(team.to).toEqual(["accounts@instatickets.co.zw", "tich@instatickets.co.zw"]);
-    expect(team.subject).toBe("New bus operator registration OP-0001");
+    expect(team.subject).toBe("New bus operator expression of interest EOI-0001");
     expect(team.replyTo).toBe("ops@tamuka.example");
-    expect(team.text).toContain("Currencies: USD, ZWG, ZAR");
+    expect(team.text).toContain("Currencies: USD, ZWG, ZAR, BWP");
     expect(team.text).toContain("Route type: Both");
     expect(reply.to).toBe("ops@tamuka.example");
         expect(reply.from).toContain("accounts@instatickets.co.zw");
-    expect(reply.subject).toBe("Your InstaTickets operator registration (OP-0001)");
+    expect(reply.subject).toBe("We have received your interest in InstaTickets (EOI-0001)");
+    expect(reply.text).not.toContain("one business day");
     expect(reply.text).toContain("Dear Tamuka Moyo,");
-    expect(reply.text).toContain("Your reference number is OP-0001.");
+    expect(reply.text).toContain("Your reference number is EOI-0001.");
   });
 
   it("adds a row to the Google Sheet with the reference and a New status", async () => {
@@ -60,7 +61,7 @@ describe("bus operator registrations", () => {
     await submitOperator(deps, form(validOperator), ctx);
     expect(deps.sheetRows).toHaveLength(1);
     const row = Object.fromEntries(deps.sheetRows[0]);
-    expect(row.Reference).toBe("OP-0001");
+    expect(row.Reference).toBe("EOI-0001");
     expect(row.Company).toBe("Tamuka Coaches (Pvt) Ltd");
     expect(row.Mobile).toBe("+263771234567");
     expect(row.Status).toBe("New");

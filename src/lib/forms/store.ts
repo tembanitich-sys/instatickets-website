@@ -139,8 +139,8 @@ export async function saveContact(db: Db, input: ContactInput, now: Date) {
   return row;
 }
 
-/** The reference shown to the operator: OP-0001, OP-0002 and so on. */
-export const operatorRef = (referenceNo: number) => `OP-${String(referenceNo).padStart(4, "0")}`;
+/** The reference for an expression of interest: EOI-0001, EOI-0002 and so on (OP- is for invited operators). */
+export const operatorRef = (referenceNo: number) => `EOI-${String(referenceNo).padStart(4, "0")}`;
 
 /** Every registration is a new row; the database hands out the next reference number. */
 export async function saveOperator(db: Db, input: OperatorInput, now: Date) {

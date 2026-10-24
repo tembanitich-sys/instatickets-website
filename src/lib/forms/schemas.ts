@@ -195,7 +195,7 @@ const agentSchema = z.object({
 
 const ROUTE_TYPES = ["local", "cross_border", "both"] as const;
 const TICKETING = ["yes", "no", "not_sure"] as const;
-export const CURRENCIES = ["USD", "ZWG", "ZAR"] as const;
+export const CURRENCIES = ["USD", "ZWG", "ZAR", "BWP"] as const;
 const HEARD_FROM = ["roadport", "cboa", "instatickets_team", "referral", "social_media", "other"] as const;
 
 const operatorSchema = z.object({

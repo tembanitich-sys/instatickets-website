@@ -5,6 +5,7 @@ import { writeAudit } from "./audit";
 import type { AdminConfig } from "./config";
 import { LOCKOUT_WINDOW_MS, MAX_FAILED_ATTEMPTS, type LockoutStore } from "./lockout";
 import { createSessionToken, safeEqual } from "./session";
+import { verifyTotp } from "./totp";
 
 export type LoginDeps = {
   /** null when ADMIN_PASSWORD / ADMIN_SESSION_SECRET are missing or too weak. */
@@ -30,7 +31,7 @@ export type LoginResult =
  */
 export async function attemptLogin(
   deps: LoginDeps,
-  input: { password: string; turnstileToken: string; ip: string | null },
+  input: { password: string; turnstileToken: string; ip: string | null; code?: string },
 ): Promise<LoginResult> {
   const { config } = deps;
   if (!config) return { ok: false, reason: "unavailable" };
@@ -42,7 +43,9 @@ export async function attemptLogin(
     return { ok: false, reason: "captcha" };
   }
 
-  if (!safeEqual(input.password, config.password)) {
+  // With an authenticator key set, a wrong code counts as a failed attempt like a wrong password.
+  const codeOk = !config.totpSecret || verifyTotp(config.totpSecret, input.code ?? "", deps.now());
+  if (!safeEqual(input.password, config.password) || !codeOk) {
     const failures = await deps.lockout.increment(key, LOCKOUT_WINDOW_MS);
     deps.log.warn(`Admin sign-in failed (${failures} of ${MAX_FAILED_ATTEMPTS} before lockout).`);
     return { ok: false, reason: "invalid" };

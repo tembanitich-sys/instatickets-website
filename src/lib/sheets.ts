@@ -7,7 +7,13 @@
  * and matches values to headings after that, so a new field never shifts columns.
  */
 export type SheetRow = [string, string][];
-export type SheetAppender = (row: SheetRow) => Promise<void>;
+/**
+ * `sheet` picks the tab (created on first use). With `key`, the row whose value in that
+ * column matches is updated in place instead of a new row being added, so a partner keeps
+ * one row as its stage changes.
+ */
+export type SheetOptions = { sheet?: string; key?: string };
+export type SheetAppender = (row: SheetRow, options?: SheetOptions) => Promise<void>;
 
 export function createSheetAppender(options: {
   url: string | undefined;
@@ -15,13 +21,13 @@ export function createSheetAppender(options: {
   fetchImpl?: typeof fetch;
 }): SheetAppender {
   const { url, secret, fetchImpl = fetch } = options;
-  return async (row) => {
+  return async (row, options = {}) => {
     if (!url || !secret) throw new Error("OPERATOR_SHEET_URL or OPERATOR_SHEET_SECRET is not set; row not added.");
     // Apps Script answers a POST with a redirect to the result; fetch follows it.
     const res = await fetchImpl(url, {
       method: "POST",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ secret, row }),
+      body: JSON.stringify({ secret, row, ...options }),
       redirect: "follow",
       signal: AbortSignal.timeout(10000),
     });

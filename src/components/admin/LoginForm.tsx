@@ -5,7 +5,7 @@ import { loginAction, type LoginState } from "@/app/admin/actions";
 import { Field, FormBanner, SubmitButton, TextInput } from "@/components/forms/fields";
 import { TurnstileWidget } from "@/components/forms/TurnstileWidget";
 
-export function LoginForm() {
+export function LoginForm({ needsCode = false }: { needsCode?: boolean }) {
   const [state, dispatch] = useActionState(loginAction, { status: "idle" } as LoginState);
   // A Turnstile token works once, so each attempt gets a fresh challenge.
   const [attempt, setAttempt] = useState(0);
@@ -29,6 +29,11 @@ export function LoginForm() {
           autoFocus
         />
       </Field>
+      {needsCode && (
+        <Field label="Authenticator code" htmlFor="admin-code" required>
+          <TextInput id="admin-code" name="code" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9 ]{6,7}" required />
+        </Field>
+      )}
       <TurnstileWidget key={attempt} />
       <SubmitButton>SIGN IN</SubmitButton>
     </form>

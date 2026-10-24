@@ -112,7 +112,7 @@ export const validOperator = {
   mainRoutes: "Harare to Bulawayo, Harare to Johannesburg",
   hasTicketingSystem: "no",
   ticketingSystemName: "",
-  currencies: ["USD", "ZWG", "ZAR"],
+  currencies: ["USD", "ZWG", "ZAR", "BWP"],
   heardFrom: "roadport",
   details: "",
   privacyAccepted: true as const,

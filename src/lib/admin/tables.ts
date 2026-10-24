@@ -102,7 +102,7 @@ export const TABLES: Record<TableDef["slug"], TableDef> = {
   },
   operators: {
     slug: "operators",
-    title: "Bus operator registrations",
+    title: "Bus operator expressions of interest",
     table: o,
     order: o.createdAt,
     search: [

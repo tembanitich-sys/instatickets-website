@@ -157,7 +157,10 @@ export function submitOperator(deps: Deps, formData: FormData, ctx: RequestConte
       { name: "Operator auto-reply email", run: () => deps.notify(operatorAutoReply(data, saved)) },
       {
         name: "Google Sheet row",
-        run: () => deps.appendOperatorRow([...operatorFields(data, saved), ["Status", "New"], ["Record", saved.id]]),
+        run: () =>
+          deps.appendOperatorRow([...operatorFields(data, saved), ["Status", "New"], ["Record", saved.id]], {
+            sheet: "Expressions of interest",
+          }),
       },
     ],
     (saved) => saved.ref,

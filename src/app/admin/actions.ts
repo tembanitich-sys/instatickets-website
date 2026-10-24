@@ -25,7 +25,7 @@ const LOGIN_MESSAGES = {
   unavailable: "Admin sign-in is not available. Check the server configuration.",
   locked: "Too many failed attempts. Try again in 15 minutes.",
   captcha: "Please complete the security check and try again.",
-  invalid: "Sign-in failed. Check the password and try again.",
+  invalid: "Sign-in failed. Check the password (and authenticator code) and try again.",
 } as const;
 
 export async function loginAction(_prev: LoginState, formData: FormData): Promise<LoginState> {
@@ -33,6 +33,7 @@ export async function loginAction(_prev: LoginState, formData: FormData): Promis
   if (!config) console.error(`Admin sign-in unavailable: ${adminConfigProblem()}`);
 
   const password = formData.get("password");
+  const code = formData.get("code");
   const token = formData.get(TURNSTILE_FIELD);
   const result = await attemptLogin(
     {
@@ -48,6 +49,7 @@ export async function loginAction(_prev: LoginState, formData: FormData): Promis
       password: typeof password === "string" ? password : "",
       turnstileToken: typeof token === "string" ? token : "",
       ip: await clientIp(),
+      code: typeof code === "string" ? code : "",
     },
   );
   if (!result.ok) return { status: "error", message: LOGIN_MESSAGES[result.reason] };

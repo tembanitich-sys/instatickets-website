@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 
 const isDev = process.env.NODE_ENV === "development";
 const turnstile = "https://challenges.cloudflare.com";
+// Partner documents upload straight from the browser to private Vercel Blob storage.
+const blobUpload = "https://vercel.com https://*.blob.vercel-storage.com";
 
 /**
  * Content Security Policy without nonces, so pages stay static and cacheable at the
@@ -16,7 +18,7 @@ const csp = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self'",
-  `connect-src 'self' ${turnstile}`,
+  `connect-src 'self' ${turnstile} ${blobUpload}`,
   `frame-src ${turnstile}`,
   "object-src 'none'",
   "base-uri 'self'",
@@ -41,6 +43,14 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },
+      {
+        // The Partner Portal holds KYC and bank details: never indexed or cached.
+        source: "/partner/:path*",
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" },
+          { key: "Cache-Control", value: "no-store" },
+        ],
+      },
       {
         // The admin area is never indexed or cached.
         source: "/admin/:path*",

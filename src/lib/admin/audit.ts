@@ -1,7 +1,18 @@
 import type { Db } from "../db/client";
 import { adminAudit } from "../db/schema";
 
-export type AuditAction = "export" | "settings.update" | "login";
+export type AuditAction =
+  | "export"
+  | "settings.update"
+  | "login"
+  | "partner.create"
+  | "partner.update"
+  | "partner.invite"
+  | "partner.status"
+  | "partner.event"
+  | "partner.document.upload"
+  | "partner.document.delete"
+  | "partner.document.download";
 
 type Writer = Pick<Db, "insert">;
 

@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { adminConfigProblem } from "@/lib/admin/config";
+import { adminConfigProblem, getAdminConfig } from "@/lib/admin/config";
 import { isAdmin } from "@/lib/admin/auth";
 import { LoginForm } from "@/components/admin/LoginForm";
 
@@ -17,7 +17,7 @@ export default async function AdminLoginPage() {
               Admin sign-in is not available. Check the server configuration.
             </p>
           ) : (
-            <LoginForm />
+            <LoginForm needsCode={!!getAdminConfig()?.totpSecret} />
           )}
         </div>
       </div>

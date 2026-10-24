@@ -6,6 +6,8 @@ export type EmailMessage = {
   subject: string;
   text: string;
   replyTo?: string;
+  /** Files attached to the email (base64 content), for example the Integration Standard. */
+  attachments?: { filename: string; content: string }[];
 };
 
 /** Sends an email or throws. Callers decide what a failure means. */
@@ -37,8 +39,9 @@ export const sendEmail: Notifier = async (message) => {
       subject: message.subject,
       text: message.text,
       ...(message.replyTo ? { reply_to: message.replyTo } : {}),
+      ...(message.attachments?.length ? { attachments: message.attachments } : {}),
     }),
-    signal: AbortSignal.timeout(8000),
+    signal: AbortSignal.timeout(message.attachments?.length ? 20000 : 8000),
   });
   if (!res.ok) throw new Error(`Resend responded with HTTP ${res.status}.`);
 };

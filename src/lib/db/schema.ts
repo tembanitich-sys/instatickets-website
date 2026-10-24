@@ -1,4 +1,4 @@
-import { boolean, index, integer, jsonb, pgTable, serial, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { boolean, index, integer, jsonb, pgTable, serial, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 const createdAt = () => timestamp("created_at", { withTimezone: true }).notNull().defaultNow();
 
@@ -146,6 +146,116 @@ export const operatorRegistrations = pgTable(
     createdAt: createdAt(),
   },
   (t) => [index("operator_registrations_created_at_idx").on(t.createdAt)],
+);
+
+/**
+ * Invited partners (bus operators and event organisers) going through onboarding.
+ * Admission is by invitation only: Bullion creates the row, then the partner completes
+ * KYC through a sign-in link. `kyc` holds the typed form data (contacts, routes, settlement
+ * accounts per currency, signatories); documents live in private storage (partner_documents).
+ */
+export const partners = pgTable(
+  "partners",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    /** bus_operator or event_organiser */
+    type: text("type").notNull(),
+    /** Running number per type: OP-0001 for bus operators, EO-0001 for event organisers. */
+    typeSeq: integer("type_seq").notNull(),
+    /** created, invited, draft, submitted, under_review, changes_requested, approved, rejected, suspended */
+    status: text("status").notNull().default("created"),
+    /** Bus only: not_started, standard_sent, certified, live */
+    integrationStatus: text("integration_status").notNull().default("not_started"),
+    legalName: text("legal_name").notNull(),
+    tradingName: text("trading_name"),
+    /** Bus: group such as the CAG or InterAfrica group. */
+    groupName: text("group_name"),
+    /** Bus: the Anchor Operator Addendum applies. */
+    anchorAddendum: boolean("anchor_addendum").notNull().default(false),
+    /** Events: organiser, promoter, venue or sports_body. */
+    organiserType: text("organiser_type"),
+    /** The contact Bullion already has (finance contact for bus operators). Signs in to the portal. */
+    contactName: text("contact_name").notNull(),
+    contactEmail: text("contact_email").notNull(),
+    contactPhone: text("contact_phone"),
+    kyc: jsonb("kyc").$type<Record<string, unknown>>().notNull().default({}),
+    /** The latest note from Bullion when changes are requested, or the reason for rejection. */
+    reviewNote: text("review_note"),
+    invitedAt: timestamp("invited_at", { withTimezone: true }),
+    submittedAt: timestamp("submitted_at", { withTimezone: true }),
+    approvedAt: timestamp("approved_at", { withTimezone: true }),
+    integrationSentAt: timestamp("integration_sent_at", { withTimezone: true }),
+    /** Automatic reminders sent while the invitation is not yet submitted (at most 2). */
+    remindersSent: integer("reminders_sent").notNull().default(0),
+    createdAt: createdAt(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    uniqueIndex("partners_type_seq_idx").on(t.type, t.typeSeq),
+    index("partners_contact_email_idx").on(t.contactEmail),
+  ],
+);
+
+/** Events submitted by an approved organiser. One Event Order Form per event. */
+export const partnerEvents = pgTable(
+  "partner_events",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    partnerId: uuid("partner_id")
+      .notNull()
+      .references(() => partners.id, { onDelete: "cascade" }),
+    /** Running number per organiser: EO-0001-E01, EO-0001-E02 ... */
+    seq: integer("seq").notNull(),
+    /** draft, submitted, under_review, changes_requested, order_form_sent, approved, rejected */
+    status: text("status").notNull().default("draft"),
+    name: text("name").notNull().default(""),
+    data: jsonb("data").$type<Record<string, unknown>>().notNull().default({}),
+    reviewNote: text("review_note"),
+    submittedAt: timestamp("submitted_at", { withTimezone: true }),
+    approvedAt: timestamp("approved_at", { withTimezone: true }),
+    createdAt: createdAt(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex("partner_events_seq_idx").on(t.partnerId, t.seq)],
+);
+
+/**
+ * Files in private storage. `partner_id` null = a library document shared by every partner
+ * of a type (master terms, Integration Standard). `source` says who uploaded it.
+ */
+export const partnerDocuments = pgTable(
+  "partner_documents",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    partnerId: uuid("partner_id").references(() => partners.id, { onDelete: "cascade" }),
+    eventId: uuid("event_id").references(() => partnerEvents.id, { onDelete: "cascade" }),
+    /** Checklist slot, for example tax_clearance, route_permits, bank_letter:ZAR, order_form. */
+    slot: text("slot").notNull(),
+    /** partner or bullion */
+    source: text("source").notNull(),
+    pathname: text("pathname").notNull().unique(),
+    fileName: text("file_name").notNull(),
+    contentType: text("content_type").notNull(),
+    size: integer("size").notNull(),
+    createdAt: createdAt(),
+  },
+  (t) => [index("partner_documents_partner_idx").on(t.partnerId), index("partner_documents_slot_idx").on(t.slot)],
+);
+
+/** One-time sign-in links. Only a SHA-256 hash of the token is stored. */
+export const partnerSignInTokens = pgTable(
+  "partner_sign_in_tokens",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    partnerId: uuid("partner_id")
+      .notNull()
+      .references(() => partners.id, { onDelete: "cascade" }),
+    tokenHash: text("token_hash").notNull().unique(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    usedAt: timestamp("used_at", { withTimezone: true }),
+    createdAt: createdAt(),
+  },
+  (t) => [index("partner_sign_in_tokens_partner_idx").on(t.partnerId)],
 );
 
 /**
