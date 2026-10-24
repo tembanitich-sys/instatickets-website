@@ -196,6 +196,9 @@ export async function invitationBlockers(db: Db, p: Partner): Promise<string[]> 
     if (p.anchorAddendum && !docs.some((d) => d.slot === contractSlots.addendum.slot)) {
       blockers.push(`Upload this operator's ${contractSlots.addendum.label}.`);
     }
+    if (!p.sandboxCredentials?.trim()) {
+      blockers.push("Enter this operator's sandbox credentials (they go out with the Integration Standard when it submits).");
+    }
   }
   return blockers;
 }
@@ -418,7 +421,9 @@ export async function submitKyc(deps: PartnerDeps, partnerId: string) {
     }),
   );
   await quietly(deps, "Team notification", () => deps.notify(teamEmail(deps, row, kyc, p.status === "changes_requested" ? "Resubmitted:" : "Submitted:")));
-  if (bus && row.integrationStatus === "not_started") await sendIntegrationStandard(deps, row);
+  // The integration pack (Integration Standard + sandbox credentials) goes out on the first
+  // submission. Without credentials on file it waits, and the team email says so.
+  if (bus && row.integrationStatus === "not_started" && row.sandboxCredentials?.trim()) await sendIntegrationStandard(deps, row);
   const fresh = (await getPartner(deps.db, row.id)) ?? row;
   await syncPartnerRow(deps, fresh);
   return { ok: true as const };
@@ -437,6 +442,9 @@ function teamEmail(deps: PartnerDeps, p: Partner, kyc: BusKyc | OrganiserKyc, wh
     `Review in the admin area: ${deps.adminUrl}/partners/${p.id}`,
     "",
     "Bank details and documents are in the admin area only.",
+    ...(type === "bus_operator" && p.integrationStatus === "not_started" && !p.sandboxCredentials?.trim()
+      ? ["", "ACTION: the integration pack was NOT sent because no sandbox credentials are on file. Enter them on the partner page and press SEND INTEGRATION PACK."]
+      : []),
   ];
   return {
     to: OPERATOR_MAIL.notify,
@@ -446,8 +454,9 @@ function teamEmail(deps: PartnerDeps, p: Partner, kyc: BusKyc | OrganiserKyc, wh
   };
 }
 
-/** Emails the Integration Standard to the operator's technical contact (copy to accounts@). */
+/** Emails the integration pack (Integration Standard + sandbox credentials) to the technical contact, copy to accounts@. */
 export async function sendIntegrationStandard(deps: PartnerDeps, p: Partner) {
+  if (!p.sandboxCredentials?.trim()) return false;
   const kyc = parseKyc("bus_operator", p.kyc) as BusKyc;
   const tech = technicalContact(kyc);
   const ref = partnerRef(p);
@@ -464,7 +473,9 @@ export async function sendIntegrationStandard(deps: PartnerDeps, p: Partner) {
       from: OPERATOR_MAIL.from,
       replyTo: OPERATOR_MAIL.replyTo,
       subject: pe.integration.subject(ref),
-      text: body(pe.integration.lines({ name: tech.name, company: p.tradingName || p.legalName, ref, attached: !!attachments })),
+      text: body(
+        pe.integration.lines({ name: tech.name, company: p.tradingName || p.legalName, ref, attached: !!attachments, credentials: p.sandboxCredentials!.trim() }),
+      ),
       attachments,
     });
     sent = true;
@@ -558,6 +569,7 @@ export async function adminAction(deps: PartnerDeps, partnerId: string, action: 
       break;
     case "resend_integration":
       if (!bus) throw new PartnerError("Only bus operators integrate.");
+      if (!p.sandboxCredentials?.trim()) throw new PartnerError("Enter the sandbox credentials first.");
       if (!(await sendIntegrationStandard(deps, p))) throw new PartnerError("The email could not be sent. Check the logs.");
       row = (await getPartner(deps.db, p.id)) ?? p;
       break;
@@ -612,6 +624,16 @@ export async function updatePartnerSetup(deps: PartnerDeps, partnerId: string, i
     .returning();
   await audit(deps, "partner.update", { ref: partnerRef(row) });
   return { ok: true as const, partner: row };
+}
+
+/** Bus only: the sandbox access sent to the technical contact with the Integration Standard. */
+export async function updateSandboxCredentials(deps: PartnerDeps, partnerId: string, text: string) {
+  const p = await getPartner(deps.db, partnerId);
+  if (!p) throw new PartnerError("Partner not found.");
+  if (p.type !== "bus_operator") throw new PartnerError("Only bus operators integrate.");
+  const value = text.replace(/\r\n/g, "\n").trim().slice(0, 2000);
+  await deps.db.update(partners).set({ sandboxCredentials: value || null, updatedAt: deps.now() }).where(eq(partners.id, p.id));
+  await audit(deps, "partner.update", { ref: partnerRef(p), field: "sandbox_credentials" });
 }
 
 // --- Events (organisers) ------------------------------------------------------------

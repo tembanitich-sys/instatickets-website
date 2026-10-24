@@ -4,6 +4,9 @@ import { base32Encode, totpCode, verifyTotp } from "@/lib/admin/totp";
 import { routeForHost } from "@/lib/operators-host";
 import { adminMayUpload } from "@/lib/partners/admin-slots";
 import { safeFileName } from "@/lib/partners/files";
+import { activeTotpSecret, disableTotp, enableTotp } from "@/lib/admin/totp-store";
+import { newTotpSecret, base32Decode } from "@/lib/admin/totp";
+import { createTestDb } from "./helpers/test-db";
 
 describe("authenticator codes", () => {
   // RFC 6238 test vector: ASCII secret "12345678901234567890", T = 59 s, SHA-1 -> 94287082.
@@ -47,5 +50,22 @@ describe("admin uploads", () => {
   });
   it("cleans file names so they cannot change the storage path", () => {
     expect(safeFileName("../../My CR14 (final).pdf")).toBe("My_CR14_final_.pdf");
+  });
+});
+
+describe("two-step sign-in set up from Admin > Settings", () => {
+  it("turns on only with a matching code, and off only with a current code", async () => {
+    const db = await createTestDb();
+    const secret = newTotpSecret();
+    const now = Date.now();
+    const code = totpCode(base32Decode(secret)!, now);
+    expect(await activeTotpSecret(db, {})).toBeNull();
+    expect(await enableTotp(db, secret, "000000" === code ? "111111" : "000000", now)).toBe(false);
+    expect(await enableTotp(db, secret, code, now)).toBe(true);
+    expect(await activeTotpSecret(db, {})).toBe(secret);
+    expect(await activeTotpSecret(db, { ADMIN_TOTP_SECRET: "JBSWY3DPEHPK3PXP" })).toBe("JBSWY3DPEHPK3PXP");
+    expect(await disableTotp(db, "999999" === code ? "888888" : "999999", now)).toBe(false);
+    expect(await disableTotp(db, code, now)).toBe(true);
+    expect(await activeTotpSecret(db, {})).toBeNull();
   });
 });

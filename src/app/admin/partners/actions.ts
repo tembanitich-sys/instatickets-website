@@ -18,6 +18,7 @@ import {
   removeDocument,
   sendInvitation,
   updatePartnerSetup,
+  updateSandboxCredentials,
   type AdminAction,
   type EventAction,
 } from "@/lib/partners/service";
@@ -148,5 +149,16 @@ export async function adminDeleteDocumentAction(documentId: string): Promise<Adm
     await writeAudit(deps.db, "partner.document.delete", { ref: partner ? partnerRef(partner) : "library", slot: doc.slot });
     revalidatePath("/admin", "layout");
     return { ok: true };
+  });
+}
+
+export async function sandboxAction(partnerId: string, _prev: AdminResult | null, fd: FormData): Promise<AdminResult> {
+  await requireAdmin();
+  const deps = partnerDeps();
+  if (!deps) return unavailable;
+  return guard(async () => {
+    await updateSandboxCredentials(deps, partnerId, str(fd, "credentials"));
+    revalidatePath(`/admin/partners/${partnerId}`);
+    return { ok: true, message: "Saved." };
   });
 }

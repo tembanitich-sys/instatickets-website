@@ -13,7 +13,7 @@ import {
 } from "@content/onboarding";
 import { AdminShell, NoDatabase } from "@/components/admin/AdminShell";
 import { BusKycSummary, OrganiserKycSummary } from "@/components/admin/KycSummary";
-import { InviteButton, PartnerActions, SetupForm } from "@/components/admin/PartnerControls";
+import { InviteButton, PartnerActions, SandboxForm, SetupForm } from "@/components/admin/PartnerControls";
 import { DocumentSlots } from "@/components/partners/DocumentSlots";
 import { adminDeleteDocumentAction, adminRecordUploadAction } from "@/app/admin/partners/actions";
 import { requireAdmin } from "@/lib/admin/auth";
@@ -81,7 +81,7 @@ export default async function AdminPartnerPage(props: PageProps<"/admin/partners
   if (status === "approved") actions.push({ action: "suspend", label: "SUSPEND" });
   if (status === "suspended") actions.push({ action: "reinstate", label: "REINSTATE" });
   if (bus && ["submitted", "under_review", "changes_requested", "approved"].includes(status)) {
-    actions.push({ action: "resend_integration", label: "RESEND INTEGRATION STANDARD" });
+    actions.push({ action: "resend_integration", label: p.integrationStatus === "not_started" ? "SEND INTEGRATION PACK" : "RESEND INTEGRATION PACK" });
     if (p.integrationStatus === "standard_sent") actions.push({ action: "certified", label: "MARK CERTIFIED" });
     if (status === "approved" && p.integrationStatus === "certified") actions.push({ action: "live", label: "MARK LIVE" });
   }
@@ -138,6 +138,12 @@ export default async function AdminPartnerPage(props: PageProps<"/admin/partners
                 </ul>
               </details>
             )}
+          </Panel>
+        )}
+
+        {bus && (
+          <Panel title="Sandbox access">
+            <SandboxForm partnerId={p.id} initial={p.sandboxCredentials ?? ""} />
           </Panel>
         )}
 

@@ -24,7 +24,9 @@ export function routeForHost(host: string | null, pathname: string): HostRoute {
   if (pathname === "/") return { kind: "rewrite", pathname: OPERATORS_PATH };
   if (pathname === OPERATORS_PATH || pathname === `${OPERATORS_PATH}/`) return { kind: "redirect-local", pathname: "/" };
   if (SHARED_PATHS.has(pathname)) return { kind: "next" };
-  // The invite-only Partner Portal lives on the subdomain.
+  // The invite-only Partner Portal lives on the subdomain, and so does the admin area, so
+  // onboarding can run before www.instatickets.co.zw moves to Vercel.
   if (pathname === "/partner" || pathname.startsWith("/partner/")) return { kind: "next" };
+  if (pathname === "/admin" || pathname.startsWith("/admin/")) return { kind: "next" };
   return { kind: "redirect-main", pathname };
 }

@@ -1,11 +1,14 @@
 import { redirect } from "next/navigation";
-import { adminConfigProblem, getAdminConfig } from "@/lib/admin/config";
+import { adminConfigProblem } from "@/lib/admin/config";
+import { activeTotpSecret } from "@/lib/admin/totp-store";
+import { getDb } from "@/lib/db/client";
 import { isAdmin } from "@/lib/admin/auth";
 import { LoginForm } from "@/components/admin/LoginForm";
 
 export default async function AdminLoginPage() {
   if (await isAdmin()) redirect("/admin");
   const unavailable = adminConfigProblem() !== null;
+  const needsCode = !!(await activeTotpSecret(getDb()).catch(() => null));
 
   return (
     <div className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-4 py-12">
@@ -17,7 +20,7 @@ export default async function AdminLoginPage() {
               Admin sign-in is not available. Check the server configuration.
             </p>
           ) : (
-            <LoginForm needsCode={!!getAdminConfig()?.totpSecret} />
+            <LoginForm needsCode={needsCode} />
           )}
         </div>
       </div>

@@ -8,6 +8,7 @@ import {
   eventAction,
   inviteAction,
   partnerAction,
+  sandboxAction,
   updateSetupAction,
   type AdminResult,
 } from "@/app/admin/partners/actions";
@@ -235,4 +236,31 @@ export function PartnerActions({ partnerId, actions }: { partnerId: string; acti
 
 export function EventActions({ partnerId, eventId, actions }: { partnerId: string; eventId: string; actions: ActionDef<EventAction>[] }) {
   return <ActionPanel actions={actions} run={(a, note) => eventAction(partnerId, eventId, a, note)} />;
+}
+
+export function SandboxForm({ partnerId, initial }: { partnerId: string; initial: string }) {
+  const [state, dispatch] = useActionState(sandboxAction.bind(null, partnerId), null);
+  return (
+    <form action={dispatch} className="space-y-3">
+      <Message result={state} />
+      <label htmlFor="sandbox" className="block text-sm font-bold text-navy">
+        Sandbox credentials for this operator
+      </label>
+      <p className="text-sm text-muted">
+        Exactly as the technical contact should receive them, for example the sandbox URL, client ID and secret. They are emailed with
+        the Integration Standard when the operator submits.
+      </p>
+      <textarea
+        id="sandbox"
+        name="credentials"
+        rows={5}
+        defaultValue={initial}
+        maxLength={2000}
+        className="block w-full rounded-lg border border-line bg-white px-3 py-2 font-mono text-sm"
+      />
+      <button type="submit" className="min-h-11 rounded-full border-2 border-navy px-5 text-sm font-bold text-navy hover:bg-mist">
+        SAVE CREDENTIALS
+      </button>
+    </form>
+  );
 }

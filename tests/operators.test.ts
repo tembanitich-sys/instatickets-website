@@ -152,7 +152,7 @@ describe("operators subdomain routing", () => {
   });
   it("sends every other subdomain page to the main site", () => {
     expect(routeForHost(host, "/how-to-buy")).toEqual({ kind: "redirect-main", pathname: "/how-to-buy" });
-    expect(routeForHost(host, "/admin")).toEqual({ kind: "redirect-main", pathname: "/admin" });
+    expect(routeForHost(host, "/admin")).toEqual({ kind: "next" });
   });
   it("serves the legal pages on the subdomain so the form's links always work", () => {
     expect(routeForHost(host, "/privacy")).toEqual({ kind: "next" });

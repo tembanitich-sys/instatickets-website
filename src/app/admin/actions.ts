@@ -7,6 +7,7 @@ import { adminConfigProblem, getAdminConfig } from "@/lib/admin/config";
 import { requireAdmin } from "@/lib/admin/auth";
 import { getLockoutStore } from "@/lib/admin/lockout";
 import { attemptLogin } from "@/lib/admin/login";
+import { activeTotpSecret, disableTotp, enableTotp } from "@/lib/admin/totp-store";
 import { SESSION_COOKIE, SESSION_TTL_SECONDS } from "@/lib/admin/session";
 import { saveGetStartedLink } from "@/lib/admin/settings";
 import { clientIp } from "@/lib/client-ip";
@@ -29,8 +30,11 @@ const LOGIN_MESSAGES = {
 } as const;
 
 export async function loginAction(_prev: LoginState, formData: FormData): Promise<LoginState> {
-  const config = getAdminConfig();
-  if (!config) console.error(`Admin sign-in unavailable: ${adminConfigProblem()}`);
+  const base = getAdminConfig();
+  if (!base) console.error(`Admin sign-in unavailable: ${adminConfigProblem()}`);
+  // Two-step sign-in can be turned on in Admin > Settings (stored in the database).
+  const totpSecret = base ? await activeTotpSecret(getDb()).catch(() => null) : null;
+  const config = base && totpSecret ? { ...base, totpSecret } : base;
 
   const password = formData.get("password");
   const code = formData.get("code");
@@ -88,4 +92,30 @@ export async function saveGetStartedAction(_prev: SettingsState, formData: FormD
   revalidateTag(SETTINGS_CACHE_TAG, { expire: 0 });
   revalidatePath("/");
   return { status: "saved", value: result.value };
+}
+
+export type TotpState = { status: "idle" } | { status: "done"; message: string } | { status: "error"; message: string };
+
+export async function enableTotpAction(_prev: TotpState, formData: FormData): Promise<TotpState> {
+  await requireAdmin();
+  const db = getDb();
+  if (!db) return { status: "error", message: "The database is not configured." };
+  const secret = String(formData.get("secret") ?? "");
+  const code = String(formData.get("code") ?? "");
+  if (!(await enableTotp(db, secret, code, Date.now()))) {
+    return { status: "error", message: "That code did not match. Check the time on your phone and try the newest code." };
+  }
+  revalidatePath("/admin/settings");
+  return { status: "done", message: "Two-step sign-in is on. From now on, sign-in asks for a code from your authenticator app." };
+}
+
+export async function disableTotpAction(_prev: TotpState, formData: FormData): Promise<TotpState> {
+  await requireAdmin();
+  const db = getDb();
+  if (!db) return { status: "error", message: "The database is not configured." };
+  if (!(await disableTotp(db, String(formData.get("code") ?? ""), Date.now()))) {
+    return { status: "error", message: "That code did not match." };
+  }
+  revalidatePath("/admin/settings");
+  return { status: "done", message: "Two-step sign-in is off." };
 }

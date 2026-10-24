@@ -296,8 +296,8 @@ export const partnerEmails = {
     subject: (ref: string, what: string) => `${what} ${ref}`,
   },
   integration: {
-    subject: (ref: string) => `InstaTickets Integration Standard for your ticketing system (${ref})`,
-    lines: (p: { name: string; company: string; ref: string; attached: boolean }) => [
+    subject: (ref: string) => `InstaTickets integration pack: Integration Standard and sandbox access (${ref})`,
+    lines: (p: { name: string; company: string; ref: string; attached: boolean; credentials: string }) => [
       `Dear ${p.name},`,
       "",
       `${p.company} has named you as its technical contact for InstaTickets (reference ${p.ref}).`,
@@ -306,7 +306,10 @@ export const partnerEmails = {
         ? "Attached is the InstaTickets Operator Integration Standard. It sets out the capabilities your ticketing system must provide and the certification tests it must pass."
         : "Our technical team will send you the InstaTickets Operator Integration Standard shortly.",
       "",
-      "Our technical team will send your sandbox credentials separately. The target is to complete integration and certification within 7 days.",
+      "Your sandbox access:",
+      p.credentials,
+      "",
+      "Please keep these credentials confidential. The target is to complete integration and pass certification within 7 days. Production credentials are issued after certification.",
       "",
       "Please reply to this email with any technical questions.",
     ],

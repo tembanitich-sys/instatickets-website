@@ -3,6 +3,7 @@ import { eq } from "drizzle-orm";
 import { partners, partnerSignInTokens } from "@/lib/db/schema";
 import { busCurrencies, busKycSchema } from "@/lib/partners/kyc";
 import {
+  updateSandboxCredentials,
   adminAction,
   adminEventAction,
   consumeSignIn,
@@ -43,6 +44,7 @@ async function invitedBus(deps: TestPartnerDeps, overrides: Partial<typeof busIn
   await upload(deps, { partnerId: null, slot: "master_terms_bus", source: "bullion" });
   await upload(deps, { partnerId: null, slot: "integration_standard", source: "bullion" });
   await upload(deps, { partnerId: p.id, slot: "order_form", source: "bullion" });
+  await updateSandboxCredentials(deps, p.id, "Sandbox URL: https://sandbox.example\nClient ID: tamuka\nSecret: s3cr3t");
   if (p.anchorAddendum) await upload(deps, { partnerId: p.id, slot: "addendum", source: "bullion" });
   const invited = await sendInvitation(deps, p.id);
   if (!invited.ok) throw new Error(invited.problems.join());
@@ -85,7 +87,7 @@ describe("creating and inviting partners", () => {
     if (!created.ok) throw new Error();
     const first = await sendInvitation(deps, created.partner.id);
     expect(first.ok).toBe(false);
-    expect(!first.ok && first.problems).toHaveLength(3); // master terms, order form, addendum
+    expect(!first.ok && first.problems).toHaveLength(4); // master terms, order form, addendum, sandbox credentials
     expect(deps.sent).toHaveLength(0);
   });
 
@@ -197,6 +199,8 @@ describe("bus operator KYC", () => {
     expect(team.text).not.toContain("998877");
     expect(integration.to).toEqual(["tech@tamuka.example", "accounts@instatickets.co.zw"]);
     expect(integration.attachments).toHaveLength(1);
+    expect(integration.subject).toBe("InstaTickets integration pack: Integration Standard and sandbox access (OP-0001)");
+    expect(integration.text).toContain("Client ID: tamuka");
 
     const row = await getPartner(deps.db, p.id);
     expect(row?.status).toBe("submitted");
@@ -220,7 +224,7 @@ describe("bus operator KYC", () => {
     expect(deps.sent.at(-1)?.text).toContain("Please upload a clearer CR14.");
     deps.sent.length = 0;
     expect(await submitKyc(deps, p.id)).toEqual({ ok: true });
-    expect(deps.sent.map((m) => m.subject)).not.toContain("InstaTickets Integration Standard for your ticketing system (OP-0001)");
+    expect(deps.sent.some((m) => m.subject.includes("integration pack"))).toBe(false);
     expect(deps.sent[1].subject).toContain("Resubmitted");
   });
 
@@ -245,6 +249,25 @@ describe("bus operator KYC", () => {
     for (const slot of BUS_DOCS) await upload(deps, { partnerId: p.id, slot });
     const result = await submitKyc(deps, p.id);
     expect(!result.ok && result.problems.map((x) => x.path)).toEqual(["doc:signed_addendum"]);
+  });
+});
+
+describe("integration pack", () => {
+  it("holds the pack if the sandbox credentials were removed, tells the team, and sends it once entered", async () => {
+    const deps = await makePartnerDeps();
+    const p = await invitedBus(deps);
+    await updateSandboxCredentials(deps, p.id, "");
+    await saveKyc(deps, p.id, fullBusKyc("finance@tamuka.example"));
+    for (const slot of BUS_DOCS) await upload(deps, { partnerId: p.id, slot });
+    deps.sent.length = 0;
+    await submitKyc(deps, p.id);
+    expect(deps.sent.some((m) => m.subject.includes("integration pack"))).toBe(false);
+    expect(deps.sent[1].text).toContain("integration pack was NOT sent");
+    await expect(adminAction(deps, p.id, "resend_integration")).rejects.toThrow(/sandbox credentials/);
+    await updateSandboxCredentials(deps, p.id, "Client ID: late");
+    await adminAction(deps, p.id, "resend_integration");
+    expect(deps.sent.at(-1)?.text).toContain("Client ID: late");
+    expect((await getPartner(deps.db, p.id))?.integrationStatus).toBe("standard_sent");
   });
 });
 

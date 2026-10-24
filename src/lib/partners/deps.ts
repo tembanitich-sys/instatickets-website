@@ -1,7 +1,6 @@
 import { operators } from "@content/site";
 import { getDb } from "../db/client";
 import { sendEmail } from "../email";
-import { SITE_URL } from "../site-url";
 import { defaultSheetAppender } from "../sheets";
 import { blobFileStore } from "./files";
 import type { PartnerDeps } from "./service";
@@ -21,6 +20,7 @@ export function partnerDeps(): PartnerDeps | null {
     log: console,
     now: () => new Date(),
     portalUrl: PORTAL_URL,
-    adminUrl: `${SITE_URL}/admin`,
+    // Same host as the portal, so links in team emails work before www moves to Vercel.
+    adminUrl: `${PORTAL_URL}/admin`,
   };
 }

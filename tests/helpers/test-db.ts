@@ -20,7 +20,7 @@ export async function createTestDb(): Promise<Db> {
   })();
   const db = await ready;
   await db.execute(
-    sql`truncate table site_settings, customer_preregistrations, business_registrations, agent_applications, operator_registrations, contact_enquiries, admin_audit, partner_sign_in_tokens, partner_documents, partner_events, partners restart identity`,
+    sql`truncate table site_settings, customer_preregistrations, business_registrations, agent_applications, operator_registrations, contact_enquiries, admin_audit, partner_sign_in_tokens, partner_documents, partner_events, partners, admin_security restart identity`,
   );
   return db;
 }

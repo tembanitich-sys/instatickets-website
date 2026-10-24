@@ -185,6 +185,11 @@ export const partners = pgTable(
     submittedAt: timestamp("submitted_at", { withTimezone: true }),
     approvedAt: timestamp("approved_at", { withTimezone: true }),
     integrationSentAt: timestamp("integration_sent_at", { withTimezone: true }),
+    /**
+     * Bus only: sandbox access for the technical contact (base URL, client ID, secret ...),
+     * sent in the same email as the Integration Standard.
+     */
+    sandboxCredentials: text("sandbox_credentials"),
     /** Automatic reminders sent while the invitation is not yet submitted (at most 2). */
     remindersSent: integer("reminders_sent").notNull().default(0),
     createdAt: createdAt(),
@@ -257,6 +262,16 @@ export const partnerSignInTokens = pgTable(
   },
   (t) => [index("partner_sign_in_tokens_partner_idx").on(t.partnerId)],
 );
+
+/**
+ * Admin security settings that must never appear in the general Settings list or its CSV
+ * export. Row "totp" holds the authenticator key once two-step sign-in is turned on.
+ */
+export const adminSecurity = pgTable("admin_security", {
+  id: text("id").primaryKey(),
+  secret: text("secret").notNull(),
+  enabledAt: timestamp("enabled_at", { withTimezone: true }).notNull().defaultNow(),
+});
 
 /**
  * Record of admin actions: every CSV export and settings change (and sign-in).
